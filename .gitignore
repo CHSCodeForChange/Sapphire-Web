@@ -56,3 +56,9 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# .idea stuff
+.idea/
+
+# Why is this here
+.DS_Store
