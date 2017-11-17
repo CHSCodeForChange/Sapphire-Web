@@ -16,8 +16,14 @@ Including another URLconf
 
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^feed/', include('feed.urls')),
+    url(r'^volunteer/', include('volunteerApp.urls')),
+    url(r'^home/', include('volunteerApp.urls')),           #TODO this should be set programatically depending on auth type
+    url(r'^', auth_views.login, {'template_name' : 'auth/login.html'}, name='login'),   #TODO this should remember you are logged in
+    url(r'^login/$', auth_views.login, {'template_name' : 'auth/login.html'}, name='login'),
+    url(r'^logout/$', auth_views.logout, name='logout'),    # Will redirect to the next page
 ]

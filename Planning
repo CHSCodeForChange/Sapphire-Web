@@ -1,0 +1,67 @@
+
+
+THIS IS A ROUGH OUTLINE AND DOES NOT INCLUDE EVERYTHING THAT WE WILL NEED!!!
+================================================================================
+Program flow:
+================================================================================
+
+Login Page
+################################################################################
+
+if(submit button is pressed){
+  if(user and password are valid){
+    login with django.auth application;
+    if(PERMISSIONS==VOLUNTEER){
+      set volunteer site layout;  //I don't know how to specify different layouts like this
+      start on the "feed" page;
+    }
+    if(PERMISSIONS==ORGANIZER){
+      set organizer site layout;  //I don't know how to specify different layouts like this
+      start on "organizer" page;
+    }
+    if(PERMISSIONS==ADMIN){
+      set admin site layout;  //I don't know how to specify different layouts like this
+    }
+    if(PERMISSIONS==TEAM_LEADER){
+      set team leader site layout;  //I don't know how to specify different layouts like this
+    }
+  }
+}
+
+Feed Page
+################################################################################
+
+get slots with the current volunteer's name associated with it;
+for each slot:
+  Make a view with date, start/end time, Event name, Location and ORGANIZER;
+  Add this view in a vertical, linear layout
+
+
+EventNeeds Page
+################################################################################
+
+get all events, sorted by priority;
+for each event:
+  Make a view with Event name, Location and ORGANIZER
+  Add this view in a vertical, linear layout
+
+SlotsByEventNeeds Page
+################################################################################
+
+Pass in an Event;
+get all slots for that specific event, sorted by priority;
+Display Event name at top of screen
+for each slot:
+  Make a view with start time+date and end time+date
+  Add this view in a vertical, linear layout
+
+SlotNeeds Page
+################################################################################
+
+get all slots, sorted by priority;
+for each slot:
+  Make a view with Event name, Location, start/end time, date and ORGANIZER
+  Add this view in a vertical, linear layout
+
+Calendar Page
+################################################################################
