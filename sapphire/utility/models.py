@@ -7,22 +7,6 @@ I have used models.CASCADE in all the db relationship on_delete cases. I do not
 know if this is good practice or will result in errors later down the line.
 """
 
-
-
-"""
-Custom User class for this backend
-"""
-class Profile(User):
-    timezone = models.charField(max_length=50, default='EST')
-    # A one to many relationship to team members that is connected when the
-    # Profile is a TEAM_LEADER with people in their team.
-    team = models.ForeignKey(
-    Profile,
-    models.CASCADE
-    )
-
-    objects = UserManager()
-
 """
 This class is an object containing all the necessary information on an Event.
 It contains instances of Slots and can be created by a Profile of type ORGANIZER

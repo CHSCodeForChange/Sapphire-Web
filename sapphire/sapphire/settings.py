@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'accounts',
+    'volunteerApp',
 ]
 
 MIDDLEWARE = [
@@ -122,3 +124,11 @@ STATIC_URL = '/static/'
 # Default url to redirect to after successful login
 
 LOGIN_REDIRECT_URL = '/home/'
+
+# Settings for sending out emails
+
+EMAIL_HOST_USER = 'sapphireappstaff@gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_PASSWORD = 'ASK A BACKEND DEV'
+EMAIL_PORT = 587

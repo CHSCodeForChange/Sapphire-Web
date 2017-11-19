@@ -22,8 +22,10 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^volunteer/', include('volunteerApp.urls')),
+    url(r'^$', auth_views.login, {'template_name' : 'accounts/login.html'}, name='login'),
     url(r'^home/', include('volunteerApp.urls')),           #TODO this should be set programatically depending on auth type
-    url(r'^', auth_views.login, {'template_name' : 'auth/login.html'}, name='login'),   #TODO this should remember you are logged in
-    url(r'^login/$', auth_views.login, {'template_name' : 'auth/login.html'}, name='login'),
+    url(r'^login/$', auth_views.login, {'template_name' : 'accounts/login.html'}, name='login'),
     url(r'^logout/$', auth_views.logout, name='logout'),    # Will redirect to the next page
+    url(r'^accounts/', include('accounts.urls', namespace='accounts')),
+    # url(r'^', auth_views.login, {'template_name' : 'auth/login.html'}, name='login'),   #TODO this should remember you are logged in
 ]
