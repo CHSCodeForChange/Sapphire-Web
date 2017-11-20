@@ -25,7 +25,7 @@ urlpatterns = [
     url(r'^$', auth_views.login, {'template_name' : 'accounts/login.html'}, name='login'),
     url(r'^home/', include('volunteerApp.urls')),           #TODO this should be set programatically depending on auth type
     url(r'^login/$', auth_views.login, {'template_name' : 'accounts/login.html'}, name='login'),
-    url(r'^logout/$', auth_views.logout, name='logout'),    # Will redirect to the next page
+    url(r'^logout/$', auth_views.logout, {'next_page' : '/accounts/logout_lander'}, name='logout'),    # Will redirect to the next page
     url(r'^accounts/', include('accounts.urls', namespace='accounts')),
     # url(r'^', auth_views.login, {'template_name' : 'auth/login.html'}, name='login'),   #TODO this should remember you are logged in
 ]

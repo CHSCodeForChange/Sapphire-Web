@@ -15,7 +15,8 @@ def home(request):
     redirect('profile')
 
 def profile(request):
-    HttpResponse('This will dynamically show the profile of the user logged in.')
+    return render(request, "accounts/profile.html")
+    return HttpResponse('This will dynamically show the profile of the user logged in.')
 
 def signup(request):
     if(request.method == 'POST'):
@@ -55,3 +56,6 @@ def activate(request, uidb64, token):
         return HttpResponse('Account confirmed. You can now login your account.')
     else:
         return HttpResponse('Activation link is invalid!')
+
+def logoutLander(request):
+    return render(request, "accounts/logout_lander.html")
