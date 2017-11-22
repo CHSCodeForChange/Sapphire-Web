@@ -16,16 +16,20 @@ def home(request):
 
 def profile(request):
     return render(request, "accounts/profile.html")
-    return HttpResponse('This will dynamically show the profile of the user logged in.')
 
 def signup(request):
+    # Checks if the user is sending their data (POST) or getting the form (GET)
     if(request.method == 'POST'):
         form = SignupForm(request.POST)
+        # Makes sure the user filled out the form correctly as dictated by forms.py
         if form.is_valid():
             user = form.save(commit=False)
+            # Sets the user to deactive until they confirm email
             user.is_active = False
+            # Saves the user to the server
             user.save()
             current_site = get_current_site(request)
+            # Sends the user an email based on the email template and the info passed in here
             message = render_to_string('emails/activate_account.html', {
                 'user':user,
                 'domain':current_site.domain,
@@ -36,7 +40,7 @@ def signup(request):
             to_email = form.cleaned_data.get('email')
             email = EmailMessage(mail_subject, message, to=[to_email])
             email.send()
-            return HttpResponse('Please confirm your email address to complete the registration.')
+            return render(request, 'accounts/please_confirm.html')
     else:
         form = SignupForm()
 
@@ -52,10 +56,9 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         login(request, user)
-        # return redirect('home')
-        return HttpResponse('Account confirmed. You can now login your account.')
+        return render(request, 'accounts/account_confirmed.html')
     else:
         return HttpResponse('Activation link is invalid!')
 
 def logoutLander(request):
-    return render(request, "accounts/logout_lander.html")
+    return render(request, 'accounts/logout_lander.html')
