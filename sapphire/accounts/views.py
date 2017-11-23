@@ -10,13 +10,15 @@ from .tokens import account_activation_token
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 
-
+# Redirects to the profile page
 def home(request):
     redirect('profile')
 
+# The profile page for the current user
 def profile(request):
     return render(request, "accounts/profile.html")
 
+# The signup page
 def signup(request):
     # Checks if the user is sending their data (POST) or getting the form (GET)
     if(request.method == 'POST'):
@@ -46,13 +48,18 @@ def signup(request):
 
     return render(request, 'accounts/signup.html', {'form': form})
 
+# The activation page for new users
+# The uidb64 and token are generated in signup
 def activate(request, uidb64, token):
+    # Tries to decode the uid and use it as a key to find a user
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
+    # Catches if the activation link is bad
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
     if user is not None and account_activation_token.check_token(user, token):
+        # Sets the user to active
         user.is_active = True
         user.save()
         login(request, user)

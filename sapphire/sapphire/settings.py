@@ -130,5 +130,5 @@ LOGIN_REDIRECT_URL = '/home/'
 EMAIL_HOST_USER = 'sapphireappstaff@gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_PASSWORD = 'ASK A BACKEND DEV' #do NOT EVER push the project with this line filled with the actual password
+EMAIL_HOST_PASSWORD = 'sapp2017' #do NOT EVER push the project with this line filled with the actual password
 EMAIL_PORT = 587

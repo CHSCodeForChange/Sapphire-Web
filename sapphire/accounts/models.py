@@ -1,10 +1,8 @@
 from django.db import models
-from django.contrib.auth.models import User 
+from django.contrib.auth.models import User
 
 
-"""
-Custom User class for this backend
-"""
+# Custom Profile linked to a User
 class Profile:
     timezone = models.CharField(max_length=50, default='EST')
     # A one to many relationship to team members that is connected when the
