@@ -17,6 +17,8 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 urlpatterns = [
@@ -30,3 +32,6 @@ urlpatterns = [
     # url(r'^', auth_views.login, {'template_name' : 'auth/login.html'}, name='login'),   #TODO this should remember you are logged in
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
