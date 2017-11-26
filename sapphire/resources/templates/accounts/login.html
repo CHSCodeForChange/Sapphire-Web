@@ -10,6 +10,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <link rel="shortcut icon" href="/static/img/logos.ico/favicon-32x32.png" type="image/x-icon">
   <link href="https://getbootstrap.com/docs/4.0/examples/sticky-footer/sticky-footer.css" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/accounts/login.css">
 </head>
 
 <body>
@@ -33,18 +34,19 @@
 </nav>
 
   <main role="main" class="container">
-    <div class="text-center">
-      <h1>Login</h1>
-      <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Login</button>
-        <a href="/accounts/signup" class="button">Sign up</a>
-        <img class="img-responsive" src="/static/img/logos.ico/WithText.jpg" alt="Sapphire Log">
-
-      </form>
+    <div class="main-body">
+      <div class="text-center">
+        <h1>Login</h1>
+        <form method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit">Login</button>
+          <a href="/accounts/signup" class="button">Sign up</a>
+        </form>
+      </div>
     </div>
 
+    <img class="img-responsive" src="/static/img/logos.ico/WithText.jpg" alt="Sapphire Log" width="50%">
   </main>
 
   <footer class="footer">
