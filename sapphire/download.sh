@@ -6,3 +6,6 @@ echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pip3 install django;
 echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pip3 install djangorestframework;
+echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+pip3 intall Jinja2
+
