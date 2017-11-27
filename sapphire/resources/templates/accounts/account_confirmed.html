@@ -1,19 +1,8 @@
 <!untested>
 
-<head>
-  <title>Confirmed!</title>
-  <h1>Account confirmed.</h1>
-  <a href="/accounts/profile">Profile</a>
-  <a href="/volunteer/feed">Feed</a>
-  <link rel="shortcut icon" href="/static/img/logos.ico/favicon-32x32.png" type="image/x-icon">
-  <link href="https://getbootstrap.com/docs/4.0/examples/sticky-footer/sticky-footer.css" rel="stylesheet">
+{% extends "header.html" %}
 
-</head>
 
-<footer class="footer">
-  <div class="container">
-      <span class="text-muted">
-        Copyright (c) 2017 CHS Code For Change under MIT License
-      </span>
-    </div>
-</footer>
+{% block content %}
+  <h1>Account Confirmed! You are ready to use Sapphire</h1>
+{% endblock %}

@@ -1,53 +1,6 @@
-<head>
-  <title>Feed</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <link rel="shortcut icon" href="/static/img/logos.ico/favicon-32x32.png" type="image/x-icon">
-  <link href="https://getbootstrap.com/docs/4.0/examples/sticky-footer/sticky-footer.css" rel="stylesheet">
+{% extends "header.html" %}
 
-</head>
+{% block content %}
+  <h1>Feed</h1>
 
-<body>
-
-  <nav class="navbar navbar-inverse navbar-static-top">
-	<div class="container">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-				<span class="sr-only">Toggle navigation</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			<a class="navbar-brand" href="#">Sapphire</a>
-		</div>
-		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-			<ul class="nav navbar-nav navbar-right">
-        <li><a href="/volunteer/feed">Feed</a></li>
-        <li><a href="/volunteer/calendar">Calendar</a></li>
-        <li><a href="/volunteer/eventNeeds">Event Needs</a></li>
-        <li><a href="/logout">Logout</a></li>
-        <li><a href="/accounts/profile">Profile</a></li>
-			</ul>
-		</div>
-	</div>
-</nav>
-
-<div class="container">
-  <div class="text-center">
-    <h1>Feed</h1>
-
-  </div>
-</div>
-
-<footer class="footer">
-  <div class="container">
-      <span class="text-muted">
-        Copyright (c) 2017 CHS Code For Change under MIT License
-      </span>
-    </div>
-</footer>
-
-</body>
+{% endblock %}
