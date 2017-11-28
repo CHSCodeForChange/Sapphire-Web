@@ -9,6 +9,7 @@ from django.template.loader import render_to_string
 from .tokens import account_activation_token
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
+from .models import Profile
 
 # Redirects to the profile page
 def home(request):
@@ -16,7 +17,12 @@ def home(request):
 
 # The profile page for the current user
 def profile(request):
-    return render(request, "accounts/profile.html")
+    if request.user.is_authenticated():
+        # profile = Profile.objects.get(request.user.id) BROKEN for some reason
+        return render(request, "accounts/profile.html", {'profile': profile})
+    else:
+        # This needs to be a template
+        return HttpResponse("Log in please.")
 
 # The signup page
 def signup(request):
@@ -55,6 +61,8 @@ def activate(request, uidb64, token):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
+        # Sets the profile's primary key to be the same as the user's
+        profile = Profile(pk=uid)
     # Catches if the activation link is bad
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
@@ -62,6 +70,7 @@ def activate(request, uidb64, token):
         # Sets the user to active
         user.is_active = True
         user.save()
+        profile.save()
         login(request, user)
         return render(request, 'accounts/account_confirmed.html')
     else:
