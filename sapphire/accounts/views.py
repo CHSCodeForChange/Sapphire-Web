@@ -64,7 +64,7 @@ def activate(request, uidb64, token):
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
         # Sets the profile's primary key to be the same as the user's
-        profile = Profile(pk=uid)
+        profile = Profile(pk=uid, hours=0)
     # Catches if the activation link is bad
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None

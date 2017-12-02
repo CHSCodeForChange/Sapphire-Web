@@ -17,7 +17,7 @@ class Slot(models.Model):
         User,
         on_delete=models.CASCADE,
         null=True,
-        blank=True
+        blank=True,
     )
     # TODO make sure this can only point to one Event and not more than that
     parentEvent = models.ForeignKey(
@@ -35,10 +35,11 @@ class Slot(models.Model):
     # TODO allow a getPriority() function to get the instantanious priority of
     # the Event object
 class SingleSlot(models.Model):
+    objects = models.Manager()
     # The organizer of the Event
-    organizer = models.OneToOneField(
+    organizer = models.ForeignKey(
         User,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
     )
     # The string name of the Event
     name = models.CharField(max_length=80)
@@ -62,6 +63,10 @@ class SingleSlot(models.Model):
     # TODO allow a getPriority() function to get the instantanious priority of
     # the Event object
     in_person = models.BooleanField()
+    def get_in_person(self):
+        if self.in_person:
+            return 'Yes'
+        return 'No'
 
 
 
@@ -71,7 +76,7 @@ It contains instances of Slots and can be created by a Profile of type ORGANIZER
 """
 class Event(models.Model):
     # The organizer of the Event
-    organizer = models.OneToOneField(
+    organizer = models.ForeignKey(
         User,
         on_delete=models.CASCADE
     )

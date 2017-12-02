@@ -56,13 +56,16 @@ class SignupForm(forms.Form):
 
     # Save a new user and set their Group to Volunteer
     def save(self, commit=True):
-        user = User.objects.create_user(
-            self.cleaned_data['username'],
-            self.cleaned_data['email'],
-            self.cleaned_data['password1'],
-        )
-        user.first_name = self.cleaned_data['first_name']
-        user.last_name = self.cleaned_data['last_name']
-        volunteer = Group.objects.get(name='Volunteer')
-        volunteer.user_set.add(user)
-        return user
+        try:
+            user = User.objects.create_user(
+                self.cleaned_data['username'],
+                self.cleaned_data['email'],
+                self.cleaned_data['password1'],
+            )
+            user.first_name = self.cleaned_data['first_name']
+            user.last_name = self.cleaned_data['last_name']
+            volunteer = Group.objects.get(name='Volunteer')
+            volunteer.user_set.add(user)
+            return user
+        except Exception as e:
+            raise

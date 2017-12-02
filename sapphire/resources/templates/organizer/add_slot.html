@@ -19,4 +19,23 @@
 
     <button type="submit">Add Slot</button>
   </form>
+  <table class="table table-hover">
+    <tr>
+      <th>Name</th>
+      <th>Start Time</th>
+      <th>End Time</th>
+      <th>In person?</th>
+    </tr>
+    {% for slot in slots %}
+      <thread>
+        <tr>
+          <!You can access all the variables in SingleSlot here as shown below>
+          <th>{{slot.name}}</th>
+          <th>{{slot.start}}</th>
+          <th>{{slot.end}}</th>
+          <th>{{slot.get_in_person}}</th>
+        </tr>
+      </thread>
+    {% endfor %}
+  </table>
 {% endblock %}

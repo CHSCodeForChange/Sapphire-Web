@@ -12,14 +12,12 @@ class Profile(models.Model):
     # A one to many relationship to team members that is connected when the
     # Profile is a TEAM_LEADER with people in their team.
     team = models.ForeignKey(
-    'self',
-    models.CASCADE
+        'self',
+        models.CASCADE,
+        null=True
     )
     # The user variable to allow authentication to work
     # user = models.OneToOneField(User)
     #
     bio = models.CharField(max_length=1000)
-    hours = models.IntegerField()
-    def Profile():
-        # self.uid = uid
-        self.hours = 0
+    hours = models.IntegerField(default=0)
