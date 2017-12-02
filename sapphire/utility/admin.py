@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Profile
+from .models import SingleSlot
 
-admin.site.register(Profile)
+admin.site.register(SingleSlot)
 # Register your models here.

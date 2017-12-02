@@ -1,12 +1,11 @@
 {% extends "header.html" %}
 
-
 {% block content %}
   <form method="post">
     {% csrf_token %}
       {% for field in form %}
-      <p>
-        {{ field.label_tag }}<br>
+      <p align="left">
+        <br>{{ field.label_tag }}
         {{ field }}
         {% if field.help_text %}
           <small style="display: none">{{ field.help_text }}</small>
@@ -16,7 +15,6 @@
         {% endfor %}
       </p>
       {% endfor %}
-
     <button type="submit">Sign up</button>
     <a href="http://127.0.0.1:8000/" class="button">Sign in</a>
   </form>

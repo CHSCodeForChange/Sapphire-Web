@@ -1,7 +1,22 @@
-<!untested>
-
 {% extends "header.html" %}
 
 {% block content %}
   <h1>Add A Slot</h1>
+  <form method="post">
+    {% csrf_token %}
+      {% for field in form %}
+      <p align="left">
+        <br>{{ field.label_tag }}
+        {{ field }}
+        {% if field.help_text %}
+          <small style="display: none">{{ field.help_text }}</small>
+        {% endif %}
+        {% for error in field.errors %}
+          <p style="color: red">{{ error }}</p>
+        {% endfor %}
+      </p>
+      {% endfor %}
+
+    <button type="submit">Add Slot</button>
+  </form>
 {% endblock %}

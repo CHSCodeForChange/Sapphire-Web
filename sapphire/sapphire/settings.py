@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'accounts',
     'volunteerApp',
     'rest_framework',
+    'utility',
 ]
 
 MIDDLEWARE = [

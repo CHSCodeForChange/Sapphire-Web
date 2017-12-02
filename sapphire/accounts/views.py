@@ -18,7 +18,8 @@ def home(request):
 # The profile page for the current user
 def profile(request):
     if request.user.is_authenticated():
-        # profile = Profile.objects.get(request.user.id) BROKEN for some reason
+        # This line breaks the code: "'int' is not iterable"
+        # profile = Profile.objects.get(request.user.pk)
         return render(request, "accounts/profile.html", {'profile': profile})
     else:
         # This needs to be a template
@@ -36,6 +37,7 @@ def signup(request):
             user.is_active = False
             # Saves the user to the server
             user.save()
+            # Gets the current domain in order to send the email
             current_site = get_current_site(request)
             # Sends the user an email based on the email template and the info passed in here
             message = render_to_string('emails/activate_account.html', {
