@@ -34,7 +34,8 @@ class Slot(models.Model):
     maxVolunteers = models.IntegerField()
     # TODO allow a getPriority() function to get the instantanious priority of
     # the Event object
-class SingleSlot(models.Model):
+class Event(models.Model):
+    is_single = models.BooleanField(default=False)
     objects = models.Manager()
     # The organizer of the Event
     organizer = models.ForeignKey(
@@ -52,17 +53,29 @@ class SingleSlot(models.Model):
         null=True,
         blank=True
     )
-    start = models.DateTimeField()
-    end = models.DateTimeField()
+    start = models.DateTimeField(null=True)
+    end = models.DateTimeField(null=True)
     # The minimun number of volunteers this slot needs to have. Set by Event
     # organizer and factored into slot priority
-    minVolunteers = models.IntegerField()
+    minVolunteers = models.IntegerField(null=True)
     # The maximum number of volunteers this slot can have. Set by Event
     # organizer and stops too many Profiles from signing up
-    maxVolunteers = models.IntegerField()
+    maxVolunteers = models.IntegerField(null=True)
     # TODO allow a getPriority() function to get the instantanious priority of
     # the Event object
-    in_person = models.BooleanField()
+    in_person = models.NullBooleanField(null=True)
+    # A one to many relationship holding the Slots for an Event object
+
+
+    # RAISING ERRORS
+
+
+    # slots = models.ForeignKey(
+    #     'Slot',
+    #     on_delete=models.CASCADE,
+    #     null=True,
+    #     blank=True
+    # )
     def get_in_person(self):
         if self.in_person:
             return 'Yes'
@@ -71,10 +84,14 @@ class SingleSlot(models.Model):
 
 
 """
+|============|
+| DEPRECATED |
+|============|
 This class is an object containing all the necessary information on an Event.
 It contains instances of Slots and can be created by a Profile of type ORGANIZER
-"""
+
 class Event(models.Model):
+    objects = models.Manager()
     # The organizer of the Event
     organizer = models.ForeignKey(
         User,
@@ -93,3 +110,4 @@ class Event(models.Model):
     )
     # TODO allow a getPriority() function to get the instantanious priority of
     # the Event object
+"""

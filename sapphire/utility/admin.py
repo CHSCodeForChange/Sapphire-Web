@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import SingleSlot
+from .models import Event
 
-admin.site.register(SingleSlot)
+admin.site.register(Event)
 # Register your models here.

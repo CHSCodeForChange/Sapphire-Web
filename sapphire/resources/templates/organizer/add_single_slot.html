@@ -1,8 +1,8 @@
 {% extends "header.html" %}
 
 {% block content %}
-  <h1>Add An Event</h1>
-  <a href="?type=singleSlot">Add a single slot</a>
+  <h1>Add A Single Slot</h1>
+  <a href="?type=event">Add an event</a>
   <form method="post">
     {% csrf_token %}
       {% for field in form %}
@@ -18,13 +18,15 @@
       </p>
       {% endfor %}
 
-    <button type="submit">Add Event</button>
+    <button type="submit">Add Slot</button>
   </form>
   <table class="table table-hover">
     <thread>
       <tr>
         <th>Name</th>
-        <th>Location</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+        <th>In person?</th>
         <th>Delete</th>
       </tr>
     </thread>
@@ -32,7 +34,9 @@
       {% for event in events %}
         <tr>
           <th>{{event.name}}</th>
-          <th>{{event.location}}</th>
+          <th>{{event.start}}</th>
+          <th>{{event.end}}</th>
+          <th>{{event.get_in_person}}</th>
           <th><a href="{% url 'deleteEvent' event_id=event.id %}?next={{ request.path|urlencode }}">x</a></th>
         </tr>
       {% endfor %}

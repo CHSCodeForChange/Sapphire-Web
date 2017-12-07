@@ -1,13 +1,9 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from utility.models import SingleSlot
+from utility.models import Event, Slot
 from django.contrib.auth import models
 
-class NewEventForm(forms.Form):
-    # Check current user for organizer permissions
-    name = forms.CharField(label='Name', max_length=50)
-
-class NewSlotForm(forms.Form):
+class NewSingleSlotForm(forms.Form):
     start = forms.DateTimeField(label='Start time')
     end = forms.DateTimeField(label='End time')
     title = forms.CharField(label='Title', max_length=30)
@@ -18,7 +14,7 @@ class NewSlotForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user')
-        super(NewSlotForm, self).__init__(*args, **kwargs)
+        super(NewSingleSlotForm, self).__init__(*args, **kwargs)
     def clean_title(self):
         title = self.cleaned_data['title']
         return title
@@ -38,7 +34,7 @@ class NewSlotForm(forms.Form):
         end = self.cleaned_data['end']
         return end
     def save(self, commit=True):
-        slot = SingleSlot(
+        event = Event(
             organizer=self.user,
             name=self.cleaned_data['title'],
             in_person=self.cleaned_data['in_person'],
@@ -46,5 +42,36 @@ class NewSlotForm(forms.Form):
             minVolunteers=1,
             volunteers=None,
             start=self.cleaned_data['start'],
-            end=self.cleaned_data['end'])
-        return slot
+            end=self.cleaned_data['end'],
+            is_single=True)
+        return event
+class NewEventForm(forms.Form):
+    title = forms.CharField(label='Title', max_length=30)
+    location = forms.CharField(label='Location', max_length=240)
+    user = models.User()
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user')
+        super(NewEventForm, self).__init__(*args, **kwargs)
+    def clean_title(self):
+        title = self.cleaned_data['title']
+        return title
+    def clean_user(self):
+        user = self.cleaned_data['user']
+        return user
+    def clean_location(self):
+        location = self.cleaned_data['location']
+        return location
+    def save(self, commit=True):
+        event = Event(
+            organizer=self.user,
+            name=self.cleaned_data['title'],
+            location=self.cleaned_data['location'],
+            in_person=None,
+            maxVolunteers=None,
+            minVolunteers=None,
+            volunteers=None,
+            start=None,
+            end=None,
+            is_single=False)
+        return event
