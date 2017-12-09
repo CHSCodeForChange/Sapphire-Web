@@ -17,7 +17,6 @@ class Profile(models.Model):
         null=True
     )
     # The user variable to allow authentication to work
-    # user = models.OneToOneField(User)
-    #
-    bio = models.CharField(max_length=1000)
+    username = models.CharField(max_length=200, default = "")
+    bio = models.CharField(max_length=1000, default = "")
     hours = models.IntegerField(default=0)

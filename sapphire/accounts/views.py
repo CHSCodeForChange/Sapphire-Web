@@ -19,11 +19,18 @@ def home(request):
 def profile(request):
     if request.user.is_authenticated():
         # This line breaks the code: "'int' is not iterable"
-        # profile = Profile.objects.get(request.user.pk)
+        profile = Profile.objects.filter(username = request.user.username).first()
         return render(request, "accounts/profile.html", {'profile': profile})
     else:
         # This needs to be a template
         return HttpResponse("Log in please.")
+
+# def editprofile(request):
+#     if(request.method == 'POST'):
+#        form = EditProfileForm(request.POST)
+#
+#        if form.is_valid():
+
 
 # The signup page
 def signup(request):
@@ -64,7 +71,7 @@ def activate(request, uidb64, token):
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
         # Sets the profile's primary key to be the same as the user's
-        profile = Profile(pk=uid, hours=0)
+        profile = Profile(username = user.get_username())
     # Catches if the activation link is bad
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
