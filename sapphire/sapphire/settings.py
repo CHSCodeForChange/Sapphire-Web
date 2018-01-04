@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ['SKEY']
+SECRET_KEY = 'not secret' #this is a testing secrect key
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -135,8 +135,8 @@ LOGIN_REDIRECT_URL = '/home/'
 
 # Settings for sending out emails
 
-EMAIL_HOST_USER = 'sapphireappstaff@gmail.com'
+EMAIL_HOST_USER = 'testingemail2081@gmail.com' #this is a testing account
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_PASSWORD = os.environ['SPASS'] #do NOT EVER push the project with this line filled with the actual password
+EMAIL_HOST_PASSWORD = 'securestuff'
 EMAIL_PORT = 587

@@ -1,0 +1,18 @@
+////////////////////////////////////////////////////////////////////////////////INSTALL
+First install the latest version of python.
+https://www.python.org/downloads/
+Make sure at the first screen at the bottom select "Add python 3.5 to PATH"
+Then click customize instillation. Selelect all but the option with IDLE. Click next.
+For the advanced options screen select all but the last 2 options.
+You are done with the python install.
+
+Run the windows batch script provided as administrator (right click windowsInstall.bat and click run as administrator).
+
+/////////////////////////////////////////////////////////////////////////////////RUN 
+Everything is done within the terminal.
+Type:
+ .\runWebsite.bat
+
+To view the website go to http://127.0.0.1:8000/, or wherever it says "Starting development server at ...".
+ When you need to stop execution press: control C
+ It will ask if you want to terminate batch job. Press y and then enter.
