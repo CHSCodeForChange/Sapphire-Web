@@ -3,7 +3,7 @@
 echo
 echo Starting downloads
 echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-pip3 install django;
+pip3 install django==1.11.9;
 echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 pip3 install djangorestframework;
 echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
