@@ -2,7 +2,73 @@
 
 {% block content %}
   <h1>Add A Single Slot</h1>
-  <a href="?type=event">Add an event</a>
+  <a href="?type=event">
+    <button type="button" class="btn btn-secondary">Add Event</button>
+  </a>
+
+<p></p>
+<form>
+  <div class="form-group row">
+    <label for="inputEventName" class="col-sm-2 col-form-label">Event Name</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="inputEventName" placeholder="Fundraising 5K">
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label for="inputEventDescirption" class="col-sm-2 col-form-label">Description</label>
+    <div class="col-sm-10">
+      <textarea type="text" class="form-control" id="inputEventDescirption" placeholder="This will be a fun event for all ages, where participants will pay a small entry fee in order to run the race. All of the proceeds will go to support our organization." rows="3"></textarea>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label for="inputLocationName" class="col-sm-2 col-form-label">Loc. Name</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="inputLocationName" placeholder="Helping Others Incorporated">
+    </div>
+  </div>
+
+ <div class="form-group row">
+    <label for="inputAddress" class="col-sm-2 col-form-label">Address</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="inputAddress" placeholder="520 East Main Street">
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label for="inputCity" class="col-sm-2">City</label>
+    <div class="form-group col-sm-3">
+      <input type="text" class="form-control" id="inputCity" placeholder="Carmel">
+    </div>
+
+    <label for="inputState" class="col-sm-1">State</label>
+    <div class="form-group col-sm-2">
+      <input type="text" class="form-control" id="inputState" placeholder="IN">
+    </div>
+
+    <label for="inputZip" class="col-sm-1">Zip</label>
+    <div class="form-group col-sm-2">
+      <input type="text" class="form-control" id="inputZip" placeholder="46033">
+    </div>
+  </div>
+
+   <div class="form-group row">
+    <label for="inputStart" class="col-sm-2 col-form-label">Start</label>
+    <div class="col-sm-4">
+      <input type="datetime-local" class="form-control" id="inputStart" placeholder="02/03/2018 12:00 PM">
+    </div>
+
+    <label for="inputEnd" class="col-sm-2 col-form-label">End</label>
+    <div class="col-sm-4">
+      <input type="datetime-local" class="form-control" id="inputEnd" placeholder="02/03/2018 06:00 PM">
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary mb-2">Submit</button>
+
+</form>
+
   <form method="post">
     {% csrf_token %}
       {% for field in form %}
@@ -20,26 +86,5 @@
 
     <button type="submit">Add Slot</button>
   </form>
-  <table class="table table-hover">
-    <thread>
-      <tr>
-        <th>Name</th>
-        <th>Start Time</th>
-        <th>End Time</th>
-        <th>In person?</th>
-        <th>Delete</th>
-      </tr>
-    </thread>
-    <tbody>
-      {% for event in events %}
-        <tr>
-          <th>{{event.name}}</th>
-          <th>{{event.start}}</th>
-          <th>{{event.end}}</th>
-          <th>{{event.get_in_person}}</th>
-          <th><a href="{% url 'deleteEvent' event_id=event.id %}?next={{ request.path|urlencode }}">x</a></th>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  
 {% endblock %}
