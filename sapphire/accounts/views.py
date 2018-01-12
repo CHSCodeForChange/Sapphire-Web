@@ -10,6 +10,7 @@ from .tokens import account_activation_token
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from .models import Profile
+from django.core.urlresolvers import reverse
 
 # Redirects to the profile page
 def home(request):
@@ -22,8 +23,7 @@ def profile(request):
         profile = Profile.objects.filter(username = request.user.username).first()
         return render(request, "accounts/profile.html", {'profile': profile})
     else:
-        # This needs to be a template
-        return HttpResponse("Log in please.")
+        return redirect('/login')
 
 # def editprofile(request):
 #     if(request.method == 'POST'):
