@@ -4,12 +4,25 @@ from utility.models import Event, Slot
 from django.contrib.auth import models
 
 class NewSingleSlotForm(forms.Form):
-    start = forms.DateTimeField(label='Start time')
-    end = forms.DateTimeField(label='End time')
-    title = forms.CharField(label='Title', max_length=30)
-    description = forms.CharField(label='Description')
-    in_person = forms.BooleanField(label='In person')
+    start = forms.DateTimeField(label='Start time', widget=forms.DateTimeInput(
+        attrs={'type': 'datetime-local',
+               'class': 'form-control'}))
+    end = forms.DateTimeField(label='End time', widget=forms.DateTimeInput(
+        attrs={'type': 'datetime-local',
+               'class': 'form-control'}))
+    title = forms.CharField(label='Title', max_length=30, widget=forms.TextInput(
+        attrs={'type': 'text',
+               'class': 'form-control'}))
+    description = forms.CharField(label='Description', widget=forms.TextInput(
+        attrs={'type': 'text',
+               'class': 'form-control'}))
+
+    in_person = forms.BooleanField(label='In person', widget=forms.CheckboxInput(
+        attrs={'type': 'checkbox',
+               'class': 'form-control'}))
+
     TESTdateField = {'DateField': forms.DateInput(attrs={'id': 'datetimepicker12'})}
+
     user = models.User()
 
     def __init__(self, *args, **kwargs):

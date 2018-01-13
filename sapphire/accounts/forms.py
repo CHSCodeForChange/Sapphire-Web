@@ -4,12 +4,24 @@ from django.core.exceptions import ValidationError
 
 # The form for user signups
 class SignupForm(forms.Form):
-    first_name = forms.CharField(label='Firstname', max_length=150)
-    last_name = forms.CharField(label='Lastname', max_length=150)
-    username = forms.CharField(label='Enter username', min_length=4, max_length=150)
-    email = forms.EmailField(label='Enter email', max_length=200)
-    password1 = forms.CharField(label='Enter password', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Confirm password', widget=forms.PasswordInput)
+    first_name = forms.CharField(label='First Name', max_length=150, widget=forms.TextInput(
+        attrs={'type': 'text',
+               'class': 'form-control'}))
+    last_name = forms.CharField(label='Last Name', max_length=150, widget=forms.TextInput(
+        attrs={'type': 'text',
+               'class': 'form-control'}))
+    username = forms.CharField(label='Username', min_length=4, max_length=150, widget=forms.TextInput(
+        attrs={'type': 'text',
+               'class': 'form-control'}))
+    email = forms.EmailField(label='Email', max_length=200, widget=forms.EmailInput(
+        attrs={'type': 'text',
+               'class': 'form-control'}))
+    password1 = forms.CharField(label='Password', widget=forms.PasswordInput(
+        attrs={'type': 'text',
+               'class': 'form-control'}))
+    password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput(
+        attrs={'type': 'text',
+               'class': 'form-control'}))
 
     # May only contain alphabetical characters
     def clean_firstname(self):
