@@ -34,6 +34,21 @@ class Slot(models.Model):
     maxVolunteers = models.IntegerField()
     # TODO allow a getPriority() function to get the instantanious priority of
     # the Event object
+
+    # The String descriptionof the event
+    description = models.CharField(max_length=960)
+
+    # The String location Name of the Event
+    location = models.CharField(max_length=240)
+    # The String address of the Event
+    address = models.CharField(max_length=240)
+    # The String city of the Event'
+    city = models.CharField(max_length=240)
+    # The String state of event
+    state = models.CharField(max_length=2)
+    # The Integer zip code of the Event
+    zip_code = models.IntegerField(null=True)
+
 class Event(models.Model):
     is_single = models.BooleanField(default=False)
     objects = models.Manager()
@@ -44,8 +59,20 @@ class Event(models.Model):
     )
     # The string name of the Event
     name = models.CharField(max_length=80)
-    # The String location of the Event
+    # The String descriptionof the event
+    description = models.CharField(max_length=960)
+
+    # The String location Name of the Event
     location = models.CharField(max_length=240)
+    # The String address of the Event
+    address = models.CharField(max_length=240)
+    # The String city of the Event'
+    city = models.CharField(max_length=240)
+    # The String state of event
+    state = models.CharField(max_length=2)
+    # The Integer zip code of the Event
+    zip_code = models.IntegerField(null=True)
+
     # The list of Volunteers
     volunteers = models.ForeignKey(
         Profile,
