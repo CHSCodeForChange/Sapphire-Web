@@ -118,6 +118,15 @@ class NewEventForm(forms.Form):
         attrs={ 'type': 'text',
                 'class': 'form-control'}))
 
+    start = forms.DateTimeField(label='Start time', input_formats=['%Y-%m-%dT%H:%M'],
+    widget=forms.DateTimeInput(
+        attrs={'type': 'datetime-local',
+               'class': 'form-control'}))
+    end = forms.DateTimeField(label='End time', input_formats=['%Y-%m-%dT%H:%M'],
+    widget=forms.DateTimeInput(
+        attrs={'type': 'datetime-local',
+               'class': 'form-control'}))
+
     location = forms.CharField(label='Location', max_length=240, widget=forms.TextInput(
         attrs={ 'type': 'text',
                 'class': 'form-control'}))
@@ -135,23 +144,16 @@ class NewEventForm(forms.Form):
                 'max': '99999',
                 'class': 'form-control'}))
 
-    start = forms.DateTimeField(label='Start time', input_formats=['%Y-%m-%dT%H:%M'],
-    widget=forms.DateTimeInput(
-        attrs={'type': 'datetime-local',
-               'class': 'form-control'}))
-    end = forms.DateTimeField(label='End time', input_formats=['%Y-%m-%dT%H:%M'],
-    widget=forms.DateTimeInput(
-        attrs={'type': 'datetime-local',
-               'class': 'form-control'}))
-    maxVolunteers = forms.IntegerField(label='# Slots', widget=forms.NumberInput(
+
+    """maxVolunteers = forms.IntegerField(label='# Slots', widget=forms.NumberInput(
         attrs={'type': 'number',
                'min': '1',
-               'class': 'form-control'}))
+               'class': 'form-control'}))"""
     user = models.User()
 
-    in_person = forms.BooleanField(label='In person', widget=forms.CheckboxInput(
+    """in_person = forms.BooleanField(label='In person', widget=forms.CheckboxInput(
         attrs={'type': 'checkbox',
-               'class': 'form-control'}))
+               'class': 'form-control'}))"""
 
 
     def __init__(self, *args, **kwargs):
@@ -166,11 +168,11 @@ class NewEventForm(forms.Form):
     def clean_user(self):
         user = self.cleaned_data['user']
         return user
-    def clean_maxVolunteers(self):
+    """def clean_maxVolunteers(self):
         description = self.cleaned_data['maxVolunteers']
         return description
     def clean_in_person(self):
-        in_person = self.cleaned_data['in_person']
+        in_person = self.cleaned_data['in_person']"""
 
     def clean_location(self):
         user = self.cleaned_data['location']
@@ -204,8 +206,8 @@ class NewEventForm(forms.Form):
             city=self.cleaned_data['city'],
             state=self.cleaned_data['state'],
             zip_code=self.cleaned_data['zip_code'],
-            in_person=self.cleaned_data['in_person'],
-            maxVolunteers=self.cleaned_data['maxVolunteers'],
+            #in_person=self.cleaned_data['in_person'],
+            #maxVolunteers=self.cleaned_data['maxVolunteers'],
             minVolunteers=1,
             volunteers=None,
             start=self.cleaned_data['start'],

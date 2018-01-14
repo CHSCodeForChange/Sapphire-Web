@@ -1,29 +1,33 @@
 {% extends "header.html" %}
 
 {% block content %}
-  <h1>Events
-  	   <a href="/organizer/add">
-      <button type="button" class="btn btn-secondary">Add Event</button>
-    </a>
-  </h1>
-  <table class="table table-hover">
-    <thread>
+
+<h1>Events</h1>
+<div class="row">
+  <a href="http://127.0.0.1:8000/organizer/add/?type=singleSlot"><button class="btn btn-secondary">Add Single Slot</button></a>
+  <a href="http://127.0.0.1:8000/organizer/add/?type=event"><button class="btn btn-secondary">Add Event</button></a>
+</div>
+<table class="table table-hover">
+  <thread>
+    <tr>
+      <th>Name</th>
+      <th>Location</th>
+      <th>Start</th>
+      <th>End</th>
+      <th>Delete</th>
+    </tr>
+  </thread>
+  <tbody>
+    {% for event in events %}
       <tr>
-        <th>Name</th>
-        <th>Location</th>
-        <th>Start</th>
-        <th>End</th>
+        <th>{{event.name}}</th>
+        <th>{{event.location}}</th>
+        <th>{{event.start}}</th>
+        <th>{{event.end}}</th>
+        <th><a href="{% url 'deleteEvent' event_id=event.id %}?next={{ request.path|urlencode }}">x</a></th>
       </tr>
-    </thread>
-    <tbody>
-      {% for event in events %}
-        <tr>
-          <th>{{event.name}}</th>
-          <th>{{event.location}}</th>
-          <th><a href="{% url 'deleteEvent' event_id=event.id %}?next={{ request.path|urlencode }}">x</a></th>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+    {% endfor %}
+  </tbody>
+</table>
 
 {% endblock %}
