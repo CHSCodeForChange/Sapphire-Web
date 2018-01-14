@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
-from .forms import SignupForm
+from .forms import *
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -24,6 +24,32 @@ def profile(request):
         return render(request, "accounts/profile.html", {'profile': profile})
     else:
         return redirect('/login')
+
+def edit_profile(request):
+    if request.method == 'POST':
+        form = EditProfileForm(request.POST, instance=request.user)
+
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('accounts:profile'))
+    else:
+        form = EditProfileForm(instance=request.user)
+        args = {'form': form}
+        return render(request, 'accounts/editProfile.html', args)
+
+"""def editProfile(request):
+    if request.user.is_authenticated():
+        # This line breaks the code: "'int' is not iterable"
+        profile = Profile.objects.filter(username = request.user.username).first()
+        form = EditProfileForm(request.POST, profile)
+
+        if form.is_valid():
+            bio = form.save(commit=False)
+            bio.save()
+        return render(request, 'accounts/editProfile.html', {'profile': profile})
+    else:
+        form = EditProfileForm()
+        return render(request, 'accounts/editProfile.html', {'form': form})"""
 
 # def editprofile(request):
 #     if(request.method == 'POST'):
