@@ -17,5 +17,8 @@ def eventNeeds(request):
     #return HttpResponse("This will be the Event Needs page where you can see a list of all the *events* that need volunteers to fill their slots.")
     events = Event.objects.all()
     return render(request, 'volunteer/events.html', {'events':events})
+def event(request):
+    event = Event.objects.all()
+    return render(request, 'volunteer/event.html', {'event':event})
 def slotNeeds(request):
     return HttpResponse("This will be the Slot Needs page where you can see a list of all the *slots* that need volunteers to fill for a specific event. This event is either chosen from a dropdown at the top or passed in when this page is loaded.")

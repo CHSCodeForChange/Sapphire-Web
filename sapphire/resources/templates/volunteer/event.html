@@ -1,30 +1,10 @@
 {% extends "header.html" %}
 
 {% block content %}
-  <h1>Slots
-  	   <a href="/organizer/add">
-      <button type="button" class="btn btn-secondary">Add Slot</button>
-    </a>
-  </h1>
-  <table class="table table-hover">
-    <thread>
-      <tr>
-        <th>Name</th>
-        <th>Volunteer</th>
-        <th>Location</th>
-        <th>Start</th>
-        <th>End</th>
-      </tr>
-    </thread>
-    <tbody>
-      {% for event in events %}
-        <tr>
-          <th>{{event.name}}</th>
-          <th>{{event.location}}</th>
-          <th><a href="{% url 'deleteEvent' event_id=event.id %}?next={{ request.path|urlencode }}">x</a></th>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <h1>{{event.name}}</h1>
+  <h4>{{event.start}} - {{event.end}}</h4>
+  <h7>{{event.location}}: {{event.address}} {{event.city}}, {{event.state}} {{event.zip_code}}</h7>
+  <p>{{event.description}}</p>
+
 
 {% endblock %}
