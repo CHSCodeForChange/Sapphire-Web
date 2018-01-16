@@ -2,8 +2,8 @@
 
 {% block content %}
   <h1>Add Event</h1>
-  <a href="http://127.0.0.1:8000/volunteer/eventNeeds/"><button class="btn btn-primary">All Events</button></a>
-  <a href="?type=singleSlot"><button class="btn btn-secondary">Add Single Slot</button></a>
+  <a href="http://127.0.0.1:8000/volunteer/eventNeeds/"><button class="btn btn-primary btn-sm">View Events</button></a>
+  <a href="?type=singleSlot"><button class="btn btn-secondary btn-sm">Add Single Slot</button></a>
   <form method="post">
     {% csrf_token %}
       {% for field in form %}
@@ -21,7 +21,10 @@
       </p>
       {% endfor %}
 
-    <button type="submit" class="btn btn-primary">Add</button>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-10"><button class="btn btn-primary btn-block" type="submit">Add</button></div>
+      </div>
   </form>
 
 
