@@ -14,7 +14,6 @@
       <th>Location</th>
       <th>Start</th>
       <th>End</th>
-      <th>Delete</th>
     </tr>
   </thread>
   <tbody>
@@ -24,7 +23,6 @@
         <th>{{event.location}}</th>
         <th>{{event.start}}</th>
         <th>{{event.end}}</th>
-        <th><a href="{% url 'deleteEvent' event_id=event.id %}?next={{ request.path|urlencode }}">x</a></th>
       </tr>
     {% endfor %}
   </tbody>

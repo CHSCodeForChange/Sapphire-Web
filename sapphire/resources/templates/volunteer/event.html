@@ -3,11 +3,54 @@
 {% block content %}
   <h1>{{event.name}}</h1>
   <h4>{{event.start}} - {{event.end}}</h4>
-  <h7>{{event.location}}: {{event.address}} {{event.city}}, {{event.state}} {{event.zip_code}}</h7>
-  <p>{{event.description}}</p>
 
-  <a href="http://127.0.0.1:8000/volunteer/eventNeeds/">
-    <button class="btn btn-secondary">All Events</button>
+  <div id="accordion" role="tablist">
+    <div class="card">
+      <div class="card-header" role="tab" id="headingOne">
+        <h5 class="mb-0">
+          <a data-toggle="collapse" href="#collapseOne" role="button" aria-expanded="true" aria-controls="collapseOne">
+            {{event.location}}: {{event.address}} {{event.city}}, {{event.state}} {{event.zip_code}}
+          </a>
+        </h5>
+      </div>
+
+      <div id="collapseOne" class="collapse toggle" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+        <div class="card-body">
+          <iframe width="600" height="400" frameborder="0" style="border:0"
+              src="https://www.google.com/maps/embed/v1/search?q={{event.address}} {{event.city}}, {{event.state}} {{event.zip_code}}&key=AIzaSyB-YQD-s4ery8KQRnzX7FhZsBC4SeFRcjA" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+
+    <p class="text-left">{{event.description}}</p>
+
+
+
+  <h3>Volunteer Slots</h3>
+  <a href="http://127.0.0.1:8000/organizer/addSlot"><button class="btn btn-secondary">Add Slot</button></a>
+  <table class="table table-hover">
+    <thread>
+      <tr>
+        <th>Name</th>
+        <th>Start</th>
+        <th>End</th>
+        <th># Volunteers</th>
+      </tr>
+    </thread>
+    <tbody>
+      {% for slot in slots %}
+        <tr>
+          <th><a href="http://127.0.0.1:8000/volunteer/{{event.id}}">{{event.name}}</a></th>
+          <th>{{slot.start}}</th>
+          <th>{{slot.end}}</th>
+          <th>{{slot.maxVolunteers}}</th>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <a class="row" href="{% url 'deleteEvent' event_id=event.id %}?next={{ request.path|urlencode }}">
+    <button class="btn btn-danger btn-block">Delete</button>
   </a>
 
 

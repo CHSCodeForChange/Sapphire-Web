@@ -12,6 +12,30 @@ know if this is good practice or will result in errors later down the line.
 A slot object allows volunteers to sign up for it and has a start time and end
 time. It has a parent Event.
 """
+
+"""class Organization(models.Model):
+    organizers = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+
+    # The list of Volunteers
+    volunteers = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+
+    events = models.ForeignKey(
+        'Event',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )"""
+
 class Slot(models.Model):
     volunteers = models.ForeignKey(
         User,
@@ -35,6 +59,7 @@ class Slot(models.Model):
     # TODO allow a getPriority() function to get the instantanious priority of
     # the Event object
 
+    title = models.CharField(max_length=240)
     # The String descriptionof the event
     description = models.CharField(max_length=960)
 
@@ -79,6 +104,13 @@ class Event(models.Model):
         on_delete=models.CASCADE,
         null=True,
         blank=True
+    )
+
+    slots = models.ForeignKey(
+        Slot,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
     )
     start = models.DateTimeField(null=True)
     end = models.DateTimeField(null=True)
