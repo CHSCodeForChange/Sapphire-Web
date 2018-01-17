@@ -26,6 +26,43 @@ def add(request):
             if form.is_valid():
                 slot = form.save(commit=False)
                 slot.save()
+                events = Event.objects.all()
+                return render(request, 'volunteer/events.html', {'events':events})
+        else:
+            form = NewSingleSlotForm(user=request.user)
+        # Filter this by single slot events in the future
+        events = Event.objects.all()
+        return render(request, 'organizer/add_single_slot.html', {'form':form, 'events':events})
+    elif type == 'event':
+        if(request.method == 'POST'):
+            form = NewEventForm(request.POST, user=request.user)
+            if form.is_valid():
+                slot = form.save(commit=False)
+                slot.save()
+                events = Event.objects.all()
+                return render(request, 'volunteer/events.html', {'events':events})
+        else:
+            form = NewEventForm(user=request.user)
+        events = Event.objects.all()
+        return render(request, 'organizer/add_event.html', {'form':form, 'events':events})
+
+def edit(request):
+    # Makes sure the user is an organizer
+    is_organizer = False
+    for g in request.user.groups.all():
+        if g.name == 'Organizer':
+            is_organizer = True
+    if not is_organizer:
+        return HttpResponse('You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
+    # Gets the page type
+    type = request.GET.get('type', 'html')
+    # If the page type is normal, send them to the single slot page for now
+    if type == 'html' or type == 'singleSlot':
+        if(request.method == 'POST'):
+            form = NewSingleSlotForm(request.POST, user=request.user)
+            if form.is_valid():
+                slot = form.save(commit=False)
+                slot.save()
         else:
             form = NewSingleSlotForm(user=request.user)
         # Filter this by single slot events in the future

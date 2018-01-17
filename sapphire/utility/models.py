@@ -74,8 +74,10 @@ class Slot(models.Model):
     # The Integer zip code of the Event
     zip_code = models.IntegerField(null=True)
 
+
 class Event(models.Model):
     is_single = models.BooleanField(default=False)
+    type = models.CharField(max_length=80)
     objects = models.Manager()
     # The organizer of the Event
     organizer = models.ForeignKey(

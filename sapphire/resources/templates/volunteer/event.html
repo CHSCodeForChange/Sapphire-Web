@@ -19,9 +19,11 @@
           <iframe width="600" height="400" frameborder="0" style="border:0"
               src="https://www.google.com/maps/embed/v1/search?q={{event.address}} {{event.city}}, {{event.state}} {{event.zip_code}}&key=AIzaSyB-YQD-s4ery8KQRnzX7FhZsBC4SeFRcjA" allowfullscreen></iframe>
         </div>
+        <p class="text-danger">Map will only function correctly if a valid address has been entered</p>
       </div>
     </div>
 
+    <h1></h1>
     <p class="text-left">{{event.description}}</p>
 
 
@@ -49,9 +51,14 @@
     </tbody>
   </table>
 
-  <a class="row" href="{% url 'deleteEvent' event_id=event.id %}?next={{ request.path|urlencode }}">
+  <div class="row">
+  <a class="col-sm-10" href="{% url 'deleteEvent' event_id=event.id %}?next={{ request.path|urlencode }}">
     <button class="btn btn-danger btn-block">Delete</button>
   </a>
+  <a class="col-sm-2" href="{{event.id}}/edit/?type={{event.type}}">
+    <button class="btn btn-primary btn-block">Edit</button>
+  </a>
+</div>
 
 
 {% endblock %}

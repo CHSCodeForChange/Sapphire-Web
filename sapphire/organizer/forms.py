@@ -108,7 +108,8 @@ class NewSingleSlotForm(forms.Form):
             volunteers=None,
             start=self.cleaned_data['start'],
             end=self.cleaned_data['end'],
-            is_single=True)
+            is_single=True,
+            type='singleSlot')
         return event
 class NewEventForm(forms.Form):
     title = forms.CharField(label='Title', max_length=30, widget=forms.TextInput(
@@ -212,9 +213,9 @@ class NewEventForm(forms.Form):
             volunteers=None,
             start=self.cleaned_data['start'],
             end=self.cleaned_data['end'],
-            is_single=False)
+            is_single=False,
+            type='event')
         return event
-
 class NewSlotForm(forms.Form):
     title = forms.CharField(label='Title', max_length=30, widget=forms.TextInput(
         attrs={'type': 'text',
