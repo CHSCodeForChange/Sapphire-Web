@@ -7,16 +7,24 @@ def index(request):
     # Run processes to build dataset after login
     return redirect('feed')     # Redirects to /home/feed/
 def feed(request):
-    return render(request, "volunteer/feed.html")
-    return HttpResponse("This is the volunteers feed as well as the default page while we get things started!")
+    if request.user.is_authenticated():
+        return render(request, "volunteer/feed.html")
+    else:
+        return redirect('login')
+
 def calendar(request):
-    return render(request, "volunteer/calendar.html")
-    return HttpResponse("This will be the calendar eventually.")
+    if request.user.is_authenticated():
+        return render(request, "volunteer/calendar.html")
+    else:
+        return redirect('login')
+
 def eventNeeds(request):
-    #return render(request, "volunteer/events.html")
-    #return HttpResponse("This will be the Event Needs page where you can see a list of all the *events* that need volunteers to fill their slots.")
     events = Event.objects.all()
-    return render(request, 'volunteer/events.html', {'events':events})
+    if request.user.is_authenticated():
+        return render(request, 'volunteer/events.html', {'events':events})
+    else:
+        return redirect('login')
+
 def event(request):
     event = Event.objects.all()
     return render(request, 'volunteer/event.html', {'event':event})
