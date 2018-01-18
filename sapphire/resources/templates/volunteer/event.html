@@ -29,23 +29,29 @@
 
 
   <h3>Volunteer Slots</h3>
-  <a href="http://127.0.0.1:8000/organizer/addSlot"><button class="btn btn-secondary">Add Slot</button></a>
-  <table class="table table-hover">
+  <a href="{% url 'addSlot' event_id=event.id %}">
+    <button class="btn btn-secondary">Add Slot</button>
+  </a>
+  <table class="table table-hover" style="margin:20px;">
     <thread>
       <tr>
-        <th>Name</th>
         <th>Start</th>
         <th>End</th>
         <th># Volunteers</th>
+        <th></th>
       </tr>
     </thread>
     <tbody>
-      {% for slot in slots %}
+      {% for slot in event.slot_set.all %}
         <tr>
-          <th><a href="http://127.0.0.1:8000/volunteer/{{event.id}}">{{event.name}}</a></th>
           <th>{{slot.start}}</th>
           <th>{{slot.end}}</th>
           <th>{{slot.maxVolunteers}}</th>
+          <th>
+            <a href="{{event.id}}/edit/?type={{event.type}}">
+              <button class="btn btn-danger">Remove</button>
+            </a>
+          </th>
         </tr>
       {% endfor %}
     </tbody>
@@ -53,10 +59,10 @@
 
   <div class="row">
   <a class="col-sm-10" href="{% url 'deleteEvent' event_id=event.id %}?next={{ request.path|urlencode }}">
-    <button class="btn btn-danger btn-block">Delete</button>
+    <button class="btn btn-danger btn-block">Delete Event</button>
   </a>
   <a class="col-sm-2" href="{{event.id}}/edit/?type={{event.type}}">
-    <button class="btn btn-primary btn-block">Edit</button>
+    <button class="btn btn-primary btn-block">Edit Event</button>
   </a>
 </div>
 

@@ -37,6 +37,7 @@ time. It has a parent Event.
     )"""
 
 class Slot(models.Model):
+    objects = models.Manager()
     volunteers = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -113,6 +114,7 @@ class Event(models.Model):
         on_delete=models.CASCADE,
         null=True,
         blank=True,
+        related_name="slot_set"
     )
     start = models.DateTimeField(null=True)
     end = models.DateTimeField(null=True)

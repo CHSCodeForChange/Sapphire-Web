@@ -2,12 +2,14 @@ from django.shortcuts import render, redirect
 from .forms import NewEventForm, NewSingleSlotForm, NewSlotForm
 from utility.models import Event
 from django.http import HttpResponse
+import string
 
 
 # Sending user object to the form, to verify which fields to display/remove (depending on group)
 def get_form_kwargs(self):
     kwargs = super(add, self).get_form_kwargs()
     kwargs.update({'user': self.request.user})
+    kwargs.update({'parentEvent': self.request.META.get('HTTP_REFERER')})
     return kwargs
 def add(request):
     # Makes sure the user is an organizer
@@ -80,7 +82,7 @@ def edit(request):
         return render(request, 'organizer/add_event.html', {'form':form, 'events':events})
 
 
-def addSlot(request):
+def addSlot(request, event_id):
     is_organizer = False
     for g in request.user.groups.all():
         if g.name == 'Organizer':
@@ -88,13 +90,18 @@ def addSlot(request):
     if not is_organizer:
         return HttpResponse('You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
 
-    if(request.method == 'POST'):
-        form = NewSlotForm(request.POST, user=request.user)
+    parentEvent = Event.objects.get(pk=event_id)
+
+    if(request.method == 'GET'):
+        form = NewSlotForm(user=request.user, parentEvent=parentEvent)
+    else:
+        #This line assumes the contents of the GET side of the if statement have already run (they should have) but its kinda janky
+        form = NewSlotForm(request.POST, user=request.user, parentEvent=parentEvent)
         if form.is_valid():
             slot = form.save(commit=False)
             slot.save()
-    else:
-        form = NewSlotForm(user=request.user)
+            return redirect('eventView', parentEvent.id)
+
     return render(request, 'organizer/add_slot.html', {'form':form})
 
 

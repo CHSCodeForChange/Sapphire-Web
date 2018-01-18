@@ -242,6 +242,7 @@ class NewSlotForm(forms.Form):
                'min': '1',
                'class': 'form-control'}))"""
     user = models.User()
+    parentEvent = Event()
 
     """in_person = forms.BooleanField(label='In person', widget=forms.CheckboxInput(
         attrs={'type': 'checkbox',
@@ -250,6 +251,7 @@ class NewSlotForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user')
+        self.parentEvent = kwargs.pop('parentEvent')
         super(NewSlotForm, self).__init__(*args, **kwargs)
     def clean_title(self):
         title = self.cleaned_data['title']
@@ -276,19 +278,21 @@ class NewSlotForm(forms.Form):
     def clean_end(self):
         end = self.cleaned_data['end']
         return end
+
     def save(self, commit=True):
         slot = Slot(
             volunteers=None,
-            parentEvent=self.request.META.get('HTTP_REFERER'),
+            parentEvent=self.parentEvent,
             start=self.cleaned_data['start'],
             end=self.cleaned_data['end'],
             minVolunteers=1,
-            maxVolunteers=self.cleaned_data['maxVolunteers'],
-            title=self.cleaned_data['title'],
-            description=self.cleaned_data['description'],
-            location=self.cleaned_data['location'],
-            address=self.cleaned_data['address'],
-            city=self.cleaned_data['city'],
-            state=self.cleaned_data['state'],
-            zip_code=self.cleaned_data['zip_code'])
+            maxVolunteers=self.parentEvent.maxVolunteers,
+            # title=self.cleaned_data['title'],
+            # description=self.cleaned_data['description'],
+            # location=self.cleaned_data['location'],
+            # address=self.cleaned_data['address'],
+            # city=self.cleaned_data['city'],
+            # state=self.cleaned_data['state'],
+            # zip_code=self.cleaned_data['zip_code']
+            )
         return slot
