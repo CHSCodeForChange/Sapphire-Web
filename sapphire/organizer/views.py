@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import NewEventForm, NewSingleSlotForm, NewSlotForm
-from utility.models import Event
+from utility.models import Event, Slot
 from django.http import HttpResponse
 import string
 
@@ -107,8 +107,15 @@ def addSlot(request, event_id):
 
 def index(request):
     return redirect('/accounts/profile')
+
 def deleteEvent(request, event_id):
     next = request.GET.get('next')
     object = Event.objects.get(id=event_id)
     object.delete()
+    return redirect(next)
+
+def deleteSlot(request, slot_id):
+    next = request.GET.get('next')
+    slot = Slot.objects.get(id=slot_id)
+    slot.delete()
     return redirect(next)

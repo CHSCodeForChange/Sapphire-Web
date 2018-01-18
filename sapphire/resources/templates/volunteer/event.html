@@ -48,7 +48,7 @@
           <th>{{slot.end}}</th>
           <th>{{slot.maxVolunteers}}</th>
           <th>
-            <a href="{{event.id}}/edit/?type={{event.type}}">
+            <a class="col-sm-10" href="{% url 'deleteSlot' slot_id=slot.id %}?next={{ request.path|urlencode }}">
               <button class="btn btn-danger">Remove</button>
             </a>
           </th>
@@ -58,7 +58,7 @@
   </table>
 
   <div class="row">
-  <a class="col-sm-10" href="{% url 'deleteEvent' event_id=event.id %}?next={{ request.path|urlencode }}">
+  <a class="col-sm-10" href="{% url 'deleteEvent' event_id=event.id %}?next={{ '/home/feed/'|urlencode }}">
     <button class="btn btn-danger btn-block">Delete Event</button>
   </a>
   <a class="col-sm-2" href="{{event.id}}/edit/?type={{event.type}}">
