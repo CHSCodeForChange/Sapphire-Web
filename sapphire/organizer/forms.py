@@ -237,10 +237,10 @@ class NewSlotForm(forms.Form):
         attrs={ 'type': 'text',
                 'class': 'form-control'}))
 
-    """maxVolunteers = forms.IntegerField(label='# Slots', widget=forms.NumberInput(
+    maxVolunteers = forms.IntegerField(label='# Slots', widget=forms.NumberInput(
         attrs={'type': 'number',
                'min': '1',
-               'class': 'form-control'}))"""
+               'class': 'form-control'}))
     user = models.User()
     parentEvent = Event()
 
@@ -278,6 +278,10 @@ class NewSlotForm(forms.Form):
     def clean_end(self):
         end = self.cleaned_data['end']
         return end
+
+    def clean_maxVolunteers(self):
+        maxVolunteers = self.cleaned_data['maxVolunteers']
+        return maxVolunteers
 
     def save(self, commit=True):
         slot = Slot(
