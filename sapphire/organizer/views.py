@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .forms import NewEventForm, NewSingleSlotForm, NewSlotForm
 from utility.models import Event, Slot
+from feed.models import Feed_Entry
 from django.http import HttpResponse
 import string
 
@@ -28,25 +29,29 @@ def add(request):
             if form.is_valid():
                 slot = form.save(commit=False)
                 slot.save()
-                events = Event.objects.all()
-                return render(request, 'volunteer/events.html', {'events':events})
+
+                feed_entry = form.feed_entry(commit=False)
+                feed_entry.save()
+
+                return render(request, 'volunteer/events.html', {})
         else:
             form = NewSingleSlotForm(user=request.user)
         # Filter this by single slot events in the future
-        events = Event.objects.all()
-        return render(request, 'organizer/add_single_slot.html', {'form':form, 'events':events})
+        return render(request, 'organizer/add_single_slot.html', {'form':form})
     elif type == 'event':
         if(request.method == 'POST'):
             form = NewEventForm(request.POST, user=request.user)
             if form.is_valid():
                 slot = form.save(commit=False)
                 slot.save()
-                events = Event.objects.all()
-                return render(request, 'volunteer/events.html', {'events':events})
+
+                feed_entry = form.feed_entry(commit=False)
+                feed_entry.save()
+
+                return render(request, 'volunteer/events.html', {})
         else:
             form = NewEventForm(user=request.user)
-        events = Event.objects.all()
-        return render(request, 'organizer/add_event.html', {'form':form, 'events':events})
+        return render(request, 'organizer/add_event.html', {'form':form})
 
 def edit(request):
     # Makes sure the user is an organizer
@@ -68,8 +73,7 @@ def edit(request):
         else:
             form = NewSingleSlotForm(user=request.user)
         # Filter this by single slot events in the future
-        events = Event.objects.all()
-        return render(request, 'organizer/add_single_slot.html', {'form':form, 'events':events})
+        return render(request, 'organizer/add_single_slot.html', {'form':form})
     elif type == 'event':
         if(request.method == 'POST'):
             form = NewEventForm(request.POST, user=request.user)
@@ -78,8 +82,7 @@ def edit(request):
                 slot.save()
         else:
             form = NewEventForm(user=request.user)
-        events = Event.objects.all()
-        return render(request, 'organizer/add_event.html', {'form':form, 'events':events})
+        return render(request, 'organizer/add_event.html', {'form':form})
 
 
 def addSlot(request, event_id):
@@ -100,6 +103,10 @@ def addSlot(request, event_id):
         if form.is_valid():
             slot = form.save(commit=False)
             slot.save()
+
+            feed_entry = form.feed_entry(commit=False)
+            feed_entry.save()
+            
             return redirect('eventView', parentEvent.id)
 
     return render(request, 'organizer/add_slot.html', {'form':form})

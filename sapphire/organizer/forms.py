@@ -1,7 +1,10 @@
+from datetime import datetime
 from django import forms
 from django.core.exceptions import ValidationError
-from utility.models import Event, Slot
 from django.contrib.auth import models
+
+from utility.models import Event, Slot
+from feed.models import Feed_Entry
 
 class NewSingleSlotForm(forms.Form):
 
@@ -50,6 +53,7 @@ class NewSingleSlotForm(forms.Form):
     TESTdateField = {'DateField': forms.DateInput(attrs={'id': 'datetimepicker12'})}
 
     user = models.User()
+    datetime = datetime.now()
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user')
@@ -92,6 +96,14 @@ class NewSingleSlotForm(forms.Form):
     def clean_end(self):
         end = self.cleaned_data['end']
         return end
+    def feed_entry(self, commit=True):
+        feed_entry = Feed_Entry(
+            user=self.user,
+            datetime=self.datetime,
+            description="Created single slot \"" + self.cleaned_data['title'] + "\""
+        )
+
+        return feed_entry
     def save(self, commit=True):
         event = Event(
             organizer=self.user,
@@ -146,11 +158,14 @@ class NewEventForm(forms.Form):
                 'class': 'form-control'}))
 
 
+
     """maxVolunteers = forms.IntegerField(label='# Slots', widget=forms.NumberInput(
         attrs={'type': 'number',
                'min': '1',
                'class': 'form-control'}))"""
     user = models.User()
+    datetime = datetime.now()
+
 
     """in_person = forms.BooleanField(label='In person', widget=forms.CheckboxInput(
         attrs={'type': 'checkbox',
@@ -197,6 +212,15 @@ class NewEventForm(forms.Form):
     def clean_end(self):
         end = self.cleaned_data['end']
         return end
+
+    def feed_entry(self, commit=True):
+        feed_entry = Feed_Entry(
+            user=self.user,
+            datetime=self.datetime,
+            description="Created event \"" + self.cleaned_data['title'] + "\""
+        )
+
+        return feed_entry
     def save(self, commit=True):
         event = Event(
             organizer=self.user,
@@ -243,6 +267,8 @@ class NewSlotForm(forms.Form):
                'class': 'form-control'}))
     user = models.User()
     parentEvent = Event()
+    datetime = datetime.now()
+
 
     """in_person = forms.BooleanField(label='In person', widget=forms.CheckboxInput(
         attrs={'type': 'checkbox',
@@ -282,6 +308,15 @@ class NewSlotForm(forms.Form):
     def clean_maxVolunteers(self):
         maxVolunteers = self.cleaned_data['maxVolunteers']
         return maxVolunteers
+
+    def feed_entry(self, commit=True):
+        feed_entry = Feed_Entry(
+            user=self.user,
+            datetime=self.datetime,
+            description="Created slot \"" + self.cleaned_data['title'] + "\" in event \"" + self.parentEvent.name + "\""
+        )
+
+        return feed_entry
 
     def save(self, commit=True):
         slot = Slot(
