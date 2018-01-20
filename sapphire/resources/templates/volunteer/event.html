@@ -35,6 +35,7 @@
   <table class="table table-hover" style="margin:20px;">
     <thread>
       <tr>
+        <th>Name</th>
         <th>Start</th>
         <th>End</th>
         <th># Volunteers</th>
@@ -44,12 +45,13 @@
     <tbody>
       {% for slot in event.slot_set.all %}
         <tr>
+          <th><a href="http://127.0.0.1:8000/volunteer/slot/{{slot.id}}">{{slot.title}}</a></th>
           <th>{{slot.start}}</th>
           <th>{{slot.end}}</th>
           <th>{{slot.maxVolunteers}}</th>
           <th>
             <a class="col-sm-10" href="{% url 'deleteSlot' slot_id=slot.id %}?next={{ request.path|urlencode }}">
-              <button class="btn btn-danger">Remove</button>
+              <button class="btn btn-danger">Delete</button>
             </a>
           </th>
         </tr>
@@ -59,10 +61,10 @@
 
   <div class="row">
   <a class="col-sm-10" href="{% url 'deleteEvent' event_id=event.id %}?next={{ '/home/feed/'|urlencode }}">
-    <button class="btn btn-danger btn-block">Delete Event</button>
+    <button class="btn btn-danger btn-block">Delete</button>
   </a>
   <a class="col-sm-2" href="{{event.id}}/edit/?type={{event.type}}">
-    <button class="btn btn-primary btn-block">Edit Event</button>
+    <button class="btn btn-primary btn-block">Edit</button>
   </a>
 </div>
 

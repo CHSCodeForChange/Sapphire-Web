@@ -28,5 +28,14 @@ def eventNeeds(request):
 def event(request):
     events = Event.objects.all()
     return render(request, 'volunteer/event.html', {'events':events})
+
+def slot(request):
+    slot = Slot.objects.all()
+    return render(request, 'volunteer/slot.html', {'slot':slot})
+
 def slotNeeds(request):
-    return HttpResponse("This will be the Slot Needs page where you can see a list of all the *slots* that need volunteers to fill for a specific event. This event is either chosen from a dropdown at the top or passed in when this page is loaded.")
+    slots = Slot.objects.all()
+    if request.user.is_authenticated():
+        return render(request, 'volunteer/slots.html', {'slots':slots})
+    else:
+        return redirect('login')

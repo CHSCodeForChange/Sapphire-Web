@@ -1,0 +1,28 @@
+{% extends "header.html" %}
+
+{% block content %}
+
+<h1>Slots</h1>
+
+<table class="table table-hover">
+  <thread>
+    <tr>
+      <th>Name</th>
+      <th>Event</th>
+      <th>Start</th>
+      <th>End</th>
+    </tr>
+  </thread>
+  <tbody>
+    {% for slot in slots %}
+      <tr>
+        <th><a href="http://127.0.0.1:8000/volunteer/slot/{{slot.id}}">{{slot.title}}</a></th>
+        <th>{{slot.parentEvent.name}}</th>
+        <th>{{slot.start}}</th>
+        <th>{{slot.end}}</th>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
