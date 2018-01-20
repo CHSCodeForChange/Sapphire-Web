@@ -6,7 +6,6 @@ from django.views.generic import ListView, DetailView
 
 
 urlpatterns = [
-    url(r'^feed/', views.feed, name='feed'),
     url(r'^calendar/', views.calendar, name='calendar'),
     url(r'^eventNeeds/', views.eventNeeds, name='eventNeeds'),
     url(r'^event/(?P<pk>\d+)$', DetailView.as_view(context_object_name="event", model = Event, template_name = "volunteer/event.html"), name='eventView'),

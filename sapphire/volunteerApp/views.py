@@ -5,12 +5,8 @@ from utility.models import *
 
 def index(request):
     # Run processes to build dataset after login
-    return redirect('feed')     # Redirects to /home/feed/
-def feed(request):
-    if request.user.is_authenticated():
-        return render(request, "volunteer/feed.html")
-    else:
-        return redirect('login')
+    return redirect('eventNeeds')     # Redirects to /home/feed/
+
 
 def calendar(request):
     if request.user.is_authenticated():

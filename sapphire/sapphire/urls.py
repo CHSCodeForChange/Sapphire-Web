@@ -23,6 +23,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^feed/', include('feed.urls')),
     url(r'^volunteer/', include('volunteerApp.urls')),
     url(r'^organizer/', include('organizer.urls')),
     url(r'^$', auth_views.login, {'template_name' : 'accounts/login.html'}, name='login'),
