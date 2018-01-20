@@ -19,7 +19,7 @@ def calendar(request):
         return redirect('login')
 
 def eventNeeds(request):
-    events = Event.objects.all()
+    events = Event.objects.order_by('start')
     if request.user.is_authenticated():
         return render(request, 'volunteer/events.html', {'events':events})
     else:
@@ -27,14 +27,15 @@ def eventNeeds(request):
 
 def event(request):
     events = Event.objects.all()
-    return render(request, 'volunteer/event.html', {'events':events})
+    slots = Slot.objects.order_by('start')
+    return render(request, 'volunteer/event.html', {'events':events, 'slots':slots})
 
 def slot(request):
     slot = Slot.objects.all()
     return render(request, 'volunteer/slot.html', {'slot':slot})
 
 def slotNeeds(request):
-    slots = Slot.objects.all()
+    slots = Slot.objects.order_by('start')
     if request.user.is_authenticated():
         return render(request, 'volunteer/slots.html', {'slots':slots})
     else:

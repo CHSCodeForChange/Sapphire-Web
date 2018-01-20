@@ -43,16 +43,20 @@
       </tr>
     </thread>
     <tbody>
-      {% for slot in event.slot_set.all %}
+      {% for slot in event.slot_set.all|dictsort:"start" %}
         <tr>
           <th><a href="http://127.0.0.1:8000/volunteer/slot/{{slot.id}}">{{slot.title}}</a></th>
           <th>{{slot.start}}</th>
           <th>{{slot.end}}</th>
           <th>{{slot.maxVolunteers}}</th>
           <th>
-            <a class="col-sm-10" href="{% url 'deleteSlot' slot_id=slot.id %}?next={{ request.path|urlencode }}">
-              <button class="btn btn-danger">Delete</button>
-            </a>
+            <div class="btn-group">
+                <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Delete</button>
+              <div class="dropdown-menu">
+                <p class="dropdown-item" href="">Are you sure?</p>
+                <a class="dropdown-item" href="{% url 'deleteSlot' slot_id=slot.id %}?next={{ request.path|urlencode }}"><button class="btn btn-danger">Yes</button></a>
+              </div>
+            </div>
           </th>
         </tr>
       {% endfor %}
