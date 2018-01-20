@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from datetime import datetime
+import string
+
 from .forms import NewEventForm, NewSingleSlotForm, NewSlotForm
 from utility.models import Event, Slot
 from feed.models import Feed_Entry
-from django.http import HttpResponse
-import string
 
 
 # Sending user object to the form, to verify which fields to display/remove (depending on group)
@@ -106,7 +108,7 @@ def addSlot(request, event_id):
 
             feed_entry = form.feed_entry(commit=False)
             feed_entry.save()
-            
+
             return redirect('eventView', parentEvent.id)
 
     return render(request, 'organizer/add_slot.html', {'form':form})
@@ -118,11 +120,29 @@ def index(request):
 def deleteEvent(request, event_id):
     next = request.GET.get('next')
     object = Event.objects.get(id=event_id)
+    name = object.name
     object.delete()
+
+    feed_entry = Feed_Entry(
+        user=request.user,
+        datetime=datetime.now(),
+        description="Deleted event \"" + name + "\""
+    )
+    feed_entry.save()
+
     return redirect(next)
 
 def deleteSlot(request, slot_id):
     next = request.GET.get('next')
     slot = Slot.objects.get(id=slot_id)
+    name = slot.title
+    event = slot.parentEvent.name
     slot.delete()
+
+    feed_entry = Feed_Entry(
+        user=request.user,
+        datetime=datetime.now(),
+        description="Deleted slot \"" + name + "\" in event \"" + event + "\""
+    )
+    feed_entry.save()
     return redirect(next)
