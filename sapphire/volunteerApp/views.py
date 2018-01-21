@@ -22,9 +22,16 @@ def eventNeeds(request):
         return redirect('login')
 
 def event(request):
+    is_organizer = False
+    for g in request.user.groups.all():
+        if g.name == 'Organizer':
+            is_organizer = True
+
+    print ("hi")
+
     events = Event.objects.all()
     slots = Slot.objects.order_by('start')
-    return render(request, 'volunteer/event.html', {'events':events, 'slots':slots})
+    return render(request, 'volunteer/event.html', {'events':events, 'slots':slots, 'is_organizer':is_organizer})
 
 def slot(request):
     slot = Slot.objects.all()
