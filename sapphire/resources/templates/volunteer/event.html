@@ -64,7 +64,7 @@
         <th>Name</th>
         <th>Start</th>
         <th>End</th>
-        <th># Volunteers</th>
+        <th>Volunteers</th>
         <th></th>
       </tr>
     </thread>
@@ -74,7 +74,7 @@
           <th><a href="http://127.0.0.1:8000/volunteer/slot/{{slot.id}}">{{slot.title}}</a></th>
           <th>{{slot.start}}</th>
           <th>{{slot.end}}</th>
-          <th>{{slot.maxVolunteers}}</th>
+          <th>{{slot.volunteers}}</th>
           <th>
             <div class="btn-group">
                 <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Delete</button>
@@ -91,11 +91,11 @@
 
   {% if True %}
     <div class="row">
-      <a class="col-sm-10" href="{% url 'deleteEvent' event_id=event.id %}?next={{ '/home/feed/'|urlencode }}">
-        <button class="btn btn-danger btn-block">Delete</button>
-      </a>
-      <a class="col-sm-2" href="{{event.id}}/edit/?type={{event.type}}">
+      <a class="col-sm-10" href="{{event.id}}/edit/?type={{event.type}}">
         <button class="btn btn-primary btn-block">Edit</button>
+      </a>
+      <a class="col-sm-2" href="{% url 'deleteEvent' event_id=event.id %}?next={{ '/home/feed/'|urlencode }}">
+        <button class="btn btn-danger btn-block">Delete</button>
       </a>
     </div>
   {% endif %}

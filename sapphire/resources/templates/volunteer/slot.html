@@ -8,12 +8,15 @@
   <p class="text-left">{{slot.description}}</p>
 
   <div class="row">
-    <a class="col-sm-10" href="{% url 'deleteSlot' slot_id=slot.id %}?next={{ request.path|urlencode }}">
-      <button class="btn btn-danger btn-block">Remove</button>
+    <a class="col-sm-8" href="{% url 'volunteer' slot_id=slot.id %}">
+      <button class="btn btn-info btn-block">Volunteer</button>
     </a>
-  <a class="col-sm-2" href="{{slot.id}}/edit/?type={{slot.type}}">
-    <button class="btn btn-primary btn-block">Edit</button>
-  </a>
+    <a class="col-sm-2" href="{{slot.id}}/edit/?type={{slot.type}}">
+      <button class="btn btn-primary btn-block">Edit</button>
+    </a>
+    <a class="col-sm-2" href="{% url 'deleteSlot' slot_id=slot.id %}?next={{ request.path|urlencode }}">
+      <button class="btn btn-danger btn-block">Delete</button>
+    </a>
 </div>
 
 
