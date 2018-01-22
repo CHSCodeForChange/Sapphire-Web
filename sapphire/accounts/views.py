@@ -11,6 +11,15 @@ from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from .models import Profile
 from django.core.urlresolvers import reverse
+from django.views.generic.edit import UpdateView
+
+class EditProfile(UpdateView):
+    model = Profile
+    fields = ['bio']
+    template_name = 'accounts/edit_profile.html'
+    success_url = 'http://127.0.0.1:8000/accounts/profile'
+
+
 
 # Redirects to the profile page
 def home(request):
@@ -21,6 +30,7 @@ def profile(request):
     if request.user.is_authenticated():
         # This line breaks the code: "'int' is not iterable"
         profile = Profile.objects.filter(username = request.user.username).first()
+        user = request.user
         return render(request, "accounts/profile.html", {'profile': profile})
     else:
         return redirect('/login')
@@ -40,7 +50,7 @@ def edit_profile(request):
 """def editProfile(request):
     if request.user.is_authenticated():
         # This line breaks the code: "'int' is not iterable"
-        profile = Profile.objects.filter(username = request.user.username).first()
+
         form = EditProfileForm(request.POST, profile)
 
         if form.is_valid():

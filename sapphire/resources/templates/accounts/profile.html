@@ -12,7 +12,7 @@
   <a href="/logout">
     <button type="button" class="btn btn-danger">Logout</button>
   </a>
-  <a href = "/accounts/profile/edit">
+  <a href = "{% url "accounts:edit_profile" pk=profile.pk %}">
     <button type="button" class="btn btn-primary">Edit Profile</button>
   <a>
 {% endblock %}
