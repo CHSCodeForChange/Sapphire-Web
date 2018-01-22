@@ -15,6 +15,7 @@ class Feed_Entry(models.Model):
     # The datetime that the user did said action
     datetime = models.DateTimeField()
 
-
     # The String description of the action
     description = models.CharField(max_length=960)
+
+    url = models.CharField(max_length=120)

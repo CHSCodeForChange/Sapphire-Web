@@ -29,10 +29,14 @@ def add(request):
         if(request.method == 'POST'):
             form = NewSingleSlotForm(request.POST, user=request.user)
             if form.is_valid():
-                slot = form.save(commit=False)
-                slot.save()
+                event = form.save(commit=False)
+                event.save()
 
-                feed_entry = form.feed_entry(commit=False)
+                feed_entry = Feed_Entry(
+                    user=request.user,
+                    datetime=datetime.now(),
+                    description="Created single slot \"" + event.name + "\"",
+                    url="/volunteer/event/" + str(event.id))
                 feed_entry.save()
 
                 return render(request, 'volunteer/events.html', {})
@@ -44,16 +48,51 @@ def add(request):
         if(request.method == 'POST'):
             form = NewEventForm(request.POST, user=request.user)
             if form.is_valid():
-                slot = form.save(commit=False)
-                slot.save()
+                event = form.save(commit=False)
+                event.save()
 
-                feed_entry = form.feed_entry(commit=False)
+                feed_entry = feed_entry = Feed_Entry(
+                    user=request.user,
+                    datetime=datetime.now(),
+                    description="Created event \"" + event.name + "\"",
+                    url="/volunteer/event/" + str(event.id))
                 feed_entry.save()
 
                 return render(request, 'volunteer/events.html', {})
         else:
             form = NewEventForm(user=request.user)
         return render(request, 'organizer/add_event.html', {'form':form})
+
+def addSlot(request, event_id):
+    is_organizer = False
+    for g in request.user.groups.all():
+        if g.name == 'Organizer':
+            is_organizer = True
+    if not is_organizer:
+        return HttpResponse('You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
+
+    parentEvent = Event.objects.get(pk=event_id)
+
+    if(request.method == 'GET'):
+        form = NewSlotForm(user=request.user, parentEvent=parentEvent)
+    else:
+        #This line assumes the contents of the GET side of the if statement have already run (they should have) but its kinda janky
+        form = NewSlotForm(request.POST, user=request.user, parentEvent=parentEvent)
+        if form.is_valid():
+            slot = form.save(commit=False)
+            slot.save()
+
+            feed_entry = Feed_Entry(
+                user=request.user,
+                datetime=datetime.now(),
+                description="Created slot \"" + str(slot.title) + "\" in event \"" + str(slot.parentEvent) + "\"",
+                url="/volunteer/slot/" + str(slot.id))
+            feed_entry.save()
+
+            return redirect('eventView', parentEvent.id)
+
+    return render(request, 'organizer/add_slot.html', {'form':form})
+
 
 def edit(request):
     # Makes sure the user is an organizer
@@ -86,34 +125,6 @@ def edit(request):
             form = NewEventForm(user=request.user)
         return render(request, 'organizer/add_event.html', {'form':form})
 
-
-def addSlot(request, event_id):
-    is_organizer = False
-    for g in request.user.groups.all():
-        if g.name == 'Organizer':
-            is_organizer = True
-    if not is_organizer:
-        return HttpResponse('You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
-
-    parentEvent = Event.objects.get(pk=event_id)
-
-    if(request.method == 'GET'):
-        form = NewSlotForm(user=request.user, parentEvent=parentEvent)
-    else:
-        #This line assumes the contents of the GET side of the if statement have already run (they should have) but its kinda janky
-        form = NewSlotForm(request.POST, user=request.user, parentEvent=parentEvent)
-        if form.is_valid():
-            slot = form.save(commit=False)
-            slot.save()
-
-            feed_entry = form.feed_entry(commit=False)
-            feed_entry.save()
-
-            return redirect('eventView', parentEvent.id)
-
-    return render(request, 'organizer/add_slot.html', {'form':form})
-
-
 def index(request):
     return redirect('/accounts/profile')
 
@@ -126,7 +137,8 @@ def deleteEvent(request, event_id):
     feed_entry = Feed_Entry(
         user=request.user,
         datetime=datetime.now(),
-        description="Deleted event \"" + name + "\""
+        description="Deleted event \"" + name + "\"",
+        url="/volunteer/eventNeeds"
     )
     feed_entry.save()
 
@@ -142,7 +154,8 @@ def deleteSlot(request, slot_id):
     feed_entry = Feed_Entry(
         user=request.user,
         datetime=datetime.now(),
-        description="Deleted slot \"" + name + "\" in event \"" + event + "\""
+        description="Deleted slot \"" + name + "\" in event \"" + event + "\"",
+        url="/volunteer/slots"
     )
     feed_entry.save()
     return redirect(next)

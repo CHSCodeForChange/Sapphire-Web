@@ -57,7 +57,7 @@ def volunteer(request, slot_id):
     feed_entry = Feed_Entry(
         user=request.user,
         datetime=datetime.now(),
-        description="Volunteered for \"" + name + "\" in event \"" + event + "\""
-    )
+        description="Volunteered for \"" + name + "\" in event \"" + event + "\"",
+        url="/volunteer/slot/" + str(slot.id))
     feed_entry.save()
     return redirect('eventNeeds')

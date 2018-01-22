@@ -96,12 +96,6 @@ class NewSingleSlotForm(forms.Form):
     def clean_end(self):
         end = self.cleaned_data['end']
         return end
-    def feed_entry(self, commit=True):
-        feed_entry = Feed_Entry(
-            user=self.user,
-            datetime=self.datetime,
-            description="Created single slot \"" + self.cleaned_data['title'] + "\""
-        )
 
         return feed_entry
     def save(self, commit=True):
