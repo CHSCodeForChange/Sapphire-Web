@@ -34,6 +34,11 @@ def profile(request):
         return render(request, "accounts/profile.html", {'profile': profile})
     else:
         return redirect('/login')
+def other_profile(request, user_id):
+    user = User.objects.get(id=user_id)
+    profile = Profile.objects.filter(username = user.username).first()
+
+    return render(request, 'accounts/other_profile.html', {'user':user, 'profile':profile})
 
 def edit_profile(request):
     profile = Profile.objects.filter(username = request.user.username).first()
