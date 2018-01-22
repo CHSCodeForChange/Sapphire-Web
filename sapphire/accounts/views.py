@@ -36,6 +36,16 @@ def profile(request):
         return redirect('/login')
 
 def edit_profile(request):
+    profile = Profile.objects.filter(username = request.user.username).first()
+    form = EditProfileForm(request.POST)
+    if form.is_valid():
+        profile.bio = form.save(commit=False, profile=profile)
+        profile.save()
+        return redirect('profile')
+
+    return render(request, 'accounts/edit_profile.html')
+
+def edit_user(request):
     if request.method == 'POST':
         form = EditProfileForm(request.POST, instance=request.user)
 

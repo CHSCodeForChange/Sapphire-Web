@@ -33,7 +33,22 @@ from django.contrib.auth.forms import UserChangeForm
         except Exception as e:
             raise"""
 
-class EditProfileForm(UserChangeForm):
+class EditProfileForm(forms.Form):
+    bio = forms.CharField(label='Bio', max_length=960, widget=forms.TextInput(
+        attrs={'type': 'text',
+                'class': 'form-control'}))
+
+    def __init__(self, *args, **kwargs):
+        self.profile = kwargs.pop('profile')
+        super(NewSlotForm, self).__init__(*args, **kwargs)
+    def clean_bio(self):
+        bio = self.cleaned_data['bio']
+        return Bio
+
+    def save(self, commit=True):
+        return self.cleaned_data['bio']
+
+class EditUserForm(UserChangeForm):
     template_name='/accounts/editProfile'
 
     class Meta:
