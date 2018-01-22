@@ -1,4 +1,5 @@
 {% extends "header.html" %}
+{% load permission_tags %}
 
 {% block content %}
   <h1>{{slot.title}}</h1>
@@ -11,12 +12,14 @@
     <a class="col-sm-8" href="{% url 'volunteer' slot_id=slot.id %}">
       <button class="btn btn-info btn-block">Volunteer</button>
     </a>
+    {% if request.user|has_group:"Organizer" %}
     <a class="col-sm-2" href="{{slot.id}}/edit/?type={{slot.type}}">
       <button class="btn btn-primary btn-block">Edit</button>
     </a>
     <a class="col-sm-2" href="{% url 'deleteSlot' slot_id=slot.id %}?next={{ request.path|urlencode }}">
       <button class="btn btn-danger btn-block">Delete</button>
     </a>
+    {% endif %}
 </div>
 
 

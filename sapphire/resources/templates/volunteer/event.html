@@ -1,4 +1,5 @@
 {% extends "header.html" %}
+{% load permission_tags %}
 
 {% block content %}
   <h1>{{event.name}}</h1>
@@ -55,9 +56,11 @@
 
 
   <h3>Volunteer Slots</h3>
+  {% if request.user|has_group:"Organizer" %}
   <a href="{% url 'addSlot' event_id=event.id %}">
     <button class="btn btn-secondary">Add Slot</button>
   </a>
+  {% endif %}
   <table class="table table-hover" style="margin:20px;">
     <thread>
       <tr>
@@ -76,6 +79,7 @@
           <th>{{slot.end}}</th>
           <th>{{slot.volunteers}}</th>
           <th>
+            {% if request.user|has_group:"Organizer" %}
             <div class="btn-group">
                 <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Delete</button>
               <div class="dropdown-menu">
@@ -83,13 +87,14 @@
                 <a class="dropdown-item" href="{% url 'deleteSlot' slot_id=slot.id %}?next={{ request.path|urlencode }}"><button class="btn btn-danger">Yes</button></a>
               </div>
             </div>
+            {% endif %}
           </th>
         </tr>
       {% endfor %}
     </tbody>
   </table>
 
-  {% if True %}
+  {% if request.user|has_group:"Organizer" %}
     <div class="row">
       <a class="col-sm-10" href="{{event.id}}/edit/?type={{event.type}}">
         <button class="btn btn-primary btn-block">Edit</button>
