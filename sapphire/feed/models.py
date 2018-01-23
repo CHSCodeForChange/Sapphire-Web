@@ -6,7 +6,8 @@ from accounts.models import Profile
 class Feed_Entry(models.Model):
     objects = models.Manager()
 
-    # The user that did the action the feed entry is talking about
+    """The user that did the action the feed entry is talking about
+        also if you click on the user it will redirect the page to the user's profile"""
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -18,4 +19,7 @@ class Feed_Entry(models.Model):
     # The String description of the action
     description = models.CharField(max_length=960)
 
+    #the URL that the feed redirects to if you click the description
     url = models.CharField(max_length=120)
+
+    

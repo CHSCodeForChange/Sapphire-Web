@@ -142,7 +142,7 @@ def deleteEvent(request, event_id):
     )
     feed_entry.save()
 
-    return redirect(next)
+    return redirect("/volunteer/eventNeeds")
 
 def deleteSlot(request, slot_id):
     next = request.GET.get('next')
