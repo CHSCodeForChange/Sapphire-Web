@@ -1,0 +1,12 @@
+
+{% extends "header.html" %}
+
+{% block content %}
+  <img class="center-block img-responsive" src="/static/img/test-user-icon.jpg" alt="profile picture" width="200">
+  <h1> {{user.first_name}} {{user.last_name}}</h1>
+  <h3> Completed {{profile.hours}} Hours of Service </h3>
+  <h1></h1>
+  <p class="text-left">
+    {{profile.bio}}
+  </p>
+{% endblock %}
