@@ -125,7 +125,7 @@ def activate(request, uidb64, token):
         # Sets the user to active
         user.is_active = True
         user.save()
-        profile.save()
+        #profile.save()
         user.backend = 'django.contrib.auth.backends.ModelBackend'
         login(request, user)
         return render(request, 'accounts/account_confirmed.html')
