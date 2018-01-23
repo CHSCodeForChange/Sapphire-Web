@@ -29,8 +29,8 @@ def home(request):
 def profile(request):
     if request.user.is_authenticated():
         # This line breaks the code: "'int' is not iterable"
-        profile = Profile.objects.filter(username = request.user.username).first()
         user = request.user
+        profile = user.profile
         return render(request, "accounts/profile.html", {'profile': profile})
     else:
         return redirect('/login')
@@ -41,10 +41,10 @@ def other_profile(request, user_id):
     return render(request, 'accounts/other_profile.html', {'user':user, 'profile':profile})
 
 def edit_profile(request):
-    profile = Profile.objects.filter(username = request.user.username).first()
     form = EditProfileForm(request.POST)
+    profile = request.user.profile
     if form.is_valid():
-        profile.bio = form.save(commit=False, profile=profile)
+        profile.bio = form.save(commit=False)
         profile.save()
         return redirect('profile')
 
@@ -130,7 +130,7 @@ def activate(request, uidb64, token):
         # Sets the user to active
         user.is_active = True
         user.save()
-        profile.save()
+        #profile.save()
         user.backend = 'django.contrib.auth.backends.ModelBackend'
         login(request, user)
         return render(request, 'accounts/account_confirmed.html')
