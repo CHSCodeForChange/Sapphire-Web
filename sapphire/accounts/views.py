@@ -29,17 +29,17 @@ def home(request):
 def profile(request):
     if request.user.is_authenticated():
         # This line breaks the code: "'int' is not iterable"
-        profile = Profile.objects.filter(username = request.user.username).first()
         user = request.user
+        profile = user.profile
         return render(request, "accounts/profile.html", {'profile': profile})
     else:
         return redirect('/login')
 
 def edit_profile(request):
-    profile = Profile.objects.filter(username = request.user.username).first()
     form = EditProfileForm(request.POST)
+    profile = request.user.profile
     if form.is_valid():
-        profile.bio = form.save(commit=False, profile=profile)
+        profile.bio = form.save(commit=False)
         profile.save()
         return redirect('profile')
 
