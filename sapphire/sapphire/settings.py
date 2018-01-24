@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'accounts',
     'feed',
     'info',
+    'groups',
     'volunteerApp',
     'organizer',
 

@@ -96,8 +96,6 @@ class NewSingleSlotForm(forms.Form):
     def clean_end(self):
         end = self.cleaned_data['end']
         return end
-
-        return feed_entry
     def save(self, commit=True):
         event = Event(
             organizer=self.user,
