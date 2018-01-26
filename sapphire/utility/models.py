@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User, UserManager
 from accounts.models import Profile
-#from groups.models import Group
 
 """
 Notes:
@@ -102,10 +101,11 @@ class Event(models.Model):
     # The Integer zip code of the Event
     zip_code = models.IntegerField(null=True)
 
-    """parentGroup = models.ForeignKey(
-        Group,
-        on_delete=models.CASCADE
-    )"""
+    parentGroup = models.ForeignKey(
+        'groups.Group',
+        on_delete=models.CASCADE,
+        null=True
+    )
     # The list of Volunteers
     volunteers = models.ForeignKey(
         Profile,

@@ -9,10 +9,24 @@
   <p class="text-left">
     {{profile.bio}}
   </p>
-  <a href="/logout">
-    <button type="button" class="btn btn-danger">Logout</button>
-  </a>
-  <a href = "/accounts/profile/edit/{{profile.id}}">
-    <button type="button" class="btn btn-primary">Edit Profile</button>
-  <a>
+  {% if this_user %}
+    <a href="/logout">
+      <button type="button" class="btn btn-danger">Logout</button>
+    </a>
+    <a href = "/accounts/profile/edit/{{profile.id}}">
+      <button type="button" class="btn btn-primary">Edit Profile</button>
+    </a>
+  {% endif %}
+
+  <h2>Recent Activity</h2>
+  <!--only shows 10 most recent right now,
+      to change to a different number go to
+    Sapphire-web/sapphire/accounts/views.py line 37,
+    and change [:10] to the number of items needed,
+    or remove [:10] to get all elements-->
+  {% for entry in feed_entries %}
+    <h5>{{entry.datetime}}</h5>
+    <p>{{entry.description}}</p>
+  {% endfor %}
+
 {% endblock %}

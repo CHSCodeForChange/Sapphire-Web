@@ -301,14 +301,6 @@ class NewSlotForm(forms.Form):
         maxVolunteers = self.cleaned_data['maxVolunteers']
         return maxVolunteers
 
-    def feed_entry(self, commit=True):
-        feed_entry = Feed_Entry(
-            user=self.user,
-            datetime=self.datetime,
-            description="Created slot \"" + self.cleaned_data['title'] + "\" in event \"" + self.parentEvent.name + "\""
-        )
-
-        return feed_entry
 
     def save(self, commit=True):
         slot = Slot(

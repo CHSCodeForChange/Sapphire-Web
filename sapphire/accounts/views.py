@@ -13,6 +13,8 @@ from .models import Profile
 from django.core.urlresolvers import reverse
 from django.views.generic.edit import UpdateView
 
+from feed.models import Feed_Entry
+
 class EditProfile(UpdateView):
     model = Profile
     fields = ['bio']
@@ -23,7 +25,7 @@ class EditProfile(UpdateView):
 
 # Redirects to the profile page
 def home(request):
-    redirect('profile')
+    redirect('accounts/profile')
 
 # The profile page for the current user
 def profile(request):
@@ -31,14 +33,20 @@ def profile(request):
         # This line breaks the code: "'int' is not iterable"
         user = request.user
         profile = user.profile
-        return render(request, "accounts/profile.html", {'profile': profile})
+
+        feed_entries = Feed_Entry.objects.filter(user=request.user).order_by('-datetime')[:10]
+        return render(request, "accounts/profile.html", {'profile':profile,'feed_entries':feed_entries, 'this_user':True})
     else:
         return redirect('/login')
 def other_profile(request, user_id):
     user = User.objects.get(id=user_id)
-    profile = Profile.objects.filter(username = user.username).first()
+    if (user != request.user):
+        profile = Profile.objects.filter(username = user.username).first()
 
-    return render(request, 'accounts/other_profile.html', {'user':user, 'profile':profile})
+        feed_entries = Feed_Entry.objects.filter(user=request.user).order_by('-datetime')[:10]
+        return render(request, 'accounts/profile.html', {'user':user, 'profile':profile,'feed_entries':feed_entries, 'this_user':False})
+    else:
+        return redirect('/accounts/profile')
 
 def edit_profile(request):
     form = EditProfileForm(request.POST)

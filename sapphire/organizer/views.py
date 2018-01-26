@@ -39,7 +39,7 @@ def add(request):
                     url="/volunteer/event/" + str(event.id))
                 feed_entry.save()
 
-                return render(request, 'volunteer/events.html', {})
+                return redirect('/volunteer/eventNeeds')
         else:
             form = NewSingleSlotForm(user=request.user)
         # Filter this by single slot events in the future
@@ -58,7 +58,7 @@ def add(request):
                     url="/volunteer/event/" + str(event.id))
                 feed_entry.save()
 
-                return render(request, 'volunteer/events.html', {})
+                return redirect('/volunteer/eventNeeds')
         else:
             form = NewEventForm(user=request.user)
         return render(request, 'organizer/add_event.html', {'form':form})
