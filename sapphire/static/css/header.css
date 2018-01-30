@@ -1,3 +1,8 @@
 .automarg {
   float: right;
 }
+
+.username {
+  font-size: 500%;
+  color: black;
+}
