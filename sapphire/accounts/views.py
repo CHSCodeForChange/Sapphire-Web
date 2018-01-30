@@ -35,7 +35,7 @@ def profile(request):
         profile = user.profile
 
         feed_entries = Feed_Entry.objects.filter(user=request.user).order_by('-datetime')[:10]
-        return render(request, "accounts/profile.html", {'profile':profile,'feed_entries':feed_entries, 'this_user':True})
+        return render(request, "accounts/profile.html", {'user':user, 'profile':profile,'feed_entries':feed_entries, 'this_user':True})
     else:
         return redirect('/login')
 def other_profile(request, user_id):
