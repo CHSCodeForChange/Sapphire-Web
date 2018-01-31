@@ -63,3 +63,6 @@ target/
 # Why is this here
 .DS_Store
 sapphire/.vscode/launch.json
+
+#database
+sapphire/db.sqlite3
