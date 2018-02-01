@@ -1,8 +1,50 @@
 .automarg {
-  float: right;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;
+  margin-bottom: auto;
 }
-
+.emptymarg {
+  margin: 0;
+}
+.emptypad {
+  padding: 0;
+}
 .username {
   font-size: 500%;
   color: black;
+}
+.disinlineblock {
+  display: inline-block;
+}
+.disinline {
+  display: inline;
+}
+.disnone {
+  display: none;
+}
+.floatnone {
+  float: none;
+}
+.floatright {
+  float: right;
+}
+.fontup110 {
+  font-size: 110%;
+}
+.maxw100 {
+  max-width: 100%;
+}
+.minw0 {
+  min-width: 0%;
+}
+.navbar-brand>img {
+  width: auto;
+  height: 110%;
+}
+.autowidth {
+  width: auto;
+}
+.padding0left {
+  padding-left: 0;
 }
