@@ -20,7 +20,22 @@
       <button class="btn btn-danger btn-block">Delete</button>
     </a>
     {% endif %}
-</div>
+  </div>
+
+  <h3>Volunteers</h3>
+  <table class="table table-hover">
+    <tbody>
+      {% for user_slot in user_slots %}
+        <tr>
+          <th>{{user_slot.volunteer.username}}</th>
+          {% if request.user|has_group:"Organizer" %}
+            <th><a href="/volunteer/signin/{{user_slot.id}}"><button class="btn btn-primary">Sign In</button></a></th>
+            <th><a href="/volunteer/signout/{{user_slot.id}}"><button class="btn btn-primary">Sign Out</button></a></th>
+          {% endif %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 
 
 {% endblock %}

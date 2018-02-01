@@ -4,7 +4,7 @@ from datetime import datetime
 import string
 
 from .forms import NewEventForm, NewSingleSlotForm, NewSlotForm
-from utility.models import Event, Slot
+from utility.models import Event, Slot, User_Slot
 from feed.models import Feed_Entry
 
 
@@ -82,12 +82,17 @@ def addSlot(request, event_id):
             slot = form.save(commit=False)
             slot.save()
 
+            for x in range(0,slot.maxVolunteers):
+                user_slot = User_Slot(volunteer=None, parentSlot=slot)
+                user_slot.save()
+
             feed_entry = Feed_Entry(
                 user=request.user,
                 datetime=datetime.now(),
                 description="Created slot \"" + str(slot.title) + "\" in event \"" + str(slot.parentEvent) + "\"",
                 url="/volunteer/slot/" + str(slot.id))
             feed_entry.save()
+
 
             return redirect('eventView', parentEvent.id)
 
@@ -132,6 +137,7 @@ def deleteEvent(request, event_id):
     next = request.GET.get('next')
     object = Event.objects.get(id=event_id)
     name = object.name
+
     object.delete()
 
     feed_entry = Feed_Entry(
@@ -145,17 +151,16 @@ def deleteEvent(request, event_id):
     return redirect("/volunteer/eventNeeds")
 
 def deleteSlot(request, slot_id):
-    next = request.GET.get('next')
     slot = Slot.objects.get(id=slot_id)
     name = slot.title
-    event = slot.parentEvent.name
+    event = slot.parentEvent
     slot.delete()
 
     feed_entry = Feed_Entry(
         user=request.user,
         datetime=datetime.now(),
-        description="Deleted slot \"" + name + "\" in event \"" + event + "\"",
+        description="Deleted slot \"" + name + "\" in event \"" + event.name + "\"",
         url="/volunteer/slots"
     )
     feed_entry.save()
-    return redirect(next)
+    return redirect('/volunteer/event/'+str(event.id))

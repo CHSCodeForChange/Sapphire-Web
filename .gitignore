@@ -65,4 +65,4 @@ target/
 sapphire/.vscode/launch.json
 
 #database
-sapphire/db.sqlite3
+#sapphire/db.sqlite3

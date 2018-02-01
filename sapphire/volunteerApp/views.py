@@ -35,9 +35,10 @@ def event(request):
     slots = Slot.objects.order_by('start')
     return render(request, 'volunteer/event.html', {'events':events, 'slots':slots, 'is_organizer':is_organizer})
 
-def slot(request):
-    slot = Slot.objects.all()
-    return render(request, 'volunteer/slot.html', {'slot':slot})
+def slot(request, slot_id):
+    slot = Slot.objects.get(id=slot_id)
+    user_slots = User_Slot.objects.filter(parentSlot=slot)
+    return render(request, 'volunteer/slot.html', {'slot':slot, 'user_slots':user_slots})
 
 def slotNeeds(request):
     slots = Slot.objects.order_by('start')
@@ -49,10 +50,16 @@ def slotNeeds(request):
 def volunteer(request, slot_id):
     #next = request.GET.get('next')
     slot = Slot.objects.get(id=slot_id)
+    user_slot = User_Slot.objects.filter(parentSlot=slot, volunteer__isnull=True).first()
+    if (user_slot == None):
+        return redirect('/volunteer/slot/'+str(slot_id))
+
+    user_slot.volunteer = request.user
+    user_slot.save()
+
     name = slot.title
     event = slot.parentEvent.name
-    slot.volunteers = request.user
-    slot.save()
+
 
     feed_entry = Feed_Entry(
         user=request.user,
@@ -60,4 +67,16 @@ def volunteer(request, slot_id):
         description="Volunteered for \"" + name + "\" in event \"" + event + "\"",
         url="/volunteer/slot/" + str(slot.id))
     feed_entry.save()
-    return redirect('eventNeeds')
+    return redirect('/volunteer/slot/'+str(slot.id))
+
+def signin(request, user_slot_id):
+    user_slot = User_Slot.objects.get(id=user_slot_id)
+    user_slot.signin = datetime.now()
+    user_slot.save()
+    return redirect('/volunteer/slot/'+str(user_slot.parentSlot.id))
+
+def signout(request, user_slot_id):
+    user_slot = User_Slot.objects.get(id=user_slot_id)
+    user_slot.signout = datetime.now()
+    user_slot.save()
+    return redirect('/volunteer/slot/'+str(user_slot.parentSlot.id))

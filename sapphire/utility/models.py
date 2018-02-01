@@ -36,14 +36,10 @@ time. It has a parent Event.
         blank=True
     )"""
 
+
+
 class Slot(models.Model):
     objects = models.Manager()
-    volunteers = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-    )
     # TODO make sure this can only point to one Event and not more than that
     parentEvent = models.ForeignKey(
         'Event',
@@ -51,6 +47,7 @@ class Slot(models.Model):
     )
     start = models.DateTimeField()
     end = models.DateTimeField()
+
     # The minimun number of volunteers this slot needs to have. Set by Event
     # organizer and factored into slot priority
     minVolunteers = models.IntegerField()
@@ -75,6 +72,23 @@ class Slot(models.Model):
     # The Integer zip code of the Event
     zip_code = models.IntegerField(null=True)
 
+class User_Slot(models.Model):
+    volunteer = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
+
+    parentSlot = models.ForeignKey(
+        Slot,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
+
+    signin = models.DateTimeField(null=True)
+    signout = models.DateTimeField(null=True)
 
 class Event(models.Model):
     is_single = models.BooleanField(default=False)
