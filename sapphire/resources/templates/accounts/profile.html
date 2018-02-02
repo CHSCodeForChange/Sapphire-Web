@@ -1,32 +1,43 @@
 
-{% extends "header.html" %}
+{% extends "header_not_centered.html" %}
 
 {% block content %}
-  <img class="center-block img-responsive" src="/static/img/test-user-icon.jpg" alt="profile picture" width="200">
-  <h1> {{request.user.first_name}} {{request.user.last_name}}</h1>
-  <h3> Completed {{profile.hours}} Hours of Service </h3>
-  <h1></h1>
-  <p class="text-left">
-    {{profile.bio}}
-  </p>
-  {% if this_user %}
-    <a href="/logout">
-      <button type="button" class="btn btn-danger">Logout</button>
-    </a>
-    <a href = "/accounts/profile/edit/{{profile.id}}">
-      <button type="button" class="btn btn-primary">Edit Profile</button>
-    </a>
-  {% endif %}
 
-  <h2>Recent Activity</h2>
-  <!--only shows 10 most recent right now,
-      to change to a different number go to
-    Sapphire-web/sapphire/accounts/views.py line 37,
-    and change [:10] to the number of items needed,
-    or remove [:10] to get all elements-->
-  {% for entry in feed_entries %}
-    <h5>{{entry.datetime}}</h5>
-    <p>{{entry.description}}</p>
-  {% endfor %}
+  <div class="col-md-8">
+    <div class="row">
+      <img class="col-md-2 left-block img-responsive img-circle" src="/static/img/test-user-icon.jpg" alt="profile picture" width="200">
+      <div class="col-md-6">
+        <h1 class="username"> {{user.username}}</h1>
+          {% if this_user %}
+            <a href="/logout">
+              <button type="button" class="btn btn-danger">Logout</button>
+            </a>
+            <a href = "/accounts/profile/edit/{{profile.id}}">
+              <button type="button" class="btn btn-primary">Edit Profile</button>
+            </a>
+          {% endif %}
+      </div>
+    </div>
+
+    <h3> Completed {{profile.hours}} Hours of Service </h3>
+    <h1></h1>
+    <p class="text-left">
+      {{profile.bio}}
+    </p>
+    {
+  </div>
+
+  <div class="col-md-4">
+    <h2>Recent Activity</h2>
+    <!--only shows 10 most recent right now,
+        to change to a different number go to
+      Sapphire-web/sapphire/accounts/views.py line 37,
+      and change [:10] to the number of items needed,
+      or remove [:10] to get all elements-->
+    {% for entry in feed_entries %}
+      <h5>{{entry.datetime}}</h5>
+      <p><a href="{{entry.url}}">{{entry.description}}</a></p>
+    {% endfor %}
+  </div>
 
 {% endblock %}

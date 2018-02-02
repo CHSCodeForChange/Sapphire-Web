@@ -8,11 +8,12 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="shortcut icon" href="/static/img/logos.ico/favicon-32x32.png" type="image/x-icon">
     <link href="https://getbootstrap.com/docs/4.0/examples/sticky-footer/sticky-footer.css" rel="stylesheet">
+    <link href="/static/css/header.css" rel="stylesheet">
   </head>
 
   <body>
     <nav class="navbar navbar-inverse navbar-static-top">
-      <div class="container">
+      <div class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
             <span class="sr-only">Toggle navigation</span>
@@ -23,7 +24,7 @@
           <a class="navbar-brand" href="/feed">Sapphire</a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="nav navbar-nav navbar-right">
+          <ul class="nav navbar-nav" style="">
             <li><a href="/feed">Feed</a></li>
             <!--li><a href="/volunteer/calendar">Calendar</a></li-->
             <li><a href="/volunteer/eventNeeds">Events</a></li>
@@ -45,7 +46,7 @@
       </div>
     </nav>
 
-    <div class="container">
+    <div class="container-fluid">
       <div class="text-center">
         {% block content %}
 
@@ -54,7 +55,7 @@
     </div>
 
     <footer class="footer" style="width:100%;left:0;">
-      <div class="container">
+      <div class="container-fluid">
           <span class="text-muted">
             Copyright (c) 2017
             <a href="https://chscodeforchange.wordpress.com/"> CHS Code For Change </a>
