@@ -107,8 +107,8 @@ def signup(request):
             current_site = get_current_site(request)
             # Sends the user an email based on the email template and the info passed in here
             message = render_to_string('emails/activate_account.html', {
-                'user':user,
-                'domain':current_site.domain,
+                'user': user,
+                'domain': current_site.domain,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': account_activation_token.make_token(user),
             })

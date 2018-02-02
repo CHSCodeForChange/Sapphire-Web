@@ -2,56 +2,79 @@
 {% load permission_tags %}
 
 {% block content %}
-  <h1>{{event.name}}</h1>
-  <h4>{{event.start}} - {{event.end}}</h4>
 
-  <div id="accordion" role="tablist">
-    <div class="card">
-      <div class="card-header" role="tab" id="headingOne">
-        <h5 class="mb-0">
-          <a data-toggle="collapse" href="#collapseOne" role="button" aria-expanded="true" aria-controls="collapseOne">
-            {{event.location}}: {{event.address}} {{event.city}}, {{event.state}} {{event.zip_code}}
-          </a>
-        </h5>
-      </div>
+<div class="jumbotron">
 
-      <div id="collapseOne" class="collapse toggle" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
-        <style>
-          .intrinsic-container {
-            position: relative;
-            height: 0;
-            overflow: hidden;
-          }
 
-          /* 16x9 Aspect Ratio */
-          .intrinsic-container-16x9 {
-            padding-bottom: 56.25%;
-          }
+    <h1 class="display-1">{{event.name}}</h1>
+    <h4 class="lead">{{event.start}} - {{event.end}}</h4>
 
-          /* 4x3 Aspect Ratio */
-          .intrinsic-container-4x3 {
-            padding-bottom: 75%;
-          }
+    <div id="accordion" role="tablist">
+        <div class="card">
+            <div class="card-header" role="tab" id="headingOne">
+                <h5 class="mb-0">
+                    <a data-toggle="collapse" href="#collapseOne" role="button" aria-expanded="true"
+                       aria-controls="collapseOne">
+                        {{event.location}}: {{event.address}} {{event.city}}, {{event.state}} {{event.zip_code}}
+                    </a>
+                </h5>
+            </div>
 
-          .intrinsic-container iframe {
-            position: absolute;
-            top:0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-          }
-        </style>
-        <div class="card-body intrinsic-container intrinsic-container-16x9">
-          <iframe src="https://www.google.com/maps/embed/v1/search?q={{event.address}} {{event.city}}, {{event.state}} {{event.zip_code}}&key=AIzaSyB-YQD-s4ery8KQRnzX7FhZsBC4SeFRcjA" allowfullscreen></iframe>
+            <div id="collapseOne" class="collapse toggle" role="tabpanel" aria-labelledby="headingOne"
+                 data-parent="#accordion">
+                <style>
+                    .intrinsic-container {
+                        position: relative;
+                        height: 0;
+                        overflow: hidden;
+                    }
+
+                    /* 16x9 Aspect Ratio */
+                    .intrinsic-container-16x9 {
+                        padding-bottom: 56.25%;
+                    }
+
+                    /* 4x3 Aspect Ratio */
+                    .intrinsic-container-4x3 {
+                        padding-bottom: 75%;
+                    }
+
+                    .intrinsic-container iframe {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                    }
+                </style>
+                <div class="card-body intrinsic-container intrinsic-container-16x9">
+                    <iframe width="125"
+                            src="https://www.google.com/maps/embed/v1/search?q={{event.address}} {{event.city}}, {{event.state}} {{event.zip_code}}&key=AIzaSyB-YQD-s4ery8KQRnzX7FhZsBC4SeFRcjA"
+                            allowfullscreen></iframe>
+                </div>
+
+
+                <p class="text-danger">Map will only function correctly if a valid address has been entered</p>
+            </div>
         </div>
 
-
-        <p class="text-danger">Map will only function correctly if a valid address has been entered</p>
-      </div>
+        <h1></h1>
+        <p class="text-left">{{event.description}}</p>
     </div>
 
-    <h1></h1>
-    <p class="text-left">{{event.description}}</p>
+    {% if request.user|has_group:"Organizer" %}
+    <div class="row">
+        <a class="col-sm-10" href="{{event.id}}/edit/?type={{event.type}}">
+            <button class="btn btn-primary btn-block">Edit</button>
+        </a>
+        <a class="col-sm-2" href="{% url 'deleteEvent' event_id=event.id %}?next={{ '/home/feed/'|urlencode }}">
+            <button class="btn btn-danger btn-block">Delete</button>
+        </a>
+    </div>
+    {% endif %}
+
+</div>
+
 
 
 
@@ -93,16 +116,5 @@
       {% endfor %}
     </tbody>
   </table>
-
-  {% if request.user|has_group:"Organizer" %}
-    <div class="row">
-      <a class="col-sm-10" href="{{event.id}}/edit/?type={{event.type}}">
-        <button class="btn btn-primary btn-block">Edit</button>
-      </a>
-      <a class="col-sm-2" href="{% url 'deleteEvent' event_id=event.id %}?next={{ '/home/feed/'|urlencode }}">
-        <button class="btn btn-danger btn-block">Delete</button>
-      </a>
-    </div>
-  {% endif %}
 
 {% endblock %}

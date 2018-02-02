@@ -22,15 +22,16 @@ class Profile(models.Model):
     username = models.CharField(max_length=200, default = "")
     bio = models.CharField(max_length=1000, default = "")
     hours = models.IntegerField(default=0)
-    permission = {} #the key is the permission itself which can be a url or just a word for the permission the value is a list of orgainizations it can do this action for
+    permission = {}  # the key is the permission itself which can be a url or just a word for the permission the value is a list of orgainizations it can do this action for
 
-    #add permission to the profile for the PERM and the ORG
+    # add permission to the profile for the PERM and the ORG
     def addPermission(self, perm, org):
         if self.permission.get(perm,None) is None:
             self.permission[perm] = [org]
         else:
             self.permission[perm].extend(org)
-    #checks to see if permission contains PERM for ORG
+
+    # checks to see if permission contains PERM for ORG
     def hasPerm(self, perm, org):
         for i in self.permission[perm]:
             if i == org:

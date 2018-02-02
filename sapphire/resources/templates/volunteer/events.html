@@ -5,7 +5,7 @@
 
 <h1>Events</h1>
 {% if request.user|has_group:"Organizer" %}
-<div class="row">
+<div class="row" style="padding: 20px;">
   <a href="/organizer/add/?type=singleSlot"><button class="btn btn-secondary">Add Single Slot</button></a>
   <a href="/organizer/add/?type=event"><button class="btn btn-secondary">Add Event</button></a>
 </div>
@@ -22,7 +22,7 @@
   <tbody>
     {% for event in events %}
       <tr>
-        <th><a href="http://127.0.0.1:8000/volunteer/event/{{event.id}}">{{event.name}}</a></th>
+          <th><a href="/volunteer/event/{{event.id}}">{{event.name}}</a></th>
         <th>{{event.location}}</th>
         <th>{{event.start}}</th>
         <th>{{event.end}}</th>
