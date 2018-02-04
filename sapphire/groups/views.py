@@ -10,7 +10,7 @@ from groups.forms import NewGroupForm
 def list(request):
     groups = Group.objects.order_by('hours')
     if request.user.is_authenticated():
-        return render(request, 'groups/list.html', {'groups':groups})
+        return render(request, 'groups/groupListView.html', {'groups': groups})
     else:
         return redirect('login')
 

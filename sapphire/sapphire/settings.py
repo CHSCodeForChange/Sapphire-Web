@@ -22,9 +22,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'not secret' #this is a testing secrect key
 
+# Set DEBUG = False to test 404 and 500 pages
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]'] use this when debug=False
 ALLOWED_HOSTS = []
 
 

@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from accounts.models import *
 from django.contrib.auth.forms import UserChangeForm
 
-
+from organizer.forms import NewSlotForm
 
 """class EditProfileForm(forms.Form):
     bio = forms.CharField(label='Bio', max_length=960, widget=forms.TextInput(
@@ -33,23 +33,27 @@ from django.contrib.auth.forms import UserChangeForm
         except Exception as e:
             raise"""
 
+
 class EditProfileForm(forms.Form):
     bio = forms.CharField(label='Bio', max_length=960, widget=forms.TextInput(
         attrs={'type': 'text',
-                'class': 'form-control'}))
+               'class': 'form-control',
+               'rows': '5'}))
 
     def __init__(self, *args, **kwargs):
         self.profile = kwargs.pop('profile')
         super(NewSlotForm, self).__init__(*args, **kwargs)
+
     def clean_bio(self):
         bio = self.cleaned_data['bio']
-        return Bio
+        return bio
 
     def save(self, commit=True):
         return self.cleaned_data['bio']
 
+
 class EditUserForm(UserChangeForm):
-    template_name='/accounts/editProfile'
+    template_name = '/accounts/editProfile'
 
     class Meta:
         model = User
@@ -59,6 +63,7 @@ class EditUserForm(UserChangeForm):
             'last_name',
             'password'
         )
+
 
 # The form for user signups
 class SignupForm(forms.Form):
@@ -100,7 +105,7 @@ class SignupForm(forms.Form):
         username = self.cleaned_data['username'].lower()
         r = User.objects.filter(username=username)
         if r.count():
-            raise  ValidationError("Username already exists")
+            raise ValidationError("Username already exists")
         return username
 
     # Must be unique
@@ -108,7 +113,7 @@ class SignupForm(forms.Form):
         email = self.cleaned_data['email'].lower()
         r = User.objects.filter(email=email)
         if r.count():
-            raise  ValidationError("Email already exists")
+            raise ValidationError("Email already exists")
         return email
 
     # Used for validation
@@ -119,7 +124,7 @@ class SignupForm(forms.Form):
         if password1 and password2 and password1 != password2:
             raise ValidationError("Password don't match")
         # Passwords must be 16+ characters long or contain a digit
-        if len(password1)<16 and not any(char.isdigit() for char in password1):
+        if len(password1) < 16 and not any(char.isdigit() for char in password1):
             raise ValidationError("You password must either be 16+ letters long or contain a digit.")
 
         return password2
