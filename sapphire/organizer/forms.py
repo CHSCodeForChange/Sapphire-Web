@@ -5,6 +5,7 @@ from django.contrib.auth import models
 
 from utility.models import Event, Slot
 from feed.models import Feed_Entry
+from groups.models import Group
 
 class NewSingleSlotForm(forms.Form):
 
@@ -156,6 +157,7 @@ class NewEventForm(forms.Form):
                'min': '1',
                'class': 'form-control'}))"""
     user = models.User()
+    parentGroup = models.Group()
     datetime = datetime.now()
 
 
@@ -166,6 +168,7 @@ class NewEventForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user')
+        self.parentGroup = kwargs.pop('parentGroup')
         super(NewEventForm, self).__init__(*args, **kwargs)
     def clean_title(self):
         title = self.cleaned_data['title']
@@ -176,6 +179,10 @@ class NewEventForm(forms.Form):
     def clean_user(self):
         user = self.cleaned_data['user']
         return user
+
+    def clean_parentGroup(self):
+        parentGroup = self.cleaned_data['parentGroup']
+        return parentGroup
     """def clean_maxVolunteers(self):
         description = self.cleaned_data['maxVolunteers']
         return description
@@ -216,6 +223,7 @@ class NewEventForm(forms.Form):
     def save(self, commit=True):
         event = Event(
             organizer=self.user,
+            parentGroup=self.parentGroup,
             name=self.cleaned_data['title'],
             description=self.cleaned_data['description'],
             location=self.cleaned_data['location'],

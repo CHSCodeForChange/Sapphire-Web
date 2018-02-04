@@ -4,6 +4,7 @@ from datetime import datetime
 
 from utility.models import *
 from feed.models import Feed_Entry
+from groups.models import Group
 
 def index(request):
     # Run processes to build dataset after login
@@ -23,22 +24,18 @@ def eventNeeds(request):
     else:
         return redirect('login')
 
-def event(request):
-    is_organizer = False
-    for g in request.user.groups.all():
-        if g.name == 'Organizer':
-            is_organizer = True
+def event(request, event_id):
+    event = Event.objects.get(id=event_id)
+    is_organizer = Group.get_is_organzer(event.parentGroup, request.user)
 
-    print ("hi")
-
-    events = Event.objects.all()
     slots = Slot.objects.order_by('start')
-    return render(request, 'volunteer/event.html', {'events':events, 'slots':slots, 'is_organizer':is_organizer})
+    return render(request, 'volunteer/event.html', {'event':event, 'slots':slots, 'is_organizer':is_organizer})
 
 def slot(request, slot_id):
     slot = Slot.objects.get(id=slot_id)
+    is_organizer = Group.get_is_organzer(slot.parentEvent.parentGroup, request.user)
     user_slots = User_Slot.objects.filter(parentSlot=slot)
-    return render(request, 'volunteer/slot.html', {'slot':slot, 'user_slots':user_slots})
+    return render(request, 'volunteer/slot.html', {'slot':slot, 'user_slots':user_slots, 'is_organizer':is_organizer})
 
 def slotNeeds(request):
     slots = Slot.objects.order_by('start')

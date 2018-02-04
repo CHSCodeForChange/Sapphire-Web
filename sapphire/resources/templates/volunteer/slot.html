@@ -12,7 +12,7 @@
     <a class="col-sm-8" href="{% url 'volunteer' slot_id=slot.id %}">
       <button class="btn btn-info btn-block">Volunteer</button>
     </a>
-    {% if request.user|has_group:"Organizer" %}
+    {% if is_organizer %}
     <a class="col-sm-2" href="{{slot.id}}/edit/?type={{slot.type}}">
       <button class="btn btn-primary btn-block">Edit</button>
     </a>
@@ -28,7 +28,7 @@
       {% for user_slot in user_slots %}
         <tr>
           <th>{{user_slot.volunteer.username}}</th>
-          {% if request.user|has_group:"Organizer" %}
+          {% if is_organizer %}
             <th><a href="/volunteer/signin/{{user_slot.id}}"><button class="btn btn-primary">Sign In</button></a></th>
             <th><a href="/volunteer/signout/{{user_slot.id}}"><button class="btn btn-primary">Sign Out</button></a></th>
           {% endif %}

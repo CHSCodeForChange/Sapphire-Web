@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User, UserManager
 from accounts.models import Profile
+from groups.models import Group
 
 """
 Notes:
@@ -91,6 +92,12 @@ class User_Slot(models.Model):
     signout = models.DateTimeField(null=True)
 
 class Event(models.Model):
+    parentGroup = models.ForeignKey(
+        Group,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
     is_single = models.BooleanField(default=False)
     type = models.CharField(max_length=80)
     objects = models.Manager()

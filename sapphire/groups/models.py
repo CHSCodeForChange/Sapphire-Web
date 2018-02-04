@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from accounts.models import Profile
-from utility.models import Slot, Event
+from django.db.models import Q
+
 
 class Group(models.Model):
     objects = models.Manager()
@@ -25,39 +26,10 @@ class Group(models.Model):
         related_name="group_owner"
     )
 
-    organizers = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        related_name="group_organizers"
-    )
-    volunteers = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        related_name="group_volunteers"
-    )
-
-    events = models.ForeignKey(
-        Event,
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        related_name="group_event_set"
-    )
-
-    slots = models.ForeignKey(
-        Slot,
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        related_name="group_slot_set"
-    )
+    organizers = models.ManyToManyField(User, related_name="group_organizers")
+    volunteers = models.ManyToManyField(User, related_name="group_volunteers")
 
     # TODO make sure this can only point to one Event and not more than that
-
 
     # The String location Name of the Event
     location = models.CharField(max_length=240)
@@ -72,3 +44,25 @@ class Group(models.Model):
 
     #number of hours of service completed by this group
     hours = models.IntegerField(null=True)
+
+    #returns a list of groups that a given user is a part of at any level
+    def get_is_member_list(user):
+        return Group.objects.filter(Q(owner=user) | Q(organizers=user) | Q(volunteers=user))
+
+    #returns a list of groups that a give user is a owner/organizer of
+    def get_is_organizer_list(user):
+        return Group.objects.filter(Q(owner=user) | Q(organizers=user))
+
+    def get_is_member(self, user):
+        groups = Group.get_is_member_list(user)
+        for group in groups:
+            if (group == self):
+                return True
+        return False
+
+    def get_is_organzer(self, user):
+        groups = Group.get_is_organizer_list(user)
+        for group in groups:
+            if (group == self):
+                return True
+        return False

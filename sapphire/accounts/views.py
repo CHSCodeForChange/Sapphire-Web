@@ -14,6 +14,7 @@ from django.core.urlresolvers import reverse
 from django.views.generic.edit import UpdateView
 
 from feed.models import Feed_Entry
+from groups.models import Group
 
 class EditProfile(UpdateView):
     model = Profile
@@ -33,9 +34,10 @@ def profile(request):
         # This line breaks the code: "'int' is not iterable"
         user = request.user
         profile = user.profile
+        groups = Group.get_is_member_list(request.user)
 
         feed_entries = Feed_Entry.objects.filter(user=request.user).order_by('-datetime')[:10]
-        return render(request, "accounts/profile.html", {'user':user, 'profile':profile,'feed_entries':feed_entries, 'this_user':True})
+        return render(request, "accounts/profile.html", {'user':user, 'profile':profile,'feed_entries':feed_entries, 'this_user':True, 'groups':groups})
     else:
         return redirect('/login')
 def other_profile(request, user_id):

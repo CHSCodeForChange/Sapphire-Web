@@ -3,7 +3,7 @@
 
 {% block content %}
 
-  <div class="col-md-8">
+  <div class="col-md-6">
     <div class="row">
       <img class="col-md-2 left-block img-responsive img-circle" src="/static/img/test-user-icon.jpg" alt="profile picture" width="200">
       <div class="col-md-6">
@@ -24,7 +24,24 @@
     <p class="text-left">
       {{profile.bio}}
     </p>
-    {
+  </div>
+
+  <div class="col-md-2">
+    <h1 class="text-center">Groups</h1>
+    <table class="table table-hover">
+      <thread>
+        <tr>
+          <th>Name</th>
+        </tr>
+      </thread>
+      <tbody>
+        {% for group in groups %}
+        <tr>
+            <th><a href="/volunteer/event/{{group.id}}">{{group.name}}</a></th>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
 
   <div class="col-md-4">
