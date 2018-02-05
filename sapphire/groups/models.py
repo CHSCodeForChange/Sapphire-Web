@@ -66,3 +66,15 @@ class Group(models.Model):
             if (group == self):
                 return True
         return False
+
+    def get_role(self, user):
+        if (self.owner == user):
+            return "owner"
+
+        for organizer in self.organizers:
+            return "organizer"
+
+        for volunteer in self.volunteers:
+            return "volunteer"
+
+        return "non
