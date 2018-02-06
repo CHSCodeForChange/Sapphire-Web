@@ -77,4 +77,4 @@ class Group(models.Model):
         for volunteer in self.volunteers:
             return "volunteer"
 
-        return "non
+        return "none"
