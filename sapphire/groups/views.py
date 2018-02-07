@@ -21,9 +21,9 @@ def group(request, group_id):
 
 def join(request, group_id):
     group = Group.objects.get(id=group_id)
-    group.volunteers.add(request.user)
-    group.save()
-    print("hello world")
+    if (group.get_is_member == False):
+        group.volunteers.add(request.user)
+        group.save()
     return redirect('/groups/'+str(group_id))
 
 def changePermissionLevel(request, group_id, user):
