@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from accounts.models import *
 from django.contrib.auth.forms import UserChangeForm
 
+
 from organizer.forms import NewSlotForm
 
 """class EditProfileForm(forms.Form):
@@ -35,14 +36,21 @@ from organizer.forms import NewSlotForm
 
 
 class EditProfileForm(forms.Form):
-    bio = forms.CharField(label='Bio', max_length=960, widget=forms.TextInput(
-        attrs={'type': 'text',
-               'class': 'form-control',
-               'rows': '5'}))
+
+
+
 
     def __init__(self, *args, **kwargs):
-        self.profile = kwargs.pop('profile')
-        super(NewSlotForm, self).__init__(*args, **kwargs)
+        self.profile = kwargs.pop('profile', None)
+        super(EditProfileForm, self).__init__(*args, **kwargs)
+
+    bio = forms.CharField(label='Bio', max_length=360, widget=forms.Textarea(
+        attrs={
+            'type': 'text',
+            'class': 'form-control',
+            'rows': 5,
+            'style': 'resize:none;',
+        }))
 
     def clean_bio(self):
         bio = self.cleaned_data['bio']

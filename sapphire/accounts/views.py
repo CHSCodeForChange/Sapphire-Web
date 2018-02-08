@@ -16,12 +16,6 @@ from django.views.generic.edit import UpdateView
 from feed.models import Feed_Entry
 from groups.models import Group
 
-class EditProfile(UpdateView):
-    model = Profile
-    fields = ['bio']
-    template_name = 'accounts/edit_profile.html'
-    success_url = 'http://127.0.0.1:8000/accounts/profile'
-
 
 
 # Redirects to the profile page
@@ -51,14 +45,15 @@ def other_profile(request, user_id):
         return redirect('/accounts/profile')
 
 def edit_profile(request):
-    form = EditProfileForm(request.POST)
     profile = request.user.profile
-    if form.is_valid():
-        profile.bio = form.save(commit=False)
-        profile.save()
-        return redirect('profile')
-
-    return render(request, 'accounts/edit_profile.html')
+    if request.POST:
+        form = EditProfileForm(request.POST, profile=profile)
+        if form.is_valid():
+            profile.bio = form.save(commit=False)
+            profile.save()
+            return redirect('/accounts/profile/')
+    form = EditProfileForm(initial={'bio':profile.bio})
+    return render(request, 'accounts/edit_profile.html', {"form":form, 'profile':profile})
 
 def edit_user(request):
     if request.method == 'POST':
