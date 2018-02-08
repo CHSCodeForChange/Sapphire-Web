@@ -91,6 +91,12 @@ class User_Slot(models.Model):
     signin = models.DateTimeField(null=True)
     signout = models.DateTimeField(null=True)
 
+    def is_signin_null(self):
+        return self.signin == None
+
+    def is_signout_null(self):
+        return self.signout == None
+
 class Event(models.Model):
     parentGroup = models.ForeignKey(
         Group,

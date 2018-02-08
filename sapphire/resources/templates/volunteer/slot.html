@@ -41,6 +41,8 @@
         <tr>
           <th>{{user_slot.volunteer.username}}</th>
           {% if is_organizer %}
+            <th>{{user_slot.is_signin_null}}</th>
+            <th>{{user_slot.is_signout_null}}</th>
             <th><a href="/volunteer/signin/{{user_slot.id}}"><button class="btn btn-primary">Sign In</button></a></th>
             <th><a href="/volunteer/signout/{{user_slot.id}}"><button class="btn btn-primary">Sign Out</button></a></th>
           {% endif %}
