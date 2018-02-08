@@ -41,11 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
     'feed',
+    'sheets',
     'info',
     'groups',
     'volunteerApp',
     'organizer',
-
     'utility',
 ]
 

@@ -33,9 +33,10 @@ def event(request, event_id):
 
 def slot(request, slot_id):
     slot = Slot.objects.get(id=slot_id)
+    event = slot.parentEvent
     is_organizer = Group.get_is_organzer(slot.parentEvent.parentGroup, request.user)
     user_slots = User_Slot.objects.filter(parentSlot=slot)
-    return render(request, 'volunteer/slot.html', {'slot':slot, 'user_slots':user_slots, 'is_organizer':is_organizer})
+    return render(request, 'volunteer/slot.html', {'slot':slot, 'user_slots':user_slots, 'event':event, 'is_organizer':is_organizer})
 
 def slotNeeds(request):
     slots = Slot.objects.order_by('start')
