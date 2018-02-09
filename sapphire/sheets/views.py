@@ -31,10 +31,16 @@ def fromslot(request, slot_id):
     user_slots = User_Slot.objects.filter(parentSlot=slot)
 
     for slot in user_slots:
-        writer.writerow([slot.volunteer.first_name,
-                     slot.volunteer.last_name,
-                     slot.signin,
-                     slot.signout])
+        if (slot.volunteer == None):
+            writer.writerow(["[No Volunteer]",
+                         "[No Volunteer]",
+                         slot.signin,
+                         slot.signout])
+        else:
+            writer.writerow([slot.volunteer.first_name,
+                         slot.volunteer.last_name,
+                         slot.signin,
+                         slot.signout])
 
     #scope = ['https://spreadsheets.google.com/feeds']
     #cred = ServiceAccountCredentials.from_json_keyfile_name('sapphire.json')
@@ -71,10 +77,16 @@ def fromevent(request, event_id):
         user_slots = User_Slot.objects.filter(parentSlot=slot)
 
         for user_slot in user_slots:
-            writer.writerow([user_slot.volunteer.first_name,
-                         user_slot.volunteer.last_name,
-                         user_slot.signin,
-                         user_slot.signout])
+            if (user_slot.volunteer == None):
+                writer.writerow(["[No Volunteer]",
+                             "[No Volunteer]",
+                             user_slot.signin,
+                             user_slot.signout])
+            else:
+                writer.writerow([user_slot.volunteer.first_name,
+                             user_slot.volunteer.last_name,
+                             user_slot.signin,
+                             user_slot.signout])
 
 
     return response
