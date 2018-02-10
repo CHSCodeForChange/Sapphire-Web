@@ -1,6 +1,8 @@
 from django.db import models
+
 from django.contrib.auth.models import User, UserManager
 from accounts.models import Profile
+from groups.models import Group
 
 # Create your models here.
 class Feed_Entry(models.Model):
@@ -13,6 +15,11 @@ class Feed_Entry(models.Model):
         on_delete=models.CASCADE,
     )
 
+    group = models.ForeignKey(
+        Group,
+        on_delete=models.CASCADE,
+    )
+
     # The datetime that the user did said action
     datetime = models.DateTimeField()
 
@@ -21,5 +28,3 @@ class Feed_Entry(models.Model):
 
     #the URL that the feed redirects to if you click the description
     url = models.CharField(max_length=120)
-
-    

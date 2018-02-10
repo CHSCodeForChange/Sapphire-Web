@@ -32,6 +32,7 @@ def addEvent(request, group_id):
             event.save()
 
             feed_entry = Feed_Entry(
+                group=group,
                 user=request.user,
                 datetime=datetime.now(),
                 description="Created single slot \"" + event.name + "\"",
@@ -119,6 +120,7 @@ def addSlot(request, event_id):
                 user_slot.save()
 
             feed_entry = Feed_Entry(
+                group=group,
                 user=request.user,
                 datetime=datetime.now(),
                 description="Created slot \"" + str(slot.title) + "\" in event \"" + str(slot.parentEvent) + "\"",
@@ -168,11 +170,13 @@ def index(request):
 def deleteEvent(request, event_id):
     next = request.GET.get('next')
     object = Event.objects.get(id=event_id)
+    group = object.parentGroup
     name = object.name
 
     object.delete()
 
     feed_entry = Feed_Entry(
+        group = group,
         user=request.user,
         datetime=datetime.now(),
         description="Deleted event \"" + name + "\"",
@@ -189,6 +193,7 @@ def deleteSlot(request, slot_id):
     slot.delete()
 
     feed_entry = Feed_Entry(
+        group=event.parentGroup,
         user=request.user,
         datetime=datetime.now(),
         description="Deleted slot \"" + name + "\" in event \"" + event.name + "\"",

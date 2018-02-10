@@ -60,6 +60,7 @@ def volunteer(request, slot_id):
 
 
     feed_entry = Feed_Entry(
+        group = event.parentGroup,
         user=request.user,
         datetime=datetime.now(),
         description="Volunteered for \"" + name + "\" in event \"" + event + "\"",
