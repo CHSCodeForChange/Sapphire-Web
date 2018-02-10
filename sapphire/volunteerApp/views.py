@@ -71,12 +71,15 @@ def volunteer(request, slot_id):
 
 def signin(request, user_slot_id):
     user_slot = User_Slot.objects.get(id=user_slot_id)
-    user_slot.signin = datetime.now()
-    user_slot.save()
+    if (user_slot.volunteer != None):
+        user_slot.signin = datetime.now()
+        user_slot.save()
     return redirect('/volunteer/slot/'+str(user_slot.parentSlot.id))
+
 
 def signout(request, user_slot_id):
     user_slot = User_Slot.objects.get(id=user_slot_id)
-    user_slot.signout = datetime.now()
-    user_slot.save()
+    if (user_slot.volunteer != None):
+        user_slot.signout = datetime.now()
+        user_slot.save()
     return redirect('/volunteer/slot/'+str(user_slot.parentSlot.id))
