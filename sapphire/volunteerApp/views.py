@@ -49,21 +49,22 @@ def volunteer(request, slot_id):
     #next = request.GET.get('next')
     slot = Slot.objects.get(id=slot_id)
     user_slot = User_Slot.objects.filter(parentSlot=slot, volunteer__isnull=True).first()
-    if (user_slot == None):
+    slots_filled_by_this_user = User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first()
+    if (user_slot == None or slots_filled_by_this_user != None):
         return redirect('/volunteer/slot/'+str(slot_id))
 
     user_slot.volunteer = request.user
     user_slot.save()
 
     name = slot.title
-    event = slot.parentEvent.name
+    event = slot.parentEvent
 
 
     feed_entry = Feed_Entry(
         group = event.parentGroup,
         user=request.user,
         datetime=datetime.now(),
-        description="Volunteered for \"" + name + "\" in event \"" + event + "\"",
+        description="Volunteered for \"" + name + "\" in event \"" + event.name + "\"",
         url="/volunteer/slot/" + str(slot.id))
     feed_entry.save()
     return redirect('/volunteer/slot/'+str(slot.id))
