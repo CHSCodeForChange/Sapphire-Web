@@ -78,3 +78,24 @@ class Group(models.Model):
             return "volunteer"
 
         return "none"
+
+class Chat_Entry(models.Model):
+    objects = models.Manager()
+
+    """The user that did the action the feed entry is talking about
+        also if you click on the user it will redirect the page to the user's profile"""
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+    )
+
+    parentGroup = models.ForeignKey(
+        Group,
+        on_delete=models.CASCADE,
+    )
+
+    # The datetime that the user did said action
+    datetime = models.DateTimeField()
+
+    # The String description of the action
+    description = models.CharField(max_length=960)

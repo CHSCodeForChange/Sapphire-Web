@@ -11,4 +11,6 @@ urlpatterns = [
     url(r'^add/', views.add, name='add'),
     url(r'^(?P<group_id>[0-9]+)/join/$', views.join, name='joinGroup'),
     url(r'^(?P<group_id>[0-9]+)/$', views.group, name='groupView'),
+    url(r'^(?P<group_id>[0-9]+)/chat/$', views.chat, name='groupChat'),
+
 ]
