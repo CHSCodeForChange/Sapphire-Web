@@ -62,15 +62,28 @@ class EditProfileForm(forms.Form):
 
 class EditUserForm(UserChangeForm):
     template_name = '/accounts/editProfile'
-
+    first_name = forms.CharField(label='First Name', max_length=150, widget=forms.TextInput(
+        attrs={'type': 'text',
+               'class': 'form-control'}))
+    last_name = forms.CharField(label='Last Name', max_length=150, widget=forms.TextInput(
+        attrs={'type': 'text',
+               'class': 'form-control'}))
+    username = forms.CharField(label='Username', min_length=4, max_length=150, widget=forms.TextInput(
+        attrs={'type': 'text',
+               'class': 'form-control'}))
+    email = forms.EmailField(label='Email', max_length=200, widget=forms.EmailInput(
+        attrs={'type': 'text',
+               'class': 'form-control'}))
     class Meta:
         model = User
         fields = (
             'email',
             'first_name',
             'last_name',
-            'password'
+            'username',
+            'password',
         )
+
 
 
 # The form for user signups

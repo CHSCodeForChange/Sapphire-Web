@@ -48,12 +48,15 @@ def edit_profile(request):
     profile = request.user.profile
     if request.POST:
         form = EditProfileForm(request.POST, profile=profile)
-        if form.is_valid():
+        form2 = EditUserForm(request.POST, instance=request.user)
+        if form.is_valid() and form2.is_valid():
             profile.bio = form.save(commit=False)
             profile.save()
+            form2.save()
             return redirect('/accounts/profile/')
     form = EditProfileForm(initial={'bio':profile.bio})
-    return render(request, 'accounts/edit_profile.html', {"form":form, 'profile':profile})
+    form2 = EditUserForm(instance=request.user)
+    return render(request, 'accounts/edit_profile.html', {"form":form, 'profile':profile, "form2": form2})
 
 def edit_user(request):
     if request.method == 'POST':
@@ -67,19 +70,6 @@ def edit_user(request):
         args = {'form': form}
         return render(request, 'accounts/editProfile.html', args)
 
-"""def editProfile(request):
-    if request.user.is_authenticated():
-        # This line breaks the code: "'int' is not iterable"
-
-        form = EditProfileForm(request.POST, profile)
-
-        if form.is_valid():
-            bio = form.save(commit=False)
-            bio.save()
-        return render(request, 'accounts/editProfile.html', {'profile': profile})
-    else:
-        form = EditProfileForm()
-        return render(request, 'accounts/editProfile.html', {'form': form})"""
 
 # def editprofile(request):
 #     if(request.method == 'POST'):
