@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from datetime import datetime
+from datetime import datetime, timezone
 
 from utility.models import *
 from feed.models import Feed_Entry
@@ -69,14 +69,18 @@ def volunteer(request, slot_id):
     feed_entry.save()
     return redirect('/volunteer/slot/'+str(slot.id))
 
+
 def signin(request, user_slot_id):
     user_slot = User_Slot.objects.get(id=user_slot_id)
-    user_slot.signin = datetime.now()
+    user_slot.signin = datetime.now(timezone.utc)
     user_slot.save()
     return redirect('/volunteer/slot/'+str(user_slot.parentSlot.id))
 
+
 def signout(request, user_slot_id):
     user_slot = User_Slot.objects.get(id=user_slot_id)
-    user_slot.signout = datetime.now()
+    user_slot.signout = datetime.now(timezone.utc)
+    deltaTime = user_slot.signout - user_slot.signin
+    user_slot.difference = float(deltaTime.days * 86400) + float(deltaTime.seconds)
     user_slot.save()
     return redirect('/volunteer/slot/'+str(user_slot.parentSlot.id))

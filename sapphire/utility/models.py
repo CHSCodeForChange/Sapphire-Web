@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User, UserManager
 from accounts.models import Profile
+from datetime import datetime, timedelta, timezone
 
 """
 Notes:
@@ -72,6 +73,7 @@ class Slot(models.Model):
     # The Integer zip code of the Event
     zip_code = models.IntegerField(null=True)
 
+
 class User_Slot(models.Model):
     volunteer = models.ForeignKey(
         User,
@@ -89,6 +91,9 @@ class User_Slot(models.Model):
 
     signin = models.DateTimeField(null=True)
     signout = models.DateTimeField(null=True)
+
+    difference = models.FloatField(null=True)
+
 
 class Event(models.Model):
     is_single = models.BooleanField(default=False)
