@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User, UserManager
 from accounts.models import Profile
+from groups.models import Group
 from datetime import datetime, timedelta, timezone
 
 """
@@ -92,12 +93,24 @@ class User_Slot(models.Model):
     signin = models.DateTimeField(null=True)
     signout = models.DateTimeField(null=True)
 
+    def is_signin_null(self):
+        return self.signin == None
+
+    def is_signout_null(self):
+        return self.signout == None
+
     difference = models.FloatField(null=True)
 
 
 class Event(models.Model):
-    is_single = models.BooleanField(default=False)
-    type = models.CharField(max_length=80)
+    parentGroup = models.ForeignKey(
+        Group,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
+    #is_single = models.BooleanField(default=False)
+    #type = models.CharField(max_length=80)
     objects = models.Manager()
     # The organizer of the Event
     organizer = models.ForeignKey(
@@ -126,12 +139,12 @@ class Event(models.Model):
         null=True
     )
     # The list of Volunteers
-    volunteers = models.ForeignKey(
+    """volunteers = models.ForeignKey(
         Profile,
         on_delete=models.CASCADE,
         null=True,
         blank=True
-    )
+    )"""
 
     slots = models.ForeignKey(
         Slot,
@@ -144,13 +157,13 @@ class Event(models.Model):
     end = models.DateTimeField(null=True)
     # The minimun number of volunteers this slot needs to have. Set by Event
     # organizer and factored into slot priority
-    minVolunteers = models.IntegerField(null=True)
+    #minVolunteers = models.IntegerField(null=True)
     # The maximum number of volunteers this slot can have. Set by Event
     # organizer and stops too many Profiles from signing up
-    maxVolunteers = models.IntegerField(null=True)
+    #maxVolunteers = models.IntegerField(null=True)
     # TODO allow a getPriority() function to get the instantanious priority of
     # the Event object
-    in_person = models.NullBooleanField(null=True)
+    #in_person = models.NullBooleanField(null=True)
     # A one to many relationship holding the Slots for an Event object
 
 

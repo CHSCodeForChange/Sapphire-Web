@@ -1,9 +1,94 @@
-{% extends "header.html" %}
+{% extends "header_not_centered.html" %}
 
 {% block content %}
 
-<h1>{{group.name}}</h1>
+<div class="col-md-4">
+  <div class="row">
+    <img class="col-md-2 left-block img-responsive img-circle" src="/static/img/test-user-icon.jpg" alt="profile picture" width="200">
+    <div class="col-md-6">
+      <h1 class=""> {{group.name}}</h1>
+      {% if is_member %}
+      <a href = "chat">
+        <button type="button" class="btn btn-primary">Chat</button>
+      </a>
+      {% else %}
+        <a href = "join">
+          <button type="button" class="btn btn-primary">Join</button>
+        </a>
+      {% endif %}
+    </div>
+  </div>
 
+  <h3> Completed {{group.hours}} Hours of Service </h3>
+  <h5>Email: <a href = "{{group.email}}">{{group.email}}</a>,
+    Website: <a href = "{{group.website}}">{{group.website}}</a></h5>
+  <h5>{{group.location}}: {{group.address}}, {{group.city}} {{group.state}} {{group.zip_code}}</h5>
+  <p class="text-left">
+    {{group.description}}
+  </p>
+</div>
 
+<div class="col-md-4">
+  <h1 class="text-center">Events</h1>
+  <table class="table table-hover">
+    <thread>
+      <tr>
+        <th>Name</th>
+        <th>Time</th>
+      </tr>
+    </thread>
+    <tbody>
+      {% for event in events %}
+      <tr>
+          <th><a href="/volunteer/event/{{event.id}}">{{event.name}}</a></th>
+          <th>{{event.start}}</th>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="col-md-4">
+  <h1 class="text-center">Members</h1>
+  <table class="table table-hover">
+    <thread>
+      <tr>
+        <th>Name</th>
+        <th>Role</th>
+      </tr>
+    </thread>
+    <tbody>
+      <tr>
+          <th>{{group.owner.username}}</th>
+          <th>owner</th>
+      </tr>
+
+      {% for u in group.organizers.all %}
+      <tr>
+          <th>{{u.username}}</th>
+          <th>organizer</th>
+          {% if is_owner %}
+            <th><a href="switchPermissionLevel/{{u.id}}">
+                <button class="btn btn-primary">Make Volunteer</button>
+            </a></th>
+          {% endif %}
+      </tr>
+      {% endfor %}
+
+      {% for u in group.volunteers.all %}
+      <tr>
+          <th>{{u.username}}</th>
+          <th>volunteer</th>
+          {% if is_owner %}
+            <th><a href="switchPermissionLevel/{{u.id}}">
+                <button class="btn btn-primary">Make Organizer</button>
+            </a></th>
+          {% endif %}
+      </tr>
+      {% endfor %}
+
+    </tbody>
+  </table>
+</div>
 
 {% endblock %}

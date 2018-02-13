@@ -3,25 +3,37 @@
 {% load standard_tags %}
 
 {% block content %}
-  <h1>{{slot.title}}</h1>
-  <h4>{{slot.start}} - {{slot.end}}</h4>
-  <h5>{{slot.location}}</h5>
+  <div class="jumbotron">
+    <h1 class="display-1">{{slot.title}}</h1>
+    <h4 class="lead">{{slot.start}} - {{slot.end}}</h4>
+    <h5 class="mb-0">{{slot.location}} - {{event.location}}: {{event.address}} {{event.city}}, {{event.state}} {{event.zip_code}}</h5>
 
-  <p class="text-left">{{slot.description}}</p>
+    <h1></h1>
+    <p class="text-left">{{slot.description}}</p>
+    <h1></h1>
 
-  <div class="row">
-    <a class="col-sm-8" href="{% url 'volunteer' slot_id=slot.id %}">
-      <button class="btn btn-info btn-block">Volunteer</button>
-    </a>
-    {% if request.user|has_group:"Organizer" %}
-    <a class="col-sm-2" href="{{slot.id}}/edit/?type={{slot.type}}">
-      <button class="btn btn-primary btn-block">Edit</button>
-    </a>
-    <a class="col-sm-2" href="{% url 'deleteSlot' slot_id=slot.id %}?next={{ request.path|urlencode }}">
-      <button class="btn btn-danger btn-block">Delete</button>
-    </a>
-    {% endif %}
+
+    <div class="row">
+      {% if is_organizer %}
+        <a class="col-sm-8" href="{% url 'volunteer' slot_id=slot.id %}">
+          <button class="btn btn-info btn-block">Volunteer</button>
+        </a>
+        <a class="col-sm-2" href="{{slot.id}}/edit/?type={{slot.type}}">
+          <button class="btn btn-primary btn-block">Edit</button>
+        </a>
+        <a class="col-sm-2" href="{% url 'deleteSlot' slot_id=slot.id %}?next={{ request.path|urlencode }}">
+          <button class="btn btn-danger btn-block">Delete</button>
+        </a>
+      {% else %}
+        <a class="col-sm-12" href="{% url 'volunteer' slot_id=slot.id %}">
+          <button class="btn btn-info btn-block">Volunteer</button>
+        </a>
+      {% endif %}
+    </div>
   </div>
+
+
+
 
   <h3>Volunteers</h3>
   <table class="table table-hover">
@@ -35,14 +47,12 @@
       </thead>
       {% for user_slot in user_slots %}
         <tr>
-            <td>{{user_slot.volunteer.username}}</td>
-          {% if request.user|has_group:"Organizer" %}
-            <td><a href="/volunteer/signin/{{user_slot.id}}">
-                <button class="btn btn-primary">Sign In</button>
-            </a></td>
-            <td><a href="/volunteer/signout/{{user_slot.id}}">
-                <button class="btn btn-primary">Sign Out</button>
-            </a></td>
+          <th>{{user_slot.volunteer.username}}</th>
+          {% if is_organizer %}
+            <th>{{user_slot.is_signin_null}}</th>
+            <th>{{user_slot.is_signout_null}}</th>
+            <th><a href="/volunteer/signin/{{user_slot.id}}"><button class="btn btn-primary">Sign In</button></a></th>
+            <th><a href="/volunteer/signout/{{user_slot.id}}"><button class="btn btn-primary">Sign Out</button></a></th>
           {% endif %}
             <td>{{user_slot.signin}}</td>
             <td>{{user_slot.signout}}</td>
@@ -50,6 +60,9 @@
       {% endfor %}
     </tbody>
   </table>
+
+  <th><a href="/sheets/fromslot/{{slot.id}}"><button class="btn btn-success">Generate Spreadsheet</button></a></th>
+
 
 
 {% endblock %}

@@ -14,12 +14,7 @@ from django.core.urlresolvers import reverse
 from django.views.generic.edit import UpdateView
 
 from feed.models import Feed_Entry
-
-class EditProfile(UpdateView):
-    model = Profile
-    fields = ['bio']
-    template_name = 'accounts/edit_profile.html'
-    success_url = 'http://127.0.0.1:8000/accounts/profile'
+from groups.models import Group
 
 
 
@@ -33,9 +28,10 @@ def profile(request):
         # This line breaks the code: "'int' is not iterable"
         user = request.user
         profile = user.profile
+        groups = Group.get_is_member_list(request.user)
 
         feed_entries = Feed_Entry.objects.filter(user=request.user).order_by('-datetime')[:10]
-        return render(request, "accounts/profile.html", {'user':user, 'profile':profile,'feed_entries':feed_entries, 'this_user':True})
+        return render(request, "accounts/profile.html", {'user':user, 'profile':profile,'feed_entries':feed_entries, 'this_user':True, 'groups':groups})
     else:
         return redirect('/login')
 def other_profile(request, user_id):
@@ -49,14 +45,18 @@ def other_profile(request, user_id):
         return redirect('/accounts/profile')
 
 def edit_profile(request):
-    form = EditProfileForm(request.POST)
     profile = request.user.profile
-    if form.is_valid():
-        profile.bio = form.save(commit=False)
-        profile.save()
-        return redirect('profile')
-
-    return render(request, 'accounts/edit_profile.html')
+    if request.POST:
+        form = EditProfileForm(request.POST, profile=profile)
+        form2 = EditUserForm(request.POST, instance=request.user)
+        if form.is_valid() and form2.is_valid():
+            profile.bio = form.save(commit=False)
+            profile.save()
+            form2.save()
+            return redirect('/accounts/profile/')
+    form = EditProfileForm(initial={'bio':profile.bio})
+    form2 = EditUserForm(instance=request.user)
+    return render(request, 'accounts/edit_profile.html', {"form":form, 'profile':profile, "form2": form2})
 
 def edit_user(request):
     if request.method == 'POST':
@@ -70,19 +70,6 @@ def edit_user(request):
         args = {'form': form}
         return render(request, 'accounts/editProfile.html', args)
 
-"""def editProfile(request):
-    if request.user.is_authenticated():
-        # This line breaks the code: "'int' is not iterable"
-
-        form = EditProfileForm(request.POST, profile)
-
-        if form.is_valid():
-            bio = form.save(commit=False)
-            bio.save()
-        return render(request, 'accounts/editProfile.html', {'profile': profile})
-    else:
-        form = EditProfileForm()
-        return render(request, 'accounts/editProfile.html', {'form': form})"""
 
 # def editprofile(request):
 #     if(request.method == 'POST'):

@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from accounts.models import *
 from django.contrib.auth.forms import UserChangeForm
 
+
 from organizer.forms import NewSlotForm
 
 """class EditProfileForm(forms.Form):
@@ -35,14 +36,21 @@ from organizer.forms import NewSlotForm
 
 
 class EditProfileForm(forms.Form):
-    bio = forms.CharField(label='Bio', max_length=960, widget=forms.TextInput(
-        attrs={'type': 'text',
-               'class': 'form-control',
-               'rows': '5'}))
+
+
+
 
     def __init__(self, *args, **kwargs):
-        self.profile = kwargs.pop('profile')
-        super(NewSlotForm, self).__init__(*args, **kwargs)
+        self.profile = kwargs.pop('profile', None)
+        super(EditProfileForm, self).__init__(*args, **kwargs)
+
+    bio = forms.CharField(label='Bio', max_length=360, widget=forms.Textarea(
+        attrs={
+            'type': 'text',
+            'class': 'form-control',
+            'rows': 5,
+            'style': 'resize:none;',
+        }))
 
     def clean_bio(self):
         bio = self.cleaned_data['bio']
@@ -54,15 +62,28 @@ class EditProfileForm(forms.Form):
 
 class EditUserForm(UserChangeForm):
     template_name = '/accounts/editProfile'
-
+    first_name = forms.CharField(label='First Name', max_length=150, widget=forms.TextInput(
+        attrs={'type': 'text',
+               'class': 'form-control'}))
+    last_name = forms.CharField(label='Last Name', max_length=150, widget=forms.TextInput(
+        attrs={'type': 'text',
+               'class': 'form-control'}))
+    username = forms.CharField(label='Username', min_length=4, max_length=150, widget=forms.TextInput(
+        attrs={'type': 'text',
+               'class': 'form-control'}))
+    email = forms.EmailField(label='Email', max_length=200, widget=forms.EmailInput(
+        attrs={'type': 'text',
+               'class': 'form-control'}))
     class Meta:
         model = User
         fields = (
             'email',
             'first_name',
             'last_name',
-            'password'
+            'username',
+            'password',
         )
+
 
 
 # The form for user signups

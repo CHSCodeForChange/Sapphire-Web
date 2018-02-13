@@ -10,3 +10,6 @@ def overview(request):
 
 def codeforchange(request):
     return render(request, "info/codeforchange.html")
+
+def pricing(request):
+    return render(request, "info/pricing.html")

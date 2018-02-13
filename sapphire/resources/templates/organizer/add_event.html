@@ -2,8 +2,8 @@
 
 {% block content %}
   <h1>Add Event</h1>
-  <a href="http://127.0.0.1:8000/volunteer/eventNeeds/"><button class="btn btn-primary btn-sm">View Events</button></a>
-  <a href="?type=singleSlot"><button class="btn btn-secondary btn-sm">Add Single Slot</button></a>
+  <a href="/organizer/addEvent/"><button class="btn btn-primary">Pick Event</button></a>
+  <a href="/volunteer/eventNeeds/"><button class="btn btn-secondary">View Events</button></a>
   <form method="post">
     {% csrf_token %}
       {% for field in form %}

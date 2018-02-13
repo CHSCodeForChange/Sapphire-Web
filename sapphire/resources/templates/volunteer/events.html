@@ -4,12 +4,10 @@
 {% block content %}
 
 <h1>Events</h1>
-{% if request.user|has_group:"Organizer" %}
-<div class="row" style="padding: 20px;">
-  <a href="/organizer/add/?type=singleSlot"><button class="btn btn-secondary">Add Single Slot</button></a>
-  <a href="/organizer/add/?type=event"><button class="btn btn-secondary">Add Event</button></a>
+<div class="row">
+  <a href="/organizer/addEvent/"><button class="btn btn-secondary">Add Event</button></a>
+  <!--a href="/organizer/add/?type=event"><button class="btn btn-secondary">Add Event</button></a-->
 </div>
-{% endif %}
 <table class="table table-hover">
   <thread>
     <tr>

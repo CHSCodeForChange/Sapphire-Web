@@ -9,5 +9,9 @@ from .models import Group
 urlpatterns = [
     url(r'^$', views.list, name='list'),
     url(r'^add/', views.add, name='add'),
-    url(r'^(?P<pk>\d+)/', DetailView.as_view(context_object_name="group", model = Group, template_name = "groups/groupView.html"), name='groupView'),
+    url(r'^(?P<group_id>[0-9]+)/join/$', views.join, name='joinGroup'),
+    url(r'^(?P<group_id>[0-9]+)/$', views.group, name='groupView'),
+    url(r'^(?P<group_id>[0-9]+)/chat/$', views.chat, name='groupChat'),
+    url(r'^(?P<group_id>[0-9]+)/switchPermissionLevel/(?P<user_id>[0-9]+)/$', views.changePermissionLevel, name='switchPermissionLevel'),
+
 ]

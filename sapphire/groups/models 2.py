@@ -43,7 +43,7 @@ class Group(models.Model):
     zip_code = models.IntegerField(null=True)
 
     #number of hours of service completed by this group
-    hours = models.IntegerField(default=0)
+    hours = models.IntegerField(null=True)
 
     #returns a list of groups that a given user is a part of at any level
     def get_is_member_list(user):
@@ -78,24 +78,3 @@ class Group(models.Model):
             return "volunteer"
 
         return "none"
-
-class Chat_Entry(models.Model):
-    objects = models.Manager()
-
-    """The user that did the action the feed entry is talking about
-        also if you click on the user it will redirect the page to the user's profile"""
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-    )
-
-    parentGroup = models.ForeignKey(
-        Group,
-        on_delete=models.CASCADE,
-    )
-
-    # The datetime that the user did said action
-    datetime = models.DateTimeField()
-
-    # The String description of the action
-    description = models.CharField(max_length=960)

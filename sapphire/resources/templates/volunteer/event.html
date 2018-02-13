@@ -62,7 +62,7 @@
         <p class="text-left">{{event.description}}</p>
     </div>
 
-    {% if request.user|has_group:"Organizer" %}
+    {% if is_organizer %}
     <div class="row">
         <a class="col-sm-10" href="{{event.id}}/edit/?type={{event.type}}">
             <button class="btn btn-primary btn-block">Edit</button>
@@ -79,7 +79,7 @@
 
 
   <h3>Volunteer Slots</h3>
-  {% if request.user|has_group:"Organizer" %}
+  {% if is_organizer %}
   <a href="{% url 'addSlot' event_id=event.id %}">
     <button class="btn btn-secondary">Add Slot</button>
   </a>
@@ -102,7 +102,7 @@
           <th>{{slot.end}}</th>
           <th>{{slot.volunteers}}</th>
           <th>
-            {% if request.user|has_group:"Organizer" %}
+            {% if is_organizer %}
             <div class="btn-group">
                 <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Delete</button>
               <div class="dropdown-menu">
@@ -116,5 +116,8 @@
       {% endfor %}
     </tbody>
   </table>
+
+  <th><a href="/sheets/fromevent/{{event.id}}"><button class="btn btn-success">Generate Spreasheet</button></a></th>
+
 
 {% endblock %}

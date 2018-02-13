@@ -66,3 +66,6 @@ sapphire/.vscode/launch.json
 
 #database
 #sapphire/db.sqlite3
+
+#json
+sapphire/sapphire.json

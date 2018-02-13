@@ -1,8 +1,9 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth import models
+from datetime import datetime
 
-from groups.models import Group
+from groups.models import Group, Chat_Entry
 
 class NewGroupForm(forms.Form):
     name = forms.CharField(label='Title', max_length=120, widget=forms.TextInput(
@@ -97,3 +98,40 @@ class NewGroupForm(forms.Form):
             zip_code=self.cleaned_data['zip_code'],
             )
         return group
+class NewChatEntryForm(forms.Form):
+
+    description = forms.CharField(label='Description', widget=forms.Textarea(
+        attrs={'type': 'text',
+               'class': 'form-control',
+               'rows': 2,
+               'style': 'resize:none;'}))
+
+    user = models.User()
+    datetime = datetime.now()
+    parentGroup = models.Group()
+
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user')
+        self.parentGroup = kwargs.pop('parentGroup')
+        super(NewChatEntryForm, self).__init__(*args, **kwargs)
+    def clean_user(self):
+        user = self.cleaned_data['user']
+        return user
+    def clean_description(self):
+        description = self.cleaned_data['description']
+        return description
+    def clean_datetime(self):
+        datetime = self.cleaned_data['datetime']
+        return datetime
+    def clean_parentGroup(self):
+        parentGroup = self.cleaned_data['parentGroup']
+        return parentGroup
+
+    def save(self, commit=True):
+        entry = Chat_Entry(
+            user=self.user,
+            parentGroup=self.parentGroup,
+            description=self.cleaned_data['description'],
+            datetime=self.datetime)
+        return entry

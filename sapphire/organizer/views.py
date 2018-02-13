@@ -6,6 +6,7 @@ import string
 from .forms import NewEventForm, NewSingleSlotForm, NewSlotForm
 from utility.models import Event, Slot, User_Slot
 from feed.models import Feed_Entry
+from groups.models import Group
 
 
 # Sending user object to the form, to verify which fields to display/remove (depending on group)
@@ -14,7 +15,38 @@ def get_form_kwargs(self):
     kwargs.update({'user': self.request.user})
     kwargs.update({'parentEvent': self.request.META.get('HTTP_REFERER')})
     return kwargs
-def add(request):
+
+def pick_group(request):
+    my_groups = Group.get_is_organizer_list(request.user)
+    return render(request, 'organizer/pick_group.html', {'groups':my_groups})
+
+def addEvent(request, group_id):
+    group = Group.objects.get(id=group_id)
+    if not Group.get_is_organzer(group, request.user):
+        return HttpResponse('You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
+
+    if(request.method == 'POST'):
+        form = NewEventForm(request.POST, user=request.user, parentGroup=group)
+        if form.is_valid():
+            event = form.save(commit=False)
+            event.save()
+
+            feed_entry = Feed_Entry(
+                group=group,
+                user=request.user,
+                datetime=datetime.now(),
+                description="Created single slot \"" + event.name + "\"",
+                url="/volunteer/event/" + str(event.id))
+            feed_entry.save()
+
+            return redirect('/volunteer/eventNeeds')
+    else:
+        form = NewEventForm(user=request.user, parentGroup=group)
+    # Filter this by single slot events in the future
+    return render(request, 'organizer/add_event.html', {'form':form})
+
+
+"""def add(request):
     # Makes sure the user is an organizer
     is_organizer = False
     for g in request.user.groups.all():
@@ -24,6 +56,9 @@ def add(request):
         return HttpResponse('You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
     # Gets the page type
     type = request.GET.get('type', 'html')
+
+    my_groups = Group.get_is_organizer_list(request.user)
+
     # If the page type is normal, send them to the single slot page for now
     if type == 'html' or type == 'singleSlot':
         if(request.method == 'POST'):
@@ -43,7 +78,7 @@ def add(request):
         else:
             form = NewSingleSlotForm(user=request.user)
         # Filter this by single slot events in the future
-        return render(request, 'organizer/add_single_slot.html', {'form':form})
+        return render(request, 'organizer/add_single_slot.html', {'form':form, 'groups':my_groups})
     elif type == 'event':
         if(request.method == 'POST'):
             form = NewEventForm(request.POST, user=request.user)
@@ -61,14 +96,12 @@ def add(request):
                 return redirect('/volunteer/eventNeeds')
         else:
             form = NewEventForm(user=request.user)
-        return render(request, 'organizer/add_event.html', {'form':form})
+        return render(request, 'organizer/add_event.html', {'form':form, 'groups':my_groups})"""
 
 def addSlot(request, event_id):
-    is_organizer = False
-    for g in request.user.groups.all():
-        if g.name == 'Organizer':
-            is_organizer = True
-    if not is_organizer:
+    parentEvent = Event.objects.get(pk=event_id)
+    group = parentEvent.parentGroup
+    if not Group.get_is_organzer(group, request.user):
         return HttpResponse('You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
 
     parentEvent = Event.objects.get(pk=event_id)
@@ -87,6 +120,7 @@ def addSlot(request, event_id):
                 user_slot.save()
 
             feed_entry = Feed_Entry(
+                group=group,
                 user=request.user,
                 datetime=datetime.now(),
                 description="Created slot \"" + str(slot.title) + "\" in event \"" + str(slot.parentEvent) + "\"",
@@ -136,11 +170,13 @@ def index(request):
 def deleteEvent(request, event_id):
     next = request.GET.get('next')
     object = Event.objects.get(id=event_id)
+    group = object.parentGroup
     name = object.name
 
     object.delete()
 
     feed_entry = Feed_Entry(
+        group = group,
         user=request.user,
         datetime=datetime.now(),
         description="Deleted event \"" + name + "\"",
@@ -157,6 +193,7 @@ def deleteSlot(request, slot_id):
     slot.delete()
 
     feed_entry = Feed_Entry(
+        group=event.parentGroup,
         user=request.user,
         datetime=datetime.now(),
         description="Deleted slot \"" + name + "\" in event \"" + event.name + "\"",
