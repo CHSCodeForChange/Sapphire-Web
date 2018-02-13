@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from groups.models import Group, Chat_Entry
 from utility.models import Event
 from groups.forms import NewGroupForm, NewChatEntryForm
+from django.contrib.auth.models import User
 
 
 # Create your views here.
@@ -17,7 +18,8 @@ def list(request):
 def group(request, group_id):
     group = Group.objects.get(id=group_id)
     events = Event.objects.filter(parentGroup=group)
-    return render(request, 'groups/groupView.html', {'group':group, 'events':events, 'is_member':group.get_is_member(request.user)})
+    is_owner = group.owner == request.user
+    return render(request, 'groups/groupView.html', {'group':group, 'events':events, 'is_member':group.get_is_member(request.user), 'is_owner':is_owner})
 
 def join(request, group_id):
     group = Group.objects.get(id=group_id)
@@ -26,20 +28,26 @@ def join(request, group_id):
         group.save()
     return redirect('/groups/'+str(group_id))
 
-def changePermissionLevel(request, group_id, user):
-    group = Group.objects.get(group_id)
+def changePermissionLevel(request, group_id, user_id):
+    user = User.objects.get(id=user_id)
+    group = Group.objects.get(id=group_id)
     if (request.user != group.owner):
         return HttpResponse('You don\'t have the right permissions to see this page.')
 
     for curr_user in group.volunteers.all():
         if (curr_user == user):
-            groups.volunteers.remove(user)
-            groups.organizer.add(user)
+            group.volunteers.remove(user)
+            group.organizers.add(user)
+            group.save()
+            return redirect('/groups/'+str(group_id))
+
 
     for curr_user in group.organizers.all():
         if (curr_user == user):
-            groups.organizers.remove(user)
-            groups.volunteers.add(user)
+            group.organizers.remove(user)
+            group.volunteers.add(user)
+            group.save()
+            return redirect('/groups/'+str(group_id))
 
     return redirect('/groups/'+str(group_id))
 

@@ -233,12 +233,12 @@ class NewEventForm(forms.Form):
             zip_code=self.cleaned_data['zip_code'],
             #in_person=self.cleaned_data['in_person'],
             #maxVolunteers=self.cleaned_data['maxVolunteers'],
-            minVolunteers=1,
-            volunteers=None,
+            #minVolunteers=1,
+            #volunteers=None,
             start=self.cleaned_data['start'],
-            end=self.cleaned_data['end'],
-            is_single=False,
-            type='event')
+            end=self.cleaned_data['end'],)
+            #is_single=False,
+            #type='event')
         return event
 class NewSlotForm(forms.Form):
     title = forms.CharField(label='Title', max_length=30, widget=forms.TextInput(

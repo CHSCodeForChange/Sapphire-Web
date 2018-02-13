@@ -43,7 +43,7 @@ class Group(models.Model):
     zip_code = models.IntegerField(null=True)
 
     #number of hours of service completed by this group
-    hours = models.IntegerField(null=True)
+    hours = models.IntegerField(default=0)
 
     #returns a list of groups that a given user is a part of at any level
     def get_is_member_list(user):

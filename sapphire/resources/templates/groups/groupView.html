@@ -67,6 +67,11 @@
       <tr>
           <th>{{u.username}}</th>
           <th>organizer</th>
+          {% if is_owner %}
+            <th><a href="switchPermissionLevel/{{u.id}}">
+                <button class="btn btn-primary">Make Volunteer</button>
+            </a></th>
+          {% endif %}
       </tr>
       {% endfor %}
 
@@ -74,6 +79,11 @@
       <tr>
           <th>{{u.username}}</th>
           <th>volunteer</th>
+          {% if is_owner %}
+            <th><a href="switchPermissionLevel/{{u.id}}">
+                <button class="btn btn-primary">Make Organizer</button>
+            </a></th>
+          {% endif %}
       </tr>
       {% endfor %}
 

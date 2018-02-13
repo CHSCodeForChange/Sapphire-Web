@@ -41,12 +41,12 @@ def addEvent(request, group_id):
 
             return redirect('/volunteer/eventNeeds')
     else:
-        form = NewSingleSlotForm(user=request.user)
+        form = NewEventForm(user=request.user, parentGroup=group)
     # Filter this by single slot events in the future
     return render(request, 'organizer/add_event.html', {'form':form})
 
 
-def add(request):
+"""def add(request):
     # Makes sure the user is an organizer
     is_organizer = False
     for g in request.user.groups.all():
@@ -96,7 +96,7 @@ def add(request):
                 return redirect('/volunteer/eventNeeds')
         else:
             form = NewEventForm(user=request.user)
-        return render(request, 'organizer/add_event.html', {'form':form, 'groups':my_groups})
+        return render(request, 'organizer/add_event.html', {'form':form, 'groups':my_groups})"""
 
 def addSlot(request, event_id):
     parentEvent = Event.objects.get(pk=event_id)
