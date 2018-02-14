@@ -2,43 +2,13 @@ from django.contrib.auth.models import User, Group
 from django import forms
 from django.core.exceptions import ValidationError
 from accounts.models import *
-from django.contrib.auth.forms import UserChangeForm
-
+from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm, SetPasswordForm
 
 from organizer.forms import NewSlotForm
 
-"""class EditProfileForm(forms.Form):
-    bio = forms.CharField(label='Bio', max_length=960, widget=forms.TextInput(
-        attrs={
-            'type': 'text',
-            'class': 'form',
-            'value': profile.bio
-            }))
-
-    def clean_bio(self):
-        bio = self.cleaned_data['bio']
-        return bio
-
-    def save(self, commit=True):
-        try:
-
-            profile = Profile(
-            objects=object,
-            timezone=timezone,
-            team=team,
-            username=username,
-            bio=self.cleaned_data['bio'],
-            hours=hours
-            )
-            return profile
-        except Exception as e:
-            raise"""
 
 
 class EditProfileForm(forms.Form):
-
-
-
 
     def __init__(self, *args, **kwargs):
         self.profile = kwargs.pop('profile', None)
@@ -83,6 +53,20 @@ class EditUserForm(UserChangeForm):
             'username',
             'password',
         )
+
+class EditPasswordForm(PasswordChangeForm):
+    template_name = '/accounts/editProfile'
+
+    old_password = forms.CharField(label= 'Old Password', widget=forms.PasswordInput(
+        attrs={'type': 'text',
+            'class': 'form-control'}))
+    password1 = forms.CharField(label='New Password', widget=forms.PasswordInput(
+        attrs={'type': 'text',
+            'class': 'form-control'}))
+    new_password2 = forms.CharField(label='Confirm New Password', widget=forms.PasswordInput(
+        attrs={'type': 'text',
+            'class': 'form-control'}))
+
 
 
 

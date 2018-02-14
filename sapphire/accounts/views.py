@@ -15,6 +15,7 @@ from django.views.generic.edit import UpdateView
 
 from feed.models import Feed_Entry
 from groups.models import Group
+from django.contrib.auth import update_session_auth_hash
 
 
 
@@ -49,33 +50,18 @@ def edit_profile(request):
     if request.POST:
         form = EditProfileForm(request.POST, profile=profile)
         form2 = EditUserForm(request.POST, instance=request.user)
-        if form.is_valid() and form2.is_valid():
+        form3 = PasswordChangeForm(user=request.user,data=request.POST)
+        if form.is_valid() and form2.is_valid() and form3.is_valid():
             profile.bio = form.save(commit=False)
             profile.save()
             form2.save()
+            form3.save()
+            
             return redirect('/accounts/profile/')
     form = EditProfileForm(initial={'bio':profile.bio})
     form2 = EditUserForm(instance=request.user)
-    return render(request, 'accounts/edit_profile.html', {"form":form, 'profile':profile, "form2": form2})
-
-def edit_user(request):
-    if request.method == 'POST':
-        form = EditProfileForm(request.POST, instance=request.user)
-
-        if form.is_valid():
-            form.save()
-            return redirect(reverse('accounts:profile'))
-    else:
-        form = EditProfileForm(instance=request.user)
-        args = {'form': form}
-        return render(request, 'accounts/editProfile.html', args)
-
-
-# def editprofile(request):
-#     if(request.method == 'POST'):
-#        form = EditProfileForm(request.POST)
-#
-#        if form.is_valid():
+    form3 = PasswordChangeForm(user=request.user, data=request.POST)
+    return render(request, 'accounts/edit_profile.html', {"form":form, 'profile':profile, "form2": form2, "form3":form3})
 
 
 # The signup page
