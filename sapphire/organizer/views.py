@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from datetime import datetime
+from datetime import datetime, timezone
 import string
 
 from .forms import NewEventForm, NewSingleSlotForm, NewSlotForm
@@ -34,7 +34,7 @@ def addEvent(request, group_id):
             feed_entry = Feed_Entry(
                 group=group,
                 user=request.user,
-                datetime=datetime.now(),
+                datetime=datetime.now(timezone.utc),
                 description="Created single slot \"" + event.name + "\"",
                 url="/volunteer/event/" + str(event.id))
             feed_entry.save()
@@ -122,7 +122,7 @@ def addSlot(request, event_id):
             feed_entry = Feed_Entry(
                 group=group,
                 user=request.user,
-                datetime=datetime.now(),
+                datetime=datetime.now(timezone.utc),
                 description="Created slot \"" + str(slot.title) + "\" in event \"" + str(slot.parentEvent) + "\"",
                 url="/volunteer/slot/" + str(slot.id))
             feed_entry.save()
@@ -178,7 +178,7 @@ def deleteEvent(request, event_id):
     feed_entry = Feed_Entry(
         group = group,
         user=request.user,
-        datetime=datetime.now(),
+        datetime=datetime.now(timezone.utc),
         description="Deleted event \"" + name + "\"",
         url="/volunteer/eventNeeds"
     )
@@ -195,7 +195,7 @@ def deleteSlot(request, slot_id):
     feed_entry = Feed_Entry(
         group=event.parentGroup,
         user=request.user,
-        datetime=datetime.now(),
+        datetime=datetime.now(timezone.utc),
         description="Deleted slot \"" + name + "\" in event \"" + event.name + "\"",
         url="/volunteer/slots"
     )

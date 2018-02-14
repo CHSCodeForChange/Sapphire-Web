@@ -63,7 +63,7 @@ def volunteer(request, slot_id):
     feed_entry = Feed_Entry(
         group = event.parentGroup,
         user=request.user,
-        datetime=datetime.now(),
+        datetime=datetime.now(timezone.utc),
         description="Volunteered for \"" + name + "\" in event \"" + event.name + "\"",
         url="/volunteer/slot/" + str(slot.id))
     feed_entry.save()
@@ -73,7 +73,7 @@ def volunteer(request, slot_id):
 def signin(request, user_slot_id):
     user_slot = User_Slot.objects.get(id=user_slot_id)
     if (user_slot.volunteer != None):
-        user_slot.signin = datetime.now()
+        user_slot.signin = datetime.now(timezone.utc)
         user_slot.save()
     return redirect('/volunteer/slot/'+str(user_slot.parentSlot.id))
 
@@ -81,8 +81,8 @@ def signin(request, user_slot_id):
 def signout(request, user_slot_id):
     user_slot = User_Slot.objects.get(id=user_slot_id)
     if (user_slot.volunteer != None):
-        user_slot.signout = datetime.now()
-        user_slot.save()
-    #deltaTime = user_slot.signout - user_slot.signin
-    #user_slot.difference = float(deltaTime.days)*86400+float(deltaTime.seconds)
+        user_slot.signout = datetime.now(timezone.utc)
+    deltaTime = user_slot.signout - user_slot.signin
+    user_slot.difference = float(deltaTime.days)*86400+float(deltaTime.seconds)
+    user_slot.save()
     return redirect('/volunteer/slot/'+str(user_slot.parentSlot.id))

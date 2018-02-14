@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth import models
-from datetime import datetime
+from datetime import datetime, timezone
 
 from groups.models import Group, Chat_Entry
 
@@ -107,7 +107,7 @@ class NewChatEntryForm(forms.Form):
                'style': 'resize:none;'}))
 
     user = models.User()
-    datetime = datetime.now()
+    datetime = datetime.now(timezone.utc)
     parentGroup = models.Group()
 
 

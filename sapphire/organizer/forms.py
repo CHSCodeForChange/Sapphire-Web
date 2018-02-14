@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth import models
@@ -54,7 +54,7 @@ class NewSingleSlotForm(forms.Form):
     TESTdateField = {'DateField': forms.DateInput(attrs={'id': 'datetimepicker12'})}
 
     user = models.User()
-    datetime = datetime.now()
+    datetime = datetime.now(timezone.utc)
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user')
@@ -158,7 +158,7 @@ class NewEventForm(forms.Form):
                'class': 'form-control'}))"""
     user = models.User()
     parentGroup = models.Group()
-    datetime = datetime.now()
+    datetime = datetime.now(timezone.utc)
 
 
     """in_person = forms.BooleanField(label='In person', widget=forms.CheckboxInput(
@@ -267,7 +267,7 @@ class NewSlotForm(forms.Form):
                'class': 'form-control'}))
     user = models.User()
     parentEvent = Event()
-    datetime = datetime.now()
+    datetime = datetime.now(timezone.utc)
 
 
     """in_person = forms.BooleanField(label='In person', widget=forms.CheckboxInput(
