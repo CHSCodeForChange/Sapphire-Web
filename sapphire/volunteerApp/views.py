@@ -83,6 +83,15 @@ def signout(request, user_slot_id):
     if (user_slot.volunteer != None):
         user_slot.signout = datetime.now(timezone.utc)
     deltaTime = user_slot.signout - user_slot.signin
-    user_slot.difference = float(deltaTime.days)*86400+float(deltaTime.seconds)
+
+    seconds = float(deltaTime.days)*86400+float(deltaTime.seconds)
+    minutes = seconds/60
+    hours = minutes/60
+
+    minutes = minutes - hours*60
+    seconds = seconds - minutes*60
+
+    user_slot.difference = str(timedelta(seconds=seconds, minutes=minutes, hours=hours))
     user_slot.save()
+
     return redirect('/volunteer/slot/'+str(user_slot.parentSlot.id))

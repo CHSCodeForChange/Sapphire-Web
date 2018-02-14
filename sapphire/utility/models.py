@@ -99,7 +99,7 @@ class User_Slot(models.Model):
     def is_signout_null(self):
         return self.signout == None
 
-    difference = models.FloatField(null=True)
+    difference = models.CharField(max_length=100, null=True)
 
 
 class Event(models.Model):
