@@ -1,21 +1,20 @@
-
 {% extends "header_not_centered.html" %}
 
 {% block content %}
-
-  <div class="col-md-6">
-    <div class="row">
-      <img class="col-md-2 left-block img-responsive img-circle" src="/static/img/test-user-icon.jpg" alt="profile picture" width="200">
-      <div class="col-md-6">
-        <h1 class="username"> {{user.username}}</h1>
-          {% if this_user %}
-            <a href="/logout">
-              <button type="button" class="btn btn-danger">Logout</button>
-            </a>
-            <a href = "/accounts/profile/edit">
-              <button type="button" class="btn btn-primary">Edit Profile</button>
-            </a>
-          {% endif %}
+<div class="row">
+  <div class="col-md-4">
+    <div>
+      <img class="img-responsive img-circle disinlineblock" src="/static/img/test-user-icon.jpg" alt="profile picture" width="30%">
+      <h1 class="username disinlineblock"> {{user.username}}</h1>
+      {% if this_user %}
+      <div>
+        <a href="/logout">
+          <button type="button" class="btn btn-danger disinlineblock emptymarg">Logout</button>
+        </a>
+        <a href="/accounts/profile/edit/">
+          <button type="button" class="btn btn-primary disinline">Edit Profile</button>
+        </a>
+        {% endif %}
       </div>
     </div>
 
@@ -43,7 +42,10 @@
       </tbody>
     </table>
   </div>
-
+  <div class="card-body intrinsic-container intrinsic-container-16x9 col-md-4">
+    <iframe src="https://www.google.com/maps/embed/v1/search?q={{event.address}} {{event.city}}, {{event.state}} {{event.zip_code}}&key=AIzaSyB-YQD-s4ery8KQRnzX7FhZsBC4SeFRcjA"
+      allowfullscreen></iframe>
+  </div>
   <div class="col-md-4">
     <h2>Recent Activity</h2>
     <!--only shows 10 most recent right now,
@@ -52,9 +54,12 @@
       and change [:10] to the number of items needed,
       or remove [:10] to get all elements-->
     {% for entry in feed_entries %}
-      <h5>{{entry.datetime}}</h5>
-      <p><a href="{{entry.url}}">{{entry.description}}</a></p>
+    <h5>{{entry.datetime}}</h5>
+    <p>
+      <a href="{{entry.url}}">{{entry.description}}</a>
+    </p>
     {% endfor %}
   </div>
+</div>
 
 {% endblock %}

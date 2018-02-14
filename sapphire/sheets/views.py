@@ -5,8 +5,8 @@ import csv
 
 #google apis
 #import gspread
-from googleapiclient import discovery
-from oauth2client.service_account import ServiceAccountCredentials
+#from googleapiclient import discovery
+#from oauth2client.service_account import ServiceAccountCredentials
 
 
 

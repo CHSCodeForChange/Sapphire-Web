@@ -11,8 +11,10 @@
   padding: 0;
 }
 .username {
-  font-size: 500%;
+  font-size: 250%;
   color: black;
+  vertical-align: bottom;
+  margin-left: 3%;
 }
 .disinlineblock {
   display: inline-block;
@@ -22,6 +24,9 @@
 }
 .disnone {
   display: none;
+}
+.disblock {
+  display: block;
 }
 .floatnone {
   float: none;
