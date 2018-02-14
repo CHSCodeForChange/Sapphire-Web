@@ -83,6 +83,6 @@ def signout(request, user_slot_id):
     if (user_slot.volunteer != None):
         user_slot.signout = datetime.now()
         user_slot.save()
-    deltaTime = user_slot.signout - user_slot.signin
-    user_slot.difference = float(deltaTime.days)*86400+float(deltaTime.seconds)
+    #deltaTime = user_slot.signout - user_slot.signin
+    #user_slot.difference = float(deltaTime.days)*86400+float(deltaTime.seconds)
     return redirect('/volunteer/slot/'+str(user_slot.parentSlot.id))

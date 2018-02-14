@@ -45,7 +45,8 @@ class Slot(models.Model):
     # TODO make sure this can only point to one Event and not more than that
     parentEvent = models.ForeignKey(
         'Event',
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        null=False
     )
     start = models.DateTimeField()
     end = models.DateTimeField()
@@ -86,8 +87,7 @@ class User_Slot(models.Model):
     parentSlot = models.ForeignKey(
         Slot,
         on_delete=models.CASCADE,
-        null=True,
-        blank=True,
+        null=False,
     )
 
     signin = models.DateTimeField(null=True)
@@ -106,8 +106,7 @@ class Event(models.Model):
     parentGroup = models.ForeignKey(
         Group,
         on_delete=models.CASCADE,
-        null=True,
-        blank=True,
+        null=False,
     )
     #is_single = models.BooleanField(default=False)
     #type = models.CharField(max_length=80)
@@ -116,6 +115,7 @@ class Event(models.Model):
     organizer = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
+        null=False
     )
     # The string name of the Event
     name = models.CharField(max_length=80)
@@ -133,11 +133,6 @@ class Event(models.Model):
     # The Integer zip code of the Event
     zip_code = models.IntegerField(null=True)
 
-    parentGroup = models.ForeignKey(
-        'groups.Group',
-        on_delete=models.CASCADE,
-        null=True
-    )
     # The list of Volunteers
     """volunteers = models.ForeignKey(
         Profile,
