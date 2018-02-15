@@ -67,6 +67,9 @@ class Group(models.Model):
                 return True
         return False
 
+    def get_is_owner(self, user):
+        return self.owner == user
+
     def get_role(self, user):
         if (self.owner == user):
             return "owner"

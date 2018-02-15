@@ -28,6 +28,16 @@ def join(request, group_id):
         group.save()
     return redirect('/groups/'+str(group_id))
 
+def leave(request, group_id):
+    group = Group.objects.get(id=group_id)
+    if (group.get_is_organzer(request.user) and group.get_is_owner(request.user) == False ):
+        group.organizers.remove(request.user)
+        group.save()
+    if (group.get_is_member(request.user)):
+        group.volunteers.remove(request.user)
+        group.save()
+    return redirect('/groups/'+str(group_id))
+
 def changePermissionLevel(request, group_id, user_id):
     user = User.objects.get(id=user_id)
     group = Group.objects.get(id=group_id)

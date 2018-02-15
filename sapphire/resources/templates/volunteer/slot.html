@@ -8,6 +8,14 @@
     <h4 class="lead">{{slot.start}} - {{slot.end}}</h4>
     <h5 class="mb-0">{{slot.location}} - {{event.location}}: {{event.address}} {{event.city}}, {{event.state}} {{event.zip_code}}</h5>
 
+
+    <div class="progress">
+      <div class="progress-bar" role="progressbar" aria-valuenow="{{percentFilled}}" aria-valuemin="0" aria-valuemax="100" style="width: {{percentFilled}}%;">
+        <span class="sr-only">{[percentFilled]} Complete</span>
+      </div>
+    </div>
+
+
     <h1></h1>
     <p class="text-left">{{slot.description}}</p>
     <h1></h1>
@@ -35,7 +43,13 @@
 
 
 
-  <h3>Volunteers</h3>
+  <h3>Volunteers
+
+    {% if is_organizer %}
+      <a href="/organizer/addUserSlot/{{slot.id}}">+</a>
+    {% endif %}
+
+  </h3>
   <table class="table table-hover">
     <tbody>
       <thead>
@@ -56,7 +70,8 @@
           {% endif %}
             <td>{{user_slot.signin}}</td>
             <td>{{user_slot.signout}}</td>
-            <td>{{user_slot.difference}}
+            <td>{{user_slot.difference}}</td>
+            <td><a href="/organizer/deleteUserSlot/{{user_slot.id}}"><button class="btn btn-danger">Delete</button></a></td>
         </tr>
       {% endfor %}
     </tbody>

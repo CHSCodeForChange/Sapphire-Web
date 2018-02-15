@@ -132,6 +132,23 @@ def addSlot(request, event_id):
 
     return render(request, 'organizer/add_slot.html', {'form':form})
 
+def addUserSlot(request, slot_id):
+    slot = Slot.objects.get(id=slot_id)
+    group = slot.parentEvent.parentGroup
+    if (group.get_is_organzer(request.user)):
+        user_slot = User_Slot(parentSlot=slot)
+        user_slot.save()
+
+    return redirect('/volunteer/slot/'+str(slot_id))
+
+def removeUserSlot(request, user_slot_id):
+    user_slot = User_Slot.objects.get(id=user_slot_id)
+    group = user_slot.parentSlot.parentEvent.parentGroup
+    if (group.get_is_organzer(request.user)):
+        user_slot.delete()
+
+    return redirect('/volunteer/slot/'+str(user_slot.parentSlot.id))
+
 
 def edit(request):
     # Makes sure the user is an organizer
