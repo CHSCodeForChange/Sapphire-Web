@@ -93,16 +93,24 @@
         <th>Start</th>
         <th>End</th>
         <th>Volunteers</th>
+          <th>Slots taken</th>
         <th></th>
       </tr>
     </thread>
     <tbody>
       {% for slot in event.slot_set.all|dictsort:"start" %}
         <tr>
-          <th><a href="http://127.0.0.1:8000/volunteer/slot/{{slot.id}}">{{slot.title}}</a></th>
+            <th><a href="/volunteer/slot/{{slot.id}}">{{slot.title}}</a></th>
           <th>{{slot.start}}</th>
           <th>{{slot.end}}</th>
-          <th>{{slot.volunteers}}</th>
+            <th>
+                {% for user_slot in slot.user_slot_set.all %}
+                {{user_slot.volunteer.username}}
+                {% endfor %}
+            </th>
+            <th>
+                {{slot.user_slot_set.all|volunteer_count}}/{{slot.maxVolunteers}}
+            </th>
           <th>
             {% if is_organizer %}
             <div class="btn-group">

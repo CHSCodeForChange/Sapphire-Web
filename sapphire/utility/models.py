@@ -99,6 +99,9 @@ class User_Slot(models.Model):
     def is_signout_null(self):
         return self.signout == None
 
+    def is_volunteer_null(self):
+      return self.volunteer == None
+
     difference = models.CharField(max_length=100, null=True)
 
 
