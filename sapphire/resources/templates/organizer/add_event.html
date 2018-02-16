@@ -2,7 +2,9 @@
 
 {% block content %}
   <h1>Add Event</h1>
-  <a href="/organizer/addEvent/"><button class="btn btn-primary">Pick Event</button></a>
+<a href="/organizer/addEvent/">
+    <button class="btn btn-primary">Pick Group</button>
+</a>
   <a href="/volunteer/eventNeeds/"><button class="btn btn-secondary">View Events</button></a>
   <form method="post">
     {% csrf_token %}
