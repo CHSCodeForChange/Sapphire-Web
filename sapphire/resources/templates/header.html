@@ -14,12 +14,15 @@
 
 <body>
   <nav class="navbar navbar-inverse navbar-static-top">
-    <a class="navbar-brand navbar-right disinlineblock automarg padding0left" href="/logout">
-      <button class="btn btn-danger btn-xs">Logout</button>
-    </a>
-    <a class="navbar-brand navbar-right disinlineblock automarg">
-      <img class="img-responsive img-circle floatright automarg" src="/static/img/test-user-icon.jpg" width=9% height=9%>
-    </a>
+      {% if user.is_authenticated %}
+      <a class="navbar-brand navbar-right disinlineblock automarg padding0left" href="/logout">
+          <button class="btn btn-danger btn-xs">Logout</button>
+      </a>
+      <a class="navbar-brand navbar-right disinlineblock automarg">
+          <img class="img-responsive img-circle floatright automarg" src="/static/img/test-user-icon.jpg" width=9%
+               height=9%>
+      </a>
+      {% endif %}
     <div class="container-fluid">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
@@ -54,15 +57,6 @@
           <li>
             <a href="/accounts/profile">Profile</a>
           </li>
-          <li>
-            <!--
-              <button class="btn btn-xs btn-warning dropdown-toggle" type="button" data-toggle="dropdown">Organizer
-              <span class="caret"></span></button>
-              <ul class="dropdown-menu">
-                <li><a href="/organizer/add/?type=event">Add Event</a></li>
-                <li><a href="/organizer/add/?type=singleSlot">Add Single Slot</a></li>
-              </ul>
-            </li>-->
         </ul>
       </div>
     </div>

@@ -2,7 +2,9 @@ from django.contrib.auth.models import User, Group
 from django import forms
 from django.core.exceptions import ValidationError
 from accounts.models import *
-from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm, SetPasswordForm
+from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm, SetPasswordForm, AuthenticationForm, \
+  UsernameField
+from django.utils.translation import ugettext, ugettext_lazy as _
 
 from organizer.forms import NewSlotForm
 
@@ -149,3 +151,25 @@ class SignupForm(forms.Form):
             return user
         except Exception as e:
             raise
+
+
+class LoginForm(AuthenticationForm):
+  username = UsernameField(
+    max_length=254,
+    widget=forms.TextInput(
+      attrs={'autofocus': True,
+             'type': 'text',
+             'class': 'form-control'
+             }),
+  )
+  password = forms.CharField(
+    label=_("Test"),
+    strip=False,
+    widget=forms.PasswordInput(
+      attrs={'type': 'text',
+             'class': 'form-control'}
+    ),
+  )
+
+  def __init__(self, request):
+    AuthenticationForm.__init__(self, request)
