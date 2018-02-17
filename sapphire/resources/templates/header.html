@@ -81,6 +81,14 @@
         <a href="https://chscodeforchange.wordpress.com/"> CHS Code For Change </a>
         under the MIT License
       </span>
+
+      {% for alert in alerts %}
+        <div class="{{alert.color}}" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <a href="{{alert.url}}" class="alert-link">{{alert.text}}</a>
+          {% if alert.deleteAlert %}{% endif %}
+        </div>
+      {% endfor %}
     </div>
   </footer>
 

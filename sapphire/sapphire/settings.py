@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
     'feed',
+    'alerts',
     'sheets',
     'info',
     'groups',
@@ -78,6 +79,7 @@ TEMPLATES = [
         },
     },
 ]
+TEMPLATES[0]['OPTIONS']['context_processors'].append("alerts.context_processors.getAlerts")
 
 WSGI_APPLICATION = 'sapphire.wsgi.application'
 
@@ -110,6 +112,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
 
 
 # Internationalization
