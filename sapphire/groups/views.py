@@ -5,6 +5,8 @@ from groups.models import Group, Chat_Entry
 from utility.models import Event
 from groups.forms import NewGroupForm, NewChatEntryForm
 from django.contrib.auth.models import User
+from alerts.models import Alert
+
 
 
 # Create your views here.
@@ -26,6 +28,10 @@ def join(request, group_id):
     if (group.get_is_member(request.user) == False):
         group.volunteers.add(request.user)
         group.save()
+
+    alert = Alert(user=request.user, text="Joined "+str(group.name), color=Alert.getGreen())
+    alert.saveIP(request)
+
     return redirect('/groups/'+str(group_id))
 
 def leave(request, group_id):
@@ -36,19 +42,29 @@ def leave(request, group_id):
     if (group.get_is_member(request.user)):
         group.volunteers.remove(request.user)
         group.save()
+
+    alert = Alert(user=request.user, text="Left "+str(group.name), color=Alert.getRed())
+    alert.saveIP(request)
+
     return redirect('/groups/'+str(group_id))
 
 def changePermissionLevel(request, group_id, user_id):
     user = User.objects.get(id=user_id)
     group = Group.objects.get(id=group_id)
     if (request.user != group.owner):
-        return HttpResponse('You don\'t have the right permissions to see this page.')
+        alert = Alert(user=request.user, text=user.name+" is now a "+group.get_role(user), color=Alert.getRed())
+        alert.saveIP(request)
+        return redirect('/groups/'+str(group_id))
 
     for curr_user in group.volunteers.all():
         if (curr_user == user):
             group.volunteers.remove(user)
             group.organizers.add(user)
             group.save()
+
+            alert = Alert(user=request.user, text=user.username+" is now an organizer", color=Alert.getYellow())
+            alert.saveIP(request)
+
             return redirect('/groups/'+str(group_id))
 
 
@@ -57,8 +73,10 @@ def changePermissionLevel(request, group_id, user_id):
             group.organizers.remove(user)
             group.volunteers.add(user)
             group.save()
-            return redirect('/groups/'+str(group_id))
 
+            alert = Alert(user=request.user, text=user.username+" is now a volunteer", color=Alert.getYellow())
+            alert.saveIP(request)
+            return redirect('/groups/'+str(group_id))
     return redirect('/groups/'+str(group_id))
 
 
@@ -72,6 +90,9 @@ def add(request):
             if form.is_valid():
                 group = form.save(commit=False)
                 group.save()
+
+                alert = Alert(user=request.user, text="Created group "+group.name, color=Alert.getBlue())
+                alert.saveIP(request)
 
                 return redirect("/groups/"+str(group.id))
 

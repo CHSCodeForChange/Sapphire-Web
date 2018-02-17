@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from utility.models import *
 from feed.models import Feed_Entry
 from groups.models import Group
+from alerts.models import Alert
 
 def index(request):
     # Run processes to build dataset after login
@@ -70,6 +71,10 @@ def volunteer(request, slot_id):
         description="Volunteered for \"" + name + "\" in event \"" + event.name + "\"",
         url="/volunteer/slot/" + str(slot.id))
     feed_entry.save()
+
+    alert = Alert(user=request.user, text="Volunteered for "+slot.title, color=Alert.getGreen())
+    alert.saveIP(request)
+
     return redirect('/volunteer/slot/'+str(slot.id))
 
 
@@ -78,6 +83,9 @@ def signin(request, user_slot_id):
     if (user_slot.volunteer != None):
         user_slot.signin = datetime.now(timezone.utc)
         user_slot.save()
+
+        alert = Alert(user=request.user, text="Signed in " + user_slot.volunteer.username, color=Alert.getYellow())
+        alert.saveIP(request)
     return redirect('/volunteer/slot/'+str(user_slot.parentSlot.id))
 
 
@@ -85,16 +93,19 @@ def signout(request, user_slot_id):
     user_slot = User_Slot.objects.get(id=user_slot_id)
     if (user_slot.volunteer != None):
         user_slot.signout = datetime.now(timezone.utc)
-    deltaTime = user_slot.signout - user_slot.signin
+        deltaTime = user_slot.signout - user_slot.signin
 
-    seconds = float(deltaTime.days)*86400+float(deltaTime.seconds)
-    minutes = seconds/60
-    hours = minutes/60
+        seconds = float(deltaTime.days)*86400+float(deltaTime.seconds)
+        minutes = seconds/60
+        hours = minutes/60
 
-    minutes = minutes - hours*60
-    seconds = seconds - minutes*60
+        minutes = minutes - hours*60
+        seconds = seconds - minutes*60
 
-    user_slot.difference = str(timedelta(seconds=seconds, minutes=minutes, hours=hours))
-    user_slot.save()
+        user_slot.difference = str(timedelta(seconds=seconds, minutes=minutes, hours=hours))
+        user_slot.save()
+
+        alert = Alert(user=request.user, text="Signed out " + user_slot.volunteer.username, color=Alert.getYellow())
+        alert.saveIP(request)
 
     return redirect('/volunteer/slot/'+str(user_slot.parentSlot.id))

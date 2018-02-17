@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import Q
+
 
 # Create your models here.
 
@@ -36,7 +38,7 @@ class Alert(models.Model):
             ipaddress = request.META.get('REMOTE_ADDR')
 
         if (request.user.is_authenticated):
-            return Alert.objects.filter(user=request.user, ip=ipaddress)#filter(user=user)
+            return Alert.objects.filter(Q(user=request.user), Q(ip=ipaddress))#filter(user=user)
         else:
             return Alert.objects.filter(ip=ipaddress)
 

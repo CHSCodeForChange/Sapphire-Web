@@ -70,17 +70,6 @@ class Group(models.Model):
     def get_is_owner(self, user):
         return self.owner == user
 
-    def get_role(self, user):
-        if (self.owner == user):
-            return "owner"
-
-        for organizer in self.organizers:
-            return "organizer"
-
-        for volunteer in self.volunteers:
-            return "volunteer"
-
-        return "none"
 
 class Chat_Entry(models.Model):
     objects = models.Manager()

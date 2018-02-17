@@ -59,10 +59,14 @@ def edit_profile(request):
             form2.save()
             form3.save()
 
+            alert = Alert(user=request.user, text="Profile updated", color=Alert.getYellow())
+            alert.saveIP(request)
+
             return redirect('/accounts/profile/')
     form = EditProfileForm(initial={'bio':profile.bio})
     form2 = EditUserForm(instance=request.user)
     form3 = PasswordChangeForm(user=request.user, data=request.POST)
+
     return render(request, 'accounts/edit_profile.html', {"form":form, 'profile':profile, "form2": form2, "form3":form3})
 
 

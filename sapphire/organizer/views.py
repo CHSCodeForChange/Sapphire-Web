@@ -7,6 +7,7 @@ from .forms import NewEventForm, NewSingleSlotForm, NewSlotForm
 from utility.models import Event, Slot, User_Slot
 from feed.models import Feed_Entry
 from groups.models import Group
+from alerts.models import Alert
 
 
 # Sending user object to the form, to verify which fields to display/remove (depending on group)
@@ -38,6 +39,9 @@ def addEvent(request, group_id):
                 description="Created single slot \"" + event.name + "\"",
                 url="/volunteer/event/" + str(event.id))
             feed_entry.save()
+
+            alert = Alert(user=request.user, text="Created event "+event.name, color=Alert.getBlue())
+            alert.saveIP(request)
 
             return redirect('/volunteer/eventNeeds')
     else:
@@ -127,6 +131,9 @@ def addSlot(request, event_id):
                 url="/volunteer/slot/" + str(slot.id))
             feed_entry.save()
 
+            alert = Alert(user=request.user, text="Created slot "+slot.title, color=Alert.getBlue())
+            alert.saveIP(request)
+
 
             return redirect('eventView', parentEvent.id)
 
@@ -139,13 +146,22 @@ def addUserSlot(request, slot_id):
         user_slot = User_Slot(parentSlot=slot)
         user_slot.save()
 
+        alert = Alert(user=request.user, text="Added a volunteer openning", color=Alert.getBlue())
+        alert.saveIP(request)
+
     return redirect('/volunteer/slot/'+str(slot_id))
 
 def removeUserSlot(request, user_slot_id):
     user_slot = User_Slot.objects.get(id=user_slot_id)
     group = user_slot.parentSlot.parentEvent.parentGroup
-    if (group.get_is_organzer(request.user)):
+    if (group.get_is_organzer(request.user) and len(User_Slot.objects.all())>1):
         user_slot.delete()
+
+        alert = Alert(user=request.user, text="Deleted a volunteer openning", color=Alert.getRed())
+        alert.saveIP(request)
+    else:
+        alert = Alert(user=request.user, text="A slot must have at lease 1 volunteer openning!", color=Alert.getRed())
+        alert.saveIP(request)
 
     return redirect('/volunteer/slot/'+str(user_slot.parentSlot.id))
 
