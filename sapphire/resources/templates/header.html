@@ -55,6 +55,14 @@
         {% block content %}
 
         {% endblock %}
+
+        {% for alert in alerts %}
+          <div class="{{alert.color}}" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <a href="{{alert.url}}" class="alert-link">{{alert.text}}</a>
+            {% if alert.deleteAlert %}{% endif %}
+          </div>
+        {% endfor %}
         </div>
       </div>
     </div>

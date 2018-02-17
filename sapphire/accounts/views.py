@@ -16,6 +16,8 @@ from django.views.generic.edit import UpdateView
 from feed.models import Feed_Entry
 from groups.models import Group
 from django.contrib.auth import update_session_auth_hash
+from alerts.models import Alert
+
 
 
 
@@ -31,7 +33,7 @@ def profile(request):
         profile = user.profile
         groups = Group.get_is_member_list(request.user)
 
-        feed_entries = Feed_Entry.objects.filter(user=request.user).order_by('-datetime')[:10]
+        feed_entries = Feed_Entry.objects.filter(user=user).order_by('-datetime')[:10]
         return render(request, "accounts/profile.html", {'user':user, 'profile':profile,'feed_entries':feed_entries, 'this_user':True, 'groups':groups})
     else:
         return redirect('/login')
@@ -56,7 +58,7 @@ def edit_profile(request):
             profile.save()
             form2.save()
             form3.save()
-            
+
             return redirect('/accounts/profile/')
     form = EditProfileForm(initial={'bio':profile.bio})
     form2 = EditUserForm(instance=request.user)
@@ -119,4 +121,8 @@ def activate(request, uidb64, token):
         return HttpResponse('Activation link is invalid!')
 
 def logoutLander(request):
-    return render(request, 'accounts/logout_lander.html')
+    alert = Alert(text="You logged out", color=Alert.getRed())
+    alert.saveIP(request)
+
+    return redirect('/login')
+    #return render(request, 'accounts/logout_lander.html')
