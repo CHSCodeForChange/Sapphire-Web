@@ -56,17 +56,25 @@
       <th>User</th>
       <th></th>
       <th></th>
+      <th></th>
+      <th></th>
+      <th>Total time</th>
       <th>Signin Time</th>
       <th>Signout Time</th>
+      <th></th>
       </thead>
       {% for user_slot in user_slots %}
         <tr>
           <th>{{user_slot.volunteer.username}}</th>
           {% if is_organizer %}
-            <th>{{user_slot.is_signin_null}}</th>
-            <th>{{user_slot.is_signout_null}}</th>
-            <th><a href="/volunteer/signin/{{user_slot.id}}"><button class="btn btn-primary">Sign In</button></a></th>
-            <th><a href="/volunteer/signout/{{user_slot.id}}"><button class="btn btn-primary">Sign Out</button></a></th>
+          <td>{{user_slot.is_signin_null}}</td>
+          <td>{{user_slot.is_signout_null}}</td>
+          <td><a href="/volunteer/signin/{{user_slot.id}}">
+            <button class="btn btn-primary">Sign In</button>
+          </a></td>
+          <td><a href="/volunteer/signout/{{user_slot.id}}">
+            <button class="btn btn-primary">Sign Out</button>
+          </a></td>
           {% endif %}
             <td>{{user_slot.signin}}</td>
             <td>{{user_slot.signout}}</td>

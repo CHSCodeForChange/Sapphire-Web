@@ -5,21 +5,19 @@
 <h1>Slots</h1>
 
 <table class="table table-hover">
-  <thread>
-    <tr>
-      <th>Name</th>
-      <th>Event</th>
-      <th>Start</th>
-      <th>End</th>
-    </tr>
-  </thread>
+  <tr>
+    <th>Name</th>
+    <th>Event</th>
+    <th>Start</th>
+    <th>End</th>
+  </tr>
   <tbody>
     {% for slot in slots %}
       <tr>
-        <th><a href="http://127.0.0.1:8000/volunteer/slot/{{slot.id}}">{{slot.title}}</a></th>
-        <th>{{slot.parentEvent.name}}</th>
-        <th>{{slot.start}}</th>
-        <th>{{slot.end}}</th>
+        <td><a href="/volunteer/slot/{{slot.id}}">{{slot.title}}</a></td>
+        <td>{{slot.parentEvent.name}}</td>
+        <td>{{slot.start}}</td>
+        <td>{{slot.end}}</td>
       </tr>
     {% endfor %}
   </tbody>

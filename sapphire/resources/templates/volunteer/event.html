@@ -87,7 +87,6 @@
   </h3>
 
   <table class="table table-hover" style="margin:20px;">
-    <thread>
       <tr>
         <th>Name</th>
         <th>Start</th>
@@ -96,35 +95,39 @@
           <th>Slots taken</th>
         <th></th>
       </tr>
-    </thread>
-    <tbody>
+      <tbody>
       {% for slot in event.slot_set.all|dictsort:"start" %}
-        <tr>
-            <th><a href="/volunteer/slot/{{slot.id}}">{{slot.title}}</a></th>
-          <th>{{slot.start}}</th>
-          <th>{{slot.end}}</th>
-            <th>
-                {% for user_slot in slot.user_slot_set.all %}
-                {{user_slot.volunteer.username}}
-                {% endfor %}
-            </th>
-            <th>
-                {{slot.user_slot_set.all|volunteer_count}}/{{slot.maxVolunteers}}
-            </th>
-          <th>
-            {% if is_organizer %}
-            <div class="btn-group">
-                <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Delete</button>
-              <div class="dropdown-menu">
-                <p class="dropdown-item" href="">Are you sure?</p>
-                <a class="dropdown-item" href="{% url 'deleteSlot' slot_id=slot.id %}?next={{ request.path|urlencode }}"><button class="btn btn-danger">Yes</button></a>
+      <tr>
+          <td><a href="/volunteer/slot/{{slot.id}}">{{slot.title}}</a></td>
+          <td>{{slot.start}}</td>
+          <td>{{slot.end}}</td>
+          <td>
+              {% for user_slot in slot.user_slot_set.all %}
+              {{user_slot.volunteer.username}}
+              {% endfor %}
+          </td>
+          <td>
+              {{slot.user_slot_set.all|volunteer_count}}/{{slot.maxVolunteers}}
+          </td>
+          <td>
+              {% if is_organizer %}
+              <div class="btn-group">
+                  <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                          aria-expanded="false">Delete
+                  </button>
+                  <div class="dropdown-menu">
+                      <p class="dropdown-item" href="">Are you sure?</p>
+                      <a class="dropdown-item"
+                         href="{% url 'deleteSlot' slot_id=slot.id %}?next={{ request.path|urlencode }}">
+                          <button class="btn btn-danger">Yes</button>
+                      </a>
+                  </div>
               </div>
-            </div>
-            {% endif %}
-          </th>
-        </tr>
+              {% endif %}
+          </td>
+      </tr>
       {% endfor %}
-    </tbody>
+      </tbody>
   </table>
 
   <th><a href="/sheets/fromevent/{{event.id}}"><button class="btn btn-success">Generate Spreasheet</button></a></th>
