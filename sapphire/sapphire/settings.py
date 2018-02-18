@@ -79,6 +79,7 @@ TEMPLATES = [
         },
     },
 ]
+
 TEMPLATES[0]['OPTIONS']['context_processors'].append("alerts.context_processors.getAlerts")
 
 WSGI_APPLICATION = 'sapphire.wsgi.application'
