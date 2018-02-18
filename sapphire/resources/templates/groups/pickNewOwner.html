@@ -1,0 +1,17 @@
+{% extends "header.html" %}
+
+{% block content %}
+
+<h1>Pick A New Owner</h1>
+
+<table class="table table-hover">
+  <tbody>
+    {% for organizer in organizers %}
+      <tr>
+        <td><a href="{{organizer.id}}">{{organizer.username}}</a></th>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

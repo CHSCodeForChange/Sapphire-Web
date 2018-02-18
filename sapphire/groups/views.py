@@ -42,11 +42,33 @@ def leave(request, group_id):
     if (group.get_is_member(request.user)):
         group.volunteers.remove(request.user)
         group.save()
+    if (group.get_is_owner(request.user)):
+        return render(request, "groups/pickNewOwner.html", {"organizers":group.organizers.all()})
 
     alert = Alert(user=request.user, text="Left "+str(group.name), color=Alert.getRed())
     alert.saveIP(request)
 
     return redirect('/groups/'+str(group_id))
+
+def pickNewOwner(request, group_id, new_owner_id):
+    group = Group.objects.get(id=group_id)
+    user = User.objects.get(id=new_owner_id)
+    if (group.owner == request.user and group.get_is_organzer(user)):
+        group.organizers.remove(user)
+        group.owner = user
+        group.save()
+
+        alert = Alert(user=request.user, text="Left "+str(group.name), color=Alert.getRed())
+        alert.saveIP(request)
+    else:
+        if (not(group.get_is_organzer(user))):
+            alert = Alert(user=request.user, text="The new owner must be a current organizer", color=Alert.getRed())
+            alert.saveIP(request)
+        else:
+            alert = Alert(user=request.user, text="You must be the owner", color=Alert.getRed())
+            alert.saveIP(request)
+    return redirect('/groups/'+str(group_id))
+
 
 def changePermissionLevel(request, group_id, user_id):
     user = User.objects.get(id=user_id)
