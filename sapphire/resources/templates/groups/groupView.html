@@ -107,7 +107,9 @@
         <td>pending</td>
           {% if is_organizer %}
         <td><a href="approve/{{u.id}}">
-                <button class="btn btn-primary">Approve</button>
+                <button class="btn btn-primary">
+                  Approve <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+                </button>
         </a></td>
           {% endif %}
       </tr>
