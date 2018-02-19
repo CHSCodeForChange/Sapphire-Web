@@ -49,15 +49,14 @@ def other_profile(request, user_id):
 
 def edit_profile(request):
     profile = request.user.profile
+    form3 = PasswordChangeForm(user=request.user, data=request.POST)
     if request.POST:
         form = EditProfileForm(request.POST, profile=profile)
         form2 = EditUserForm(request.POST, instance=request.user)
-        form3 = PasswordChangeForm(user=request.user,data=request.POST)
-        if form.is_valid() and form2.is_valid() and form3.is_valid():
+        if form.is_valid() and form2.is_valid():
             profile.bio = form.save(commit=False)
             profile.save()
             form2.save()
-            form3.save()
 
             alert = Alert(user=request.user, text="Profile updated", color=Alert.getYellow())
             alert.saveIP(request)
@@ -65,10 +64,23 @@ def edit_profile(request):
             return redirect('/accounts/profile/')
     form = EditProfileForm(initial={'bio':profile.bio})
     form2 = EditUserForm(instance=request.user)
-    form3 = PasswordChangeForm(user=request.user, data=request.POST)
 
-    return render(request, 'accounts/edit_profile.html', {"form":form, 'profile':profile, "form2": form2, "form3":form3})
 
+    return render(request, 'accounts/edit_profile.html', {"form":form, 'profile':profile, "form2": form2})
+
+def edit_password(request):
+    user = request.user
+    form = PasswordChangeForm(user=request.user, data=request.POST)
+    if request.POST:
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, user)
+            alert = Alert(user=request.user, text="Password updated", color=Alert.getYellow())
+            alert.saveIP(request)
+
+            return redirect('/accounts/profile')
+
+    return render(request, 'accounts/edit_password.html', {"form":form})
 
 # The signup page
 def signup(request):

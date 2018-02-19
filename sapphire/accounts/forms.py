@@ -56,17 +56,23 @@ class EditUserForm(UserChangeForm):
         )
 
 class EditPasswordForm(PasswordChangeForm):
-    template_name = '/accounts/editProfile'
+    template_name = '/accounts/edit_password'
 
-    old_password = forms.CharField(label= 'Old Password', widget=forms.PasswordInput(
-        attrs={'type': 'text',
-            'class': 'form-control'}))
-    password1 = forms.CharField(label='New Password', widget=forms.PasswordInput(
-        attrs={'type': 'text',
-            'class': 'form-control'}))
-    new_password2 = forms.CharField(label='Confirm New Password', widget=forms.PasswordInput(
-        attrs={'type': 'text',
-            'class': 'form-control'}))
+    old_password = forms.CharField(label= 'Old Password', widget=forms.PasswordInput(), required=False)
+    new_password1 = forms.CharField(label='New Password', widget=forms.PasswordInput(), required=False)
+    new_password2 = forms.CharField(label='Confirm New Password', widget=forms.PasswordInput(), required=False)
+
+    def clean(self):
+
+        data= self.cleaned_data
+
+        if data.get('old_password') and data.get('new_password1') and data.get('new_password2'):
+            pass
+        else:
+            raise forms.ValidationError('Some Fields Missing')
+
+        return data
+
 
 
 
