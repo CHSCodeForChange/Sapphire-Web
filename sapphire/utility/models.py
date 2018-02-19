@@ -1,8 +1,10 @@
 from django.db import models
+from django.db.models import Q
+from datetime import datetime, timedelta, timezone
+
 from django.contrib.auth.models import User, UserManager
 from accounts.models import Profile
 from groups.models import Group
-from datetime import datetime, timedelta, timezone
 
 """
 Notes:
@@ -74,6 +76,27 @@ class Slot(models.Model):
     state = models.CharField(max_length=2)
     # The Integer zip code of the Event
     zip_code = models.IntegerField(null=True)
+
+    def get_users_groups_slots(user):
+        groups = Group.get_is_member_list(user)
+        events = None
+        for group in groups:
+            if (events == None):
+                events = Event.objects.filter(parentGroup=group)
+            else:
+                groups_events = Event.objects.filter(parentGroup=group)
+                events = events.union(groups_events)
+        slots = None
+        for event in events:
+            if (slots == None):
+                slots = Slot.objects.filter(parentEvent=event)
+                print (slots)
+            else:
+                events_slots = Slot.objects.filter(parentEvent=event)
+                print (events_slots)
+                slots = slots.union(events_slots)
+
+        return slots.order_by('start')#Slot.objects.filter(Q(parentEvent.parentGroup.get_is_member(user))).objects.order_by('start')
 
 
 class User_Slot(models.Model):
@@ -178,6 +201,18 @@ class Event(models.Model):
         if self.in_person:
             return 'Yes'
         return 'No'
+
+    def get_users_groups_events(user):
+        groups = Group.get_is_member_list(user)
+        events = None
+        for group in groups:
+            if (events == None):
+                events = Event.objects.filter(parentGroup=group)
+            else:
+                groups_events = Event.objects.filter(parentGroup=group)
+                events = events.union(groups_events)
+
+        return events.order_by('start')
 
 
 
