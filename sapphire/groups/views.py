@@ -21,18 +21,50 @@ def group(request, group_id):
     group = Group.objects.get(id=group_id)
     events = Event.objects.filter(parentGroup=group)
     is_owner = group.owner == request.user
-    return render(request, 'groups/groupView.html', {'group':group, 'events':events, 'is_member':group.get_is_member(request.user), 'is_owner':is_owner})
+    return render(request, 'groups/groupView.html', {'group':group, 'events':events,
+        'is_member':group.get_is_member(request.user), 'is_owner':is_owner, 'is_organizer':group.get_is_organzer(request.user)})
 
 def join(request, group_id):
     group = Group.objects.get(id=group_id)
     if (group.get_is_member(request.user) == False):
-        group.volunteers.add(request.user)
-        group.save()
+        if (group.approvalNeeded):
+            group.pendingUsers.add(request.user)
+            group.save()
 
-    alert = Alert(user=request.user, text="Joined "+str(group.name), color=Alert.getGreen())
-    alert.saveIP(request)
+            alert = Alert(user=request.user, text="Requested to join "+str(group.name)+", wating for organizer approval", color=Alert.getGreen())
+            alert.saveIP(request)
+
+        else:
+            group.volunteers.add(request.user)
+            group.save()
+
+            alert = Alert(user=request.user, text="Joined "+str(group.name), color=Alert.getGreen())
+            alert.saveIP(request)
 
     return redirect('/groups/'+str(group_id))
+
+def approve(request, group_id, user_id):
+    group = Group.objects.get(id=group_id)
+    user = User.objects.get(id=user_id)
+    if (group.get_is_organzer(request.user) and group.get_is_pending(user)):
+        group.pendingUsers.remove(user)
+        group.volunteers.add(user)
+        group.save()
+
+        alert = Alert(user=request.user, text=user.username+" is now a volunteer", color=Alert.getYellow())
+        alert.saveIP(request)
+    else:
+        if (not(group.get_is_organzer(request.user))):
+            alert = Alert(user=request.user, text="Only organizers or owners can approve pending users", color=Alert.getRed())
+            alert.saveIP(request)
+        else:
+            alert = Alert(user=request.user, text="This is not a pending user", color=Alert.getRed())
+            alert.saveIP(request)
+
+    return redirect('/groups/'+str(group_id))
+
+
+
 
 def leave(request, group_id):
     group = Group.objects.get(id=group_id)

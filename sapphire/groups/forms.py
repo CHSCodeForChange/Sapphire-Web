@@ -41,6 +41,9 @@ class NewGroupForm(forms.Form):
 
     owner = models.User()
 
+    approvalNeeded = forms.BooleanField(label='Approval Needed To Join')
+
+
     def __init__(self, *args, **kwargs):
         self.owner = kwargs.pop('owner')
         super(NewGroupForm, self).__init__(*args, **kwargs)
@@ -59,8 +62,6 @@ class NewGroupForm(forms.Form):
     def clean_website(self):
         website = self.cleaned_data['website']
         return website
-
-
     def clean_location(self):
         user = self.cleaned_data['location']
         return user
@@ -76,13 +77,14 @@ class NewGroupForm(forms.Form):
     def clean_zip_code(self):
         user = self.cleaned_data['zip_code']
         return user
-
     def clean_owner(self):
         owner = self.cleaned_data['owner']
         return owner
+    def clean_approvalNeeded(self):
+        approvalNeeded = self.cleaned_data['approvalNeeded']
+        return approvalNeeded
 
 
-        return feed_entry
     def save(self, commit=True):
         group = Group(
             name=self.cleaned_data['name'],
@@ -96,8 +98,10 @@ class NewGroupForm(forms.Form):
             city=self.cleaned_data['city'],
             state=self.cleaned_data['state'],
             zip_code=self.cleaned_data['zip_code'],
+            approvalNeeded=self.cleaned_data['approvalNeeded']
             )
         return group
+
 class NewChatEntryForm(forms.Form):
 
     description = forms.CharField(label='Description', widget=forms.Textarea(

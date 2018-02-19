@@ -28,6 +28,7 @@ class Group(models.Model):
 
     organizers = models.ManyToManyField(User, related_name="group_organizers")
     volunteers = models.ManyToManyField(User, related_name="group_volunteers")
+    pendingUsers = models.ManyToManyField(User, related_name="group_pending_users")
 
     # TODO make sure this can only point to one Event and not more than that
 
@@ -45,6 +46,8 @@ class Group(models.Model):
     #number of hours of service completed by this group
     hours = models.IntegerField(default=0)
 
+    approvalNeeded = models.BooleanField(null=False)
+
     #returns a list of groups that a given user is a part of at any level
     def get_is_member_list(user):
         return Group.objects.filter(Q(owner=user) | Q(organizers=user) | Q(volunteers=user))
@@ -53,12 +56,24 @@ class Group(models.Model):
     def get_is_organizer_list(user):
         return Group.objects.filter(Q(owner=user) | Q(organizers=user))
 
+
+    def get_is_pending_list(user):
+        return Group.objects.filter(pendingUsers=user)
+
+    def get_is_pending(self, user):
+        groups = Group.get_is_pending_list(user)
+        for group in groups:
+            if (group == self):
+                return True
+        return False
+
     def get_is_member(self, user):
         groups = Group.get_is_member_list(user)
         for group in groups:
             if (group == self):
                 return True
         return False
+
 
     def get_is_organzer(self, user):
         groups = Group.get_is_organizer_list(user)

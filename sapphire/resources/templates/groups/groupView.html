@@ -101,6 +101,18 @@
       </tr>
       {% endfor %}
 
+      {% for u in group.pendingUsers.all %}
+      <tr>
+        <td>{{u.username}}</td>
+        <td>pending</td>
+          {% if is_organizer %}
+        <td><a href="approve/{{u.id}}">
+                <button class="btn btn-primary">Approve</button>
+        </a></td>
+          {% endif %}
+      </tr>
+      {% endfor %}
+
     </tbody>
   </table>
 </div>
