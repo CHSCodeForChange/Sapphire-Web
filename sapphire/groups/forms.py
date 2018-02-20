@@ -41,7 +41,7 @@ class NewGroupForm(forms.Form):
 
     owner = models.User()
 
-    approvalNeeded = forms.BooleanField(label='Approval Needed To Join')
+    approvalNeeded = forms.BooleanField(label='Approval Needed')
 
 
     def __init__(self, *args, **kwargs):

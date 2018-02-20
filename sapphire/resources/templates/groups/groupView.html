@@ -1,7 +1,7 @@
 {% extends "header_not_centered.html" %}
 
 {% block content %}
-
+<p></p>
 <div class="row">
   <div class="col-md-5">
     <div class="row">
@@ -25,9 +25,11 @@
         </a>
       </div>
       {% else %}
+        <div class="col-md-12">
           <a href = "join">
             <button type="button" class="btn btn-primary btn-block">Join</button>
           </a>
+        </div>
       {% endif %}
     </div>
 
@@ -47,25 +49,27 @@
     </div>
   </div>
 
-  <div class="col-md-3">
+  <div class="col-md-4">
     <h1 class="text-center">Events</h1>
     <table class="table table-hover">
       <tr>
         <th>Name</th>
         <th>Time</th>
+        <th>Location</th>
       </tr>
       <tbody>
         {% for event in events %}
         <tr>
           <td><a href="/volunteer/event/{{event.id}}">{{event.name}}</a></td>
           <td>{{event.start}}</td>
+          <td>{{event.location}}</td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
 
-  <div class="col-md-3">
+  <div class="col-md-2">
     <h1 class="text-center">Members</h1>
     <table class="table table-hover">
       <tr>

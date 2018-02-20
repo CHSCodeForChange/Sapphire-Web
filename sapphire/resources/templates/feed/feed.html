@@ -3,6 +3,16 @@
 {% block content %}
   <h1 class="display-3">Feed</h1>
 
+  <div class="text-right">
+    <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Filter<span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+    <div class="dropdown-menu">
+        <a class="dropdown-item" href="/feed">None</a>
+        {% for group in groups %}
+          <a class="dropdown-item" href="/feed/group/{{group.id}}">{{group.name}}</a>
+        {% endfor %}
+    </div>
+  </div>
+
   {% for entry in feed_entries %}
   <div class="row">
     <div class="col-sm-1">
