@@ -8,16 +8,20 @@
   <tr>
     <th>Name</th>
     <th>Event</th>
+    <th>Group</th>
     <th>Start</th>
     <th>End</th>
+    <th>Slots Taken</th>
   </tr>
   <tbody>
     {% for slot in slots %}
       <tr>
         <td><a href="/volunteer/slot/{{slot.id}}">{{slot.title}}</a></td>
-        <td>{{slot.parentEvent.name}}</td>
+        <td><a href="/volunteer/event/{{slot.parentEvent.id}}">{{slot.parentEvent.name}}</a></td>
+        <td><a href="/groups/{{slot.parentEvent.parentGroup.id}}">{{slot.parentEvent.parentGroup.name}}</a></td>
         <td>{{slot.start}}</td>
         <td>{{slot.end}}</td>
+
       </tr>
     {% endfor %}
   </tbody>

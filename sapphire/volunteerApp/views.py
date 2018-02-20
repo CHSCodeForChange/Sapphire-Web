@@ -39,7 +39,6 @@ def slot(request, slot_id):
     user_slots = User_Slot.objects.filter(parentSlot=slot)
 
     percentFilled = int(len(User_Slot.objects.filter(parentSlot=slot).exclude(volunteer=None))/len(User_Slot.objects.filter(parentSlot=slot))*100)
-    print (percentFilled)
     return render(request, 'volunteer/slot.html', {'slot':slot, 'user_slots':user_slots, 'event':event, 'is_organizer':is_organizer, 'percentFilled':percentFilled})
 
 def slotNeeds(request):

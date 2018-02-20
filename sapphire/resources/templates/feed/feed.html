@@ -5,10 +5,10 @@
 
   {% for entry in feed_entries %}
   <div class="row">
-    <div class="col-sm-2">
+    <div class="col-sm-1">
       <img class="img-responsive" src="/static/img/test-user-icon.jpg" alt="profile picture" width="100">
     </div>
-    <div class="col-sm-10">
+    <div class="col-sm-11">
       <div class="text-left">
         <h3><a href="/accounts/profile/{{entry.user.id}}">{{entry.user}}</a>
             <a href="/groups/{{entry.group.id}}"><span class="label label-default">{{entry.group.name}}</span></a></h3>
