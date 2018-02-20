@@ -37,9 +37,11 @@ def slot(request, slot_id):
     event = slot.parentEvent
     is_organizer = Group.get_is_organzer(slot.parentEvent.parentGroup, request.user)
     user_slots = User_Slot.objects.filter(parentSlot=slot)
+    is_volunteered = not(User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first() == None)
+    print (is_volunteered)
 
     percentFilled = int(len(User_Slot.objects.filter(parentSlot=slot).exclude(volunteer=None))/len(User_Slot.objects.filter(parentSlot=slot))*100)
-    return render(request, 'volunteer/slot.html', {'slot':slot, 'user_slots':user_slots, 'event':event, 'is_organizer':is_organizer, 'percentFilled':percentFilled})
+    return render(request, 'volunteer/slot.html', {'slot':slot, 'user_slots':user_slots, 'event':event, 'is_organizer':is_organizer, 'percentFilled':percentFilled, 'is_volunteered':is_volunteered})
 
 def slotNeeds(request):
     slots = Slot.get_users_groups_slots(request.user)
@@ -54,6 +56,9 @@ def volunteer(request, slot_id):
     user_slot = User_Slot.objects.filter(parentSlot=slot, volunteer__isnull=True).first()
     slots_filled_by_this_user = User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first()
     if (user_slot == None or slots_filled_by_this_user != None):
+        alert = Alert(user=request.user, text="Already volunteered", color=Alert.getRed())
+        alert.saveIP(request)
+
         return redirect('/volunteer/slot/'+str(slot_id))
 
     user_slot.volunteer = request.user
@@ -75,6 +80,25 @@ def volunteer(request, slot_id):
     alert.saveIP(request)
 
     return redirect('/volunteer/slot/'+str(slot.id))
+
+def unvolunteer(request, slot_id):
+    slot = Slot.objects.get(id=slot_id)
+    slots_filled_by_this_user = User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first()
+    if (slots_filled_by_this_user == None):
+        alert = Alert(user=request.user, text="Haven't volunteered yet", color=Alert.getRed())
+        alert.saveIP(request)
+
+        return redirect('/volunteer/slot/'+str(slot_id))
+    else:
+        slots_filled_by_this_user.delete()
+        user_slot = User_Slot(parentSlot=slot)
+        user_slot.save()
+
+        alert = Alert(user=request.user, text="unvolunteered for "+slot.title, color=Alert.getRed())
+        alert.saveIP(request)
+
+        return redirect('/volunteer/slot/'+str(slot_id))
+
 
 
 def signin(request, user_slot_id):

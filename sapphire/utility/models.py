@@ -96,6 +96,8 @@ class Slot(models.Model):
                 print (events_slots)
                 slots = slots.union(events_slots)
 
+        if (slots==None):
+            return slots
         return slots.order_by('start')#Slot.objects.filter(Q(parentEvent.parentGroup.get_is_member(user))).objects.order_by('start')
 
 
@@ -212,6 +214,8 @@ class Event(models.Model):
                 groups_events = Event.objects.filter(parentGroup=group)
                 events = events.union(groups_events)
 
+        if (events==None):
+            return events
         return events.order_by('start')
 
 

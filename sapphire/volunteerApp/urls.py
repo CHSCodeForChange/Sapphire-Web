@@ -12,7 +12,8 @@ urlpatterns = [
     url(r'^slot/(?P<slot_id>[0-9]+)$', views.slot, name='slotView'),
     url(r'^slots/', views.slotNeeds, name='slotNeeds'),
     url(r'^$', views.index, name='index'),      #NOTE This must be last otherwise it will always take precedent
-    url(r'^slot/(?P<slot_id>[0-9]+)/volunteer$', views.volunteer, name='volunteer'), #We should make this start with eventView instead of just having numbers
+    url(r'^slot/(?P<slot_id>[0-9]+)/volunteer/$', views.volunteer, name='volunteer'), #We should make this start with eventView instead of just having numbers
+    url(r'^slot/(?P<slot_id>[0-9]+)/unvolunteer/$', views.unvolunteer, name='unvolunteer'), #We should make this start with eventView instead of just having numbers
     url(r'^signin/(?P<user_slot_id>[0-9]+)$', views.signin, name='signin'), #We should make this start with eventView instead of just having numbers
     url(r'^signout/(?P<user_slot_id>[0-9]+)$', views.signout, name='signout'), #We should make this start with eventView instead of just having numbers
 

@@ -6,7 +6,7 @@
         <div id="message">
           <div style="padding: 20px;">
             {% for alert in alerts %}
-              <div class="{{alert.color}} alert" role="alert">
+              <div class="alert {{alert.color}} alert-dismissable fade show" role="alert">
                 {{alert.text}}
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
