@@ -3,6 +3,10 @@
 {% load standard_tags %}
 
 {% block content %}
+<p></p>
+<p class="text-right">
+  <a href="/volunteer/event/{{slot.parentEvent.id}}">{{slot.parentEvent.name}}</a> / <a href="/groups/{{slot.parentEvent.parentGroup.id}}">{{slot.parentEvent.parentGroup.name}}</a>
+</p>
   <div class="jumbotron">
     <h1 class="display-1">{{slot.title}}</h1>
     <h4 class="lead">{{slot.start}} - {{slot.end}}</h4>
@@ -108,6 +112,8 @@ Delete          <span class="glyphicon glyphicon-remove" aria-hidden="true"></sp
   <th><a href="/sheets/fromslot/{{slot.id}}"><button class="btn btn-success">
     <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> Generate Spreadsheet
   </button></a></th>
+
+
 
 
 
