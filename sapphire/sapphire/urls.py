@@ -23,6 +23,7 @@ from django.conf.urls.static import static
 from accounts.forms import LoginForm
 
 urlpatterns = [
+    url(r'^bs/$', auth_views.login, {'template_name': 'bs-4-header.html'}, name='bs-4'), #, 'authentication_form': LoginForm
     url(r'^admin/', admin.site.urls),
     url(r'^feed/', include('feed.urls')),
     url(r'^info/', include('info.urls')),
