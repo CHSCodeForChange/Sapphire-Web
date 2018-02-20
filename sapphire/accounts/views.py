@@ -40,10 +40,10 @@ def profile(request):
 def other_profile(request, user_id):
     user = User.objects.get(id=user_id)
     if (user != request.user):
-        profile = Profile.objects.filter(username = user.username).first()
-
+        profile = Profile.objects.get(user=user)
+        groups = Group.get_is_member_list(user)
         feed_entries = Feed_Entry.objects.filter(user=request.user).order_by('-datetime')[:10]
-        return render(request, 'accounts/profile.html', {'user':user, 'profile':profile,'feed_entries':feed_entries, 'this_user':False})
+        return render(request, 'accounts/profile.html', {'user':user, 'profile':profile,'feed_entries':feed_entries, 'this_user':False, 'groups':groups})
     else:
         return redirect('/accounts/profile')
 
