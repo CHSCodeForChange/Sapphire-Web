@@ -13,17 +13,17 @@
 
     <div class="row">
       {% if is_member %}
-      <div class="col-md-6">
-        <a href = "chat">
-          <button type="button" class="col md-6 btn btn-primary btn-block">Chat</button>
-        </a>
-      </div>
+        <div class="col-md-6">
+          <a href = "chat">
+            <button type="button" class="col md-6 btn btn-primary btn-block">Chat</button>
+          </a>
+        </div>
 
-      <div class="col-md-6">
-        <a href = "leave">
-          <button type="button" class="col md-6 btn btn-danger btn-block">Leave</button>
-        </a>
-      </div>
+        <div class="col-md-6">
+          <a href = "leave">
+            <button type="button" class="col md-6 btn btn-danger btn-block">Leave</button>
+          </a>
+        </div>
       {% else %}
         <div class="col-md-12">
           <a href = "join">
@@ -31,7 +31,6 @@
           </a>
         </div>
       {% endif %}
-    </div>
     {% if is_owner %}
     <div class="col-md-6">
       <a href = "update">
