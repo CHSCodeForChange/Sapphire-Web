@@ -21,6 +21,7 @@ def group(request, group_id):
     group = Group.objects.get(id=group_id)
     events = Event.objects.filter(parentGroup=group)
     is_owner = group.owner == request.user
+    print(is_owner)
     return render(request, 'groups/groupView.html', {'group':group, 'events':events,
         'is_member':group.get_is_member(request.user), 'is_owner':is_owner, 'is_organizer':group.get_is_organzer(request.user)})
 

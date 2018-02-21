@@ -2,3 +2,4 @@ Jinja2==2.10
 django==1.11.7
 djangorestframework==3.7.3
 django-crispy-forms==1.7.0
+gunicorn==19.7.1

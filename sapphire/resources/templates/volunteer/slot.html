@@ -11,7 +11,7 @@
     <h1 class="display-1">{{slot.title}}</h1>
     <h4 class="lead">{{slot.start}} - {{slot.end}}</h4>
     <h5 class="mb-0">{{slot.location}} - {{event.location}}: {{event.address}} {{event.city}}, {{event.state}} {{event.zip_code}}</h5>
-
+    <h1></h1>
 
     <div class="progress">
       <div class="progress-bar" role="progressbar" aria-valuenow="{{percentFilled}}" aria-valuemin="0" aria-valuemax="100" style="width: {{percentFilled}}%;">
@@ -84,11 +84,13 @@
       <th>Signin</th>
       <th>Signout</th>
       <th>Difference</th>
-      <th></th>
+      {% if is_organizer %}
+        <th>Delete</th>
+      {% endif %}
       </thead>
       {% for user_slot in user_slots %}
         <tr>
-          <th>{{user_slot.volunteer.username}}</th>
+          <td>{{user_slot.volunteer.username}}</td>
           {% if is_organizer %}
 
           <td><a href="/volunteer/signin/{{user_slot.id}}">
@@ -101,9 +103,9 @@
             <td>{{user_slot.signin}}</td>
             <td>{{user_slot.signout}}</td>
             <td>{{user_slot.difference}}</td>
-            <td><a href="/organizer/deleteUserSlot/{{user_slot.id}}"><button class="btn btn-danger">
-Delete          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-            </button></a></td>
+            {% if is_organizer %}
+              <td><a href="/organizer/deleteUserSlot/{{user_slot.id}}"><button class="btn btn-danger">Delete</button></a></td>
+            {% endif %}
         </tr>
       {% endfor %}
     </tbody>
