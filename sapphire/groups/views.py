@@ -3,7 +3,7 @@ from django.http import HttpResponse
 
 from groups.models import Group, Chat_Entry
 from utility.models import Event
-from groups.forms import NewGroupForm, NewChatEntryForm
+from groups.forms import NewGroupForm, NewChatEntryForm, EditGroupForm
 from django.contrib.auth.models import User
 from alerts.models import Alert
 
@@ -154,6 +154,22 @@ def add(request):
 
     else:
         return redirect('login')
+def update(request, group_id):
+    group = Group.objects.get(id=group_id)
+    owner = group.owner
+    if request.user.is_authenticated():
+        form = EditGroupForm(request.POST, id=group_id)
+        if form.is_valid():
+            data = form.save(commit=False)
+            group.name = data['name']
+            group.save()
+
+            alert = Alert(user=request.user, text="Updated group "+group.name, color=Alert.getBlue())
+            alert.saveIP(request)
+
+            return redirect("/groups/"+str(group.id))
+
+        return render(request, 'groups/editGroup.html', {'form':form})
 
 def chat(request, group_id):
     group = Group.objects.get(id=group_id)

@@ -32,6 +32,19 @@
         </div>
       {% endif %}
     </div>
+    {% if is_owner %}
+    <div class="col-md-6">
+      <a href = "update">
+        <button type="button" class="col md-6 btn btn-danger btn-block">Edit</button>
+      </a>
+    {% endif %}
+    </div>
+    {% else %}
+        <a href = "join">
+          <button type="button" class="btn btn-primary btn-block">Join</button>
+        </a>
+    {% endif %}
+  </div>
 
 
     <h3> Hours of Service: {{group.hours}} </h3>

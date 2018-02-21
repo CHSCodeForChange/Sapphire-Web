@@ -49,7 +49,6 @@ def other_profile(request, user_id):
 
 def edit_profile(request):
     profile = request.user.profile
-    form3 = PasswordChangeForm(user=request.user, data=request.POST)
     if request.POST:
         form = EditProfileForm(request.POST, profile=profile)
         form2 = EditUserForm(request.POST, instance=request.user)
