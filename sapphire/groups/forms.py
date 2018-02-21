@@ -37,11 +37,11 @@ class NewGroupForm(forms.Form):
         attrs={ 'type': 'number',
                 'max': '99999',
                 'class': 'form-control'}))
-
+    approvalNeeded = forms.BooleanField(label='Approval Needed')
 
     owner = models.User()
 
-    approvalNeeded = forms.BooleanField(label='Approval Needed')
+
 
 
     def __init__(self, *args, **kwargs):
@@ -135,6 +135,8 @@ class EditGroupForm(forms.Form):
                     'max': '99999',
                     'class': 'form-control'}))
 
+        approvalNeeded = forms.BooleanField(label='Approval Needed', required=False)
+
         def __init__(self, *args, **kwargs):
             self.group_id = kwargs.pop('id')
             super(EditGroupForm, self).__init__(*args, **kwargs)
@@ -171,8 +173,10 @@ class EditGroupForm(forms.Form):
             user = self.cleaned_data['zip_code']
             return user
 
+        def clean_approvalNeeded(self):
+            approvalNeeded = self.cleaned_data['approvalNeeded']
+            return approvalNeeded
 
-            return feed_entry
         def save(self, commit=True):
             return self.cleaned_data
 
