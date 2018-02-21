@@ -3,7 +3,7 @@ from django.http import HttpResponse
 
 from groups.models import Group, Chat_Entry
 from utility.models import Event
-from groups.forms import NewGroupForm, NewChatEntryForm
+from groups.forms import NewGroupForm, NewChatEntryForm, EditGroupForm
 from django.contrib.auth.models import User
 from alerts.models import Alert
 
@@ -16,6 +16,38 @@ def list(request):
         return render(request, 'groups/groupListView.html', {'groups': groups})
     else:
         return redirect('login')
+
+def update(request, group_id):
+    group = Group.objects.get(id=group_id)
+    owner = group.owner
+    if request.user.is_authenticated():
+        form = EditGroupForm(request.POST, id=group_id)
+        if form.is_valid():
+            data = form.save(commit=False)
+            group.name = data['name']
+            group.tagline = data['tagline']
+            group.description = data['description']
+            group.email = data['email']
+            group.website = data['website']
+            group.location = data['location']
+            group.address = data['address']
+            group.city = data['city']
+            group.state = data['state']
+            group.zip_code = data['zip_code']
+            group.approvalNeeded = data['approvalNeeded']
+
+            group.save()
+
+            alert = Alert(user=request.user, text="Updated group "+group.name, color=Alert.getBlue())
+            alert.saveIP(request)
+
+            return redirect("/groups/"+str(group.id))
+
+    form = EditGroupForm(id=group_id, initial={'name':group.name, 'tagline':group.tagline, 'description':group.description,
+    'email':group.email, 'website':group.website, 'location':group.location, 'address':group.address, 'city':group.city,
+    'state':group.state, 'zip_code':group.zip_code, 'approvalNeeded':'approvalNeeded'})
+
+    return render(request, 'groups/editGroup.html', {'form':form})
 
 def group(request, group_id):
     group = Group.objects.get(id=group_id)

@@ -9,6 +9,7 @@ from .models import Group
 urlpatterns = [
     url(r'^$', views.list, name='list'),
     url(r'^add/', views.add, name='add'),
+    url(r'^(?P<group_id>[0-9]+)/update/', views.update, name='update'),
     url(r'^(?P<group_id>[0-9]+)/join/$', views.join, name='joinGroup'),
     url(r'^(?P<group_id>[0-9]+)/approve/(?P<user_id>[0-9]+)/$', views.approve, name='approve'),
     url(r'^(?P<group_id>[0-9]+)/leave/$', views.leave, name='leaveGroup'),
