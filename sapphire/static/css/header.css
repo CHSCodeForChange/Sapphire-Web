@@ -43,6 +43,10 @@
 .minw0 {
   min-width: 0%;
 }
+.containmarg {
+  margin-left: 10%;
+  margin-right: 10%;
+}
 .navbar-brand>img {
   width: auto;
   height: 110%;
@@ -52,4 +56,7 @@
 }
 .padding0left {
   padding-left: 0;
+}
+.maxautowidth {
+  max-width: 100%;
 }
