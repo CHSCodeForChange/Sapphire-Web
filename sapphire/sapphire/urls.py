@@ -23,6 +23,7 @@ from django.conf.urls.static import static
 from accounts.forms import LoginForm
 
 urlpatterns = [
+    url(r'^bs/$', auth_views.login, {'template_name': 'bs-4-header.html'}, name='bs-4'), #, 'authentication_form': LoginForm
     url(r'^admin/', admin.site.urls),
     url(r'^feed/', include('feed.urls')),
     url(r'^info/', include('info.urls')),
@@ -32,8 +33,7 @@ urlpatterns = [
     url(r'^organizer/', include('organizer.urls')),
     url(r'^$', auth_views.login, {'template_name' : 'accounts/login.html'}, name='login'),
     url(r'^home/', include('volunteerApp.urls')),           #TODO this should be set programatically depending on auth type
-    url(r'^login/$', auth_views.login, {'template_name': 'accounts/login.html', 'authentication_form': LoginForm},
-        name='login'),
+    url(r'^login/$', auth_views.login, {'template_name': 'accounts/login.html'}, name='login'), #, 'authentication_form': LoginForm
     url(r'^logout/$', auth_views.logout, {'next_page' : '/accounts/logout_lander'}, name='logout'),    # Will redirect to the next page
     url(r'^accounts/', include('accounts.urls', namespace='accounts')),
     # url(r'^', auth_views.login, {'template_name' : 'auth/login.html'}, name='login'),   #TODO this should remember you are logged in

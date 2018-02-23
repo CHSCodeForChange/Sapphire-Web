@@ -16,6 +16,8 @@ from django.views.generic.edit import UpdateView
 from feed.models import Feed_Entry
 from groups.models import Group
 from django.contrib.auth import update_session_auth_hash
+from alerts.models import Alert
+
 
 
 
@@ -31,17 +33,17 @@ def profile(request):
         profile = user.profile
         groups = Group.get_is_member_list(request.user)
 
-        feed_entries = Feed_Entry.objects.filter(user=request.user).order_by('-datetime')[:10]
+        feed_entries = Feed_Entry.objects.filter(user=user).order_by('-datetime')[:10]
         return render(request, "accounts/profile.html", {'user':user, 'profile':profile,'feed_entries':feed_entries, 'this_user':True, 'groups':groups})
     else:
         return redirect('/login')
 def other_profile(request, user_id):
     user = User.objects.get(id=user_id)
     if (user != request.user):
-        profile = Profile.objects.filter(username = user.username).first()
-
+        profile = Profile.objects.get(user=user)
+        groups = Group.get_is_member_list(user)
         feed_entries = Feed_Entry.objects.filter(user=request.user).order_by('-datetime')[:10]
-        return render(request, 'accounts/profile.html', {'user':user, 'profile':profile,'feed_entries':feed_entries, 'this_user':False})
+        return render(request, 'accounts/profile.html', {'user':user, 'profile':profile,'feed_entries':feed_entries, 'this_user':False, 'groups':groups})
     else:
         return redirect('/accounts/profile')
 
@@ -50,19 +52,34 @@ def edit_profile(request):
     if request.POST:
         form = EditProfileForm(request.POST, profile=profile)
         form2 = EditUserForm(request.POST, instance=request.user)
-        form3 = PasswordChangeForm(user=request.user,data=request.POST)
-        if form.is_valid() and form2.is_valid() and form3.is_valid():
+        if form.is_valid() and form2.is_valid():
             profile.bio = form.save(commit=False)
             profile.save()
             form2.save()
-            form3.save()
-            
+
+            alert = Alert(user=request.user, text="Profile updated", color=Alert.getYellow())
+            alert.saveIP(request)
+
             return redirect('/accounts/profile/')
     form = EditProfileForm(initial={'bio':profile.bio})
     form2 = EditUserForm(instance=request.user)
-    form3 = PasswordChangeForm(user=request.user, data=request.POST)
-    return render(request, 'accounts/edit_profile.html', {"form":form, 'profile':profile, "form2": form2, "form3":form3})
 
+
+    return render(request, 'accounts/edit_profile.html', {"form":form, 'profile':profile, "form2": form2})
+
+def edit_password(request):
+    user = request.user
+    form = PasswordChangeForm(user=request.user, data=request.POST)
+    if request.POST:
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, user)
+            alert = Alert(user=request.user, text="Password updated", color=Alert.getYellow())
+            alert.saveIP(request)
+
+            return redirect('/accounts/profile')
+
+    return render(request, 'accounts/edit_password.html', {"form":form})
 
 # The signup page
 def signup(request):
@@ -119,4 +136,8 @@ def activate(request, uidb64, token):
         return HttpResponse('Activation link is invalid!')
 
 def logoutLander(request):
-    return render(request, 'accounts/logout_lander.html')
+    alert = Alert(text="You logged out", color=Alert.getRed())
+    alert.saveIP(request)
+
+    return redirect('/login')
+    #return render(request, 'accounts/logout_lander.html')

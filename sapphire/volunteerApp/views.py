@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from utility.models import *
 from feed.models import Feed_Entry
 from groups.models import Group
+from alerts.models import Alert
 
 def index(request):
     # Run processes to build dataset after login
@@ -18,7 +19,7 @@ def calendar(request):
         return redirect('login')
 
 def eventNeeds(request):
-    events = Event.objects.order_by('start')
+    events = Event.get_users_groups_events(request.user)
     if request.user.is_authenticated():
         return render(request, 'volunteer/events.html', {'events':events})
     else:
@@ -36,13 +37,14 @@ def slot(request, slot_id):
     event = slot.parentEvent
     is_organizer = Group.get_is_organzer(slot.parentEvent.parentGroup, request.user)
     user_slots = User_Slot.objects.filter(parentSlot=slot)
+    is_volunteered = not(User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first() == None)
+    print (is_volunteered)
 
     percentFilled = int(len(User_Slot.objects.filter(parentSlot=slot).exclude(volunteer=None))/len(User_Slot.objects.filter(parentSlot=slot))*100)
-    print (percentFilled)
-    return render(request, 'volunteer/slot.html', {'slot':slot, 'user_slots':user_slots, 'event':event, 'is_organizer':is_organizer, 'percentFilled':percentFilled})
+    return render(request, 'volunteer/slot.html', {'slot':slot, 'user_slots':user_slots, 'event':event, 'is_organizer':is_organizer, 'percentFilled':percentFilled, 'is_volunteered':is_volunteered})
 
 def slotNeeds(request):
-    slots = Slot.objects.order_by('start')
+    slots = Slot.get_users_groups_slots(request.user)
     if request.user.is_authenticated():
         return render(request, 'volunteer/slots.html', {'slots':slots})
     else:
@@ -54,6 +56,9 @@ def volunteer(request, slot_id):
     user_slot = User_Slot.objects.filter(parentSlot=slot, volunteer__isnull=True).first()
     slots_filled_by_this_user = User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first()
     if (user_slot == None or slots_filled_by_this_user != None):
+        alert = Alert(user=request.user, text="Already volunteered", color=Alert.getRed())
+        alert.saveIP(request)
+
         return redirect('/volunteer/slot/'+str(slot_id))
 
     user_slot.volunteer = request.user
@@ -70,7 +75,30 @@ def volunteer(request, slot_id):
         description="Volunteered for \"" + name + "\" in event \"" + event.name + "\"",
         url="/volunteer/slot/" + str(slot.id))
     feed_entry.save()
+
+    alert = Alert(user=request.user, text="Volunteered for "+slot.title, color=Alert.getGreen())
+    alert.saveIP(request)
+
     return redirect('/volunteer/slot/'+str(slot.id))
+
+def unvolunteer(request, slot_id):
+    slot = Slot.objects.get(id=slot_id)
+    slots_filled_by_this_user = User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first()
+    if (slots_filled_by_this_user == None):
+        alert = Alert(user=request.user, text="Haven't volunteered yet", color=Alert.getRed())
+        alert.saveIP(request)
+
+        return redirect('/volunteer/slot/'+str(slot_id))
+    else:
+        slots_filled_by_this_user.delete()
+        user_slot = User_Slot(parentSlot=slot)
+        user_slot.save()
+
+        alert = Alert(user=request.user, text="unvolunteered for "+slot.title, color=Alert.getRed())
+        alert.saveIP(request)
+
+        return redirect('/volunteer/slot/'+str(slot_id))
+
 
 
 def signin(request, user_slot_id):
@@ -78,6 +106,9 @@ def signin(request, user_slot_id):
     if (user_slot.volunteer != None):
         user_slot.signin = datetime.now(timezone.utc)
         user_slot.save()
+
+        alert = Alert(user=request.user, text="Signed in " + user_slot.volunteer.username, color=Alert.getYellow())
+        alert.saveIP(request)
     return redirect('/volunteer/slot/'+str(user_slot.parentSlot.id))
 
 
@@ -85,16 +116,19 @@ def signout(request, user_slot_id):
     user_slot = User_Slot.objects.get(id=user_slot_id)
     if (user_slot.volunteer != None):
         user_slot.signout = datetime.now(timezone.utc)
-    deltaTime = user_slot.signout - user_slot.signin
+        deltaTime = user_slot.signout - user_slot.signin
 
-    seconds = float(deltaTime.days)*86400+float(deltaTime.seconds)
-    minutes = seconds/60
-    hours = minutes/60
+        seconds = float(deltaTime.days)*86400+float(deltaTime.seconds)
+        minutes = seconds/60
+        hours = minutes/60
 
-    minutes = minutes - hours*60
-    seconds = seconds - minutes*60
+        minutes = minutes - hours*60
+        seconds = seconds - minutes*60
 
-    user_slot.difference = str(timedelta(seconds=seconds, minutes=minutes, hours=hours))
-    user_slot.save()
+        user_slot.difference = str(timedelta(seconds=seconds, minutes=minutes, hours=hours))
+        user_slot.save()
+
+        alert = Alert(user=request.user, text="Signed out " + user_slot.volunteer.username, color=Alert.getYellow())
+        alert.saveIP(request)
 
     return redirect('/volunteer/slot/'+str(user_slot.parentSlot.id))

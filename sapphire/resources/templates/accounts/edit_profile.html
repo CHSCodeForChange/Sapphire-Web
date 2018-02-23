@@ -19,44 +19,27 @@
           </div>
 
         </p>
-
       {% endif %}
     {% endfor %}
-    {% csrf_token %}
-      {% for field in form3 %}
-      <p align="center">
-        {% if field.help_text %}
-          <small style="display: none">{{ field.help_text }}</small>
-        {% endif %}
-        {% for error in field.errors %}
-          <p style="color: red">{{ error }}</p>
-        {% endfor %}
-        <div class="form-group row">
-          <label class="col-sm-2 col-form-label">{{ field.label }}</label>
-          <div class="col-sm-8"> {{ field }} </div>
-        </div>
+        {% for field in form %}
+        <p align="center">
+          {% if field.help_text %}
+            <small style="display: none">{{ field.help_text }}</small>
+          {% endif %}
+          {% for error in field.errors %}
+            <p style="color: red">{{ error }}</p>
+          {% endfor %}
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">{{ field.label }}</label>
+            <div class="col-sm-8"> {{ field }} </div>
+          </div>
 
-      </p>
-      {% endfor %}
-    {% csrf_token %}
-      {% for field in form %}
-      <p align="center">
-        {% if field.help_text %}
-          <small style="display: none">{{ field.help_text }}</small>
-        {% endif %}
-        {% for error in field.errors %}
-          <p style="color: red">{{ error }}</p>
+        </p>
         {% endfor %}
-        <div class="form-group row">
-          <label class="col-sm-2 col-form-label">{{ field.label }}</label>
-          <div class="col-sm-8"> {{ field }} </div>
-        </div>
-
-      </p>
-      {% endfor %}
     <div class="form-group row">
       <label class="col-sm-2 col-form-label"></label>
-      <div class="col-sm-8"><button class="btn btn-primary btn-block" type="submit">Update</button></div>
+      <div class="col-sm-6"><button class="btn btn-primary btn-block" type="submit">Update</button></div>
+      <div class="col-sm-2"><a href="/accounts/profile/edit/password"><button type="button" class="btn btn-warning btn-block">Change Password</button></a></div>
     </div>
 </form>
 

@@ -7,6 +7,7 @@ from .forms import NewEventForm, NewSingleSlotForm, NewSlotForm
 from utility.models import Event, Slot, User_Slot
 from feed.models import Feed_Entry
 from groups.models import Group
+from alerts.models import Alert
 
 
 # Sending user object to the form, to verify which fields to display/remove (depending on group)
@@ -38,6 +39,9 @@ def addEvent(request, group_id):
                 description="Created single slot \"" + event.name + "\"",
                 url="/volunteer/event/" + str(event.id))
             feed_entry.save()
+
+            alert = Alert(user=request.user, text="Created event "+event.name, color=Alert.getBlue())
+            alert.saveIP(request)
 
             return redirect('/volunteer/eventNeeds')
     else:
@@ -127,6 +131,9 @@ def addSlot(request, event_id):
                 url="/volunteer/slot/" + str(slot.id))
             feed_entry.save()
 
+            alert = Alert(user=request.user, text="Created slot "+slot.title, color=Alert.getBlue())
+            alert.saveIP(request)
+
 
             return redirect('eventView', parentEvent.id)
 
@@ -139,13 +146,28 @@ def addUserSlot(request, slot_id):
         user_slot = User_Slot(parentSlot=slot)
         user_slot.save()
 
+        alert = Alert(user=request.user, text="Added a volunteer openning", color=Alert.getBlue())
+        alert.saveIP(request)
+    else:
+        alert = Alert(user=request.user, text="Only organizers can add volunteer opennings", color=Alert.getRed())
+        alert.saveIP(request)
     return redirect('/volunteer/slot/'+str(slot_id))
 
 def removeUserSlot(request, user_slot_id):
     user_slot = User_Slot.objects.get(id=user_slot_id)
     group = user_slot.parentSlot.parentEvent.parentGroup
-    if (group.get_is_organzer(request.user)):
+    if (group.get_is_organzer(request.user) and len(User_Slot.objects.all())>1):
         user_slot.delete()
+
+        alert = Alert(user=request.user, text="Deleted a volunteer openning", color=Alert.getRed())
+        alert.saveIP(request)
+    else:
+        if (group.get_is_organzer(request.user) == False):
+            alert = Alert(user=request.user, text="Only organizers can delete volunteer opennings", color=Alert.getRed())
+            alert.saveIP(request)
+        else:
+            alert = Alert(user=request.user, text="A slot must have at lease 1 volunteer openning!", color=Alert.getRed())
+            alert.saveIP(request)
 
     return redirect('/volunteer/slot/'+str(user_slot.parentSlot.id))
 
@@ -185,36 +207,58 @@ def index(request):
     return redirect('/accounts/profile')
 
 def deleteEvent(request, event_id):
-    next = request.GET.get('next')
     object = Event.objects.get(id=event_id)
     group = object.parentGroup
-    name = object.name
+    if (group.get_is_organzer(request.user)):
+        name = object.name
 
-    object.delete()
+        object.delete()
 
-    feed_entry = Feed_Entry(
-        group = group,
-        user=request.user,
-        datetime=datetime.now(timezone.utc),
-        description="Deleted event \"" + name + "\"",
-        url="/volunteer/eventNeeds"
-    )
-    feed_entry.save()
+        feed_entry = Feed_Entry(
+            group = group,
+            user=request.user,
+            datetime=datetime.now(timezone.utc),
+            description="Deleted event \"" + name + "\"",
+            url="/volunteer/eventNeeds"
+        )
+        feed_entry.save()
 
-    return redirect("/volunteer/eventNeeds")
+        alert = Alert(user=request.user, text="Deleted event "+name, color=Alert.getRed())
+        alert.saveIP(request)
+
+        return redirect("/volunteer/eventNeeds")
+
+    else:
+        alert = Alert(user=request.user, text="Only organizers can delete events", color=Alert.getRed())
+        alert.saveIP(request)
+
+        return redirect("/volunteer/event/"+str(object.id))
+
 
 def deleteSlot(request, slot_id):
     slot = Slot.objects.get(id=slot_id)
-    name = slot.title
-    event = slot.parentEvent
-    slot.delete()
+    group = slot.parentEvent.parentGroup
+    if (group.get_is_organzer(request.user)):
+        name = slot.title
+        event = slot.parentEvent
+        slot.delete()
 
-    feed_entry = Feed_Entry(
-        group=event.parentGroup,
-        user=request.user,
-        datetime=datetime.now(timezone.utc),
-        description="Deleted slot \"" + name + "\" in event \"" + event.name + "\"",
-        url="/volunteer/slots"
-    )
-    feed_entry.save()
-    return redirect('/volunteer/event/'+str(event.id))
+        feed_entry = Feed_Entry(
+            group=event.parentGroup,
+            user=request.user,
+            datetime=datetime.now(timezone.utc),
+            description="Deleted slot \"" + name + "\" in event \"" + event.name + "\"",
+            url="/volunteer/slots"
+        )
+
+        feed_entry.save()
+
+        alert = Alert(user=request.user, text="Deleted slot " + name, color=Alert.getRed())
+        alert.saveIP(request)
+
+        return redirect('/volunteer/event/'+str(event.id))
+    else:
+        alert = Alert(user=request.user, text="Only organizers can delete slots", color=Alert.getRed())
+        alert.saveIP(request)
+
+        return redirect("/volunteer/slot/"+str(slot.id))

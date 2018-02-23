@@ -3,6 +3,11 @@
 
 {% block content %}
 
+<p></p>
+<p class="text-right">
+  <a href="/groups/{{event.parentGroup.id}}">{{event.parentGroup.name}}</a>
+</p>
+
 <div class="jumbotron">
 
 
@@ -22,37 +27,12 @@
 
             <div id="collapseOne" class="collapse toggle" role="tabpanel" aria-labelledby="headingOne"
                  data-parent="#accordion">
-                <style>
-                    .intrinsic-container {
-                        position: relative;
-                        height: 0;
-                        overflow: hidden;
-                    }
 
-                    /* 16x9 Aspect Ratio */
-                    .intrinsic-container-16x9 {
-                        padding-bottom: 56.25%;
-                    }
-
-                    /* 4x3 Aspect Ratio */
-                    .intrinsic-container-4x3 {
-                        padding-bottom: 75%;
-                    }
-
-                    .intrinsic-container iframe {
-                        position: absolute;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 100%;
-                    }
-                </style>
-                <div class="card-body intrinsic-container intrinsic-container-16x9">
-                    <iframe width="125"
+                <div class="embed-responsive embed-responsive-16by9">
+                    <iframe class="embed-responsive-item"
                             src="https://www.google.com/maps/embed/v1/search?q={{event.address}} {{event.city}}, {{event.state}} {{event.zip_code}}&key=AIzaSyB-YQD-s4ery8KQRnzX7FhZsBC4SeFRcjA"
                             allowfullscreen></iframe>
                 </div>
-
 
                 <p class="text-danger">Map will only function correctly if a valid address has been entered</p>
             </div>
@@ -65,14 +45,24 @@
     {% if is_organizer %}
     <div class="row">
         <a class="col-sm-10" href="{{event.id}}/edit/?type={{event.type}}">
-            <button class="btn btn-primary btn-block">Edit</button>
+            <button class="btn btn-primary btn-block">
+              Edit <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+            </button>
         </a>
-        <a class="col-sm-2" href="{% url 'deleteEvent' event_id=event.id %}?next={{ '/home/feed/'|urlencode }}">
-            <button class="btn btn-danger btn-block">Delete</button>
-        </a>
+
+
+        <div class="btn-group col-sm-2">
+            <button class="btn btn-danger btn-block dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Delete <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+            <div class="dropdown-menu">
+                <p class="dropdown-item" href="">Are you sure?</p>
+                <a class="dropdown-item"
+                   href="{% url 'deleteEvent' event_id=event.id %}?next={{ '/home/feed/'|urlencode }}">
+                    <button class="btn btn-danger">Yes</button>
+                </a>
+            </div>
+        </div>
     </div>
     {% endif %}
-
 </div>
 
 
@@ -87,47 +77,48 @@
   </h3>
 
   <table class="table table-hover" style="margin:20px;">
-    <thread>
       <tr>
         <th>Name</th>
         <th>Start</th>
         <th>End</th>
         <th>Volunteers</th>
-          <th>Slots taken</th>
+          <th>Slots Taken</th>
         <th></th>
       </tr>
-    </thread>
-    <tbody>
+      <tbody>
       {% for slot in event.slot_set.all|dictsort:"start" %}
-        <tr>
-            <th><a href="/volunteer/slot/{{slot.id}}">{{slot.title}}</a></th>
-          <th>{{slot.start}}</th>
-          <th>{{slot.end}}</th>
-            <th>
-                {% for user_slot in slot.user_slot_set.all %}
-                {{user_slot.volunteer.username}}
-                {% endfor %}
-            </th>
-            <th>
-                {{slot.user_slot_set.all|volunteer_count}}/{{slot.maxVolunteers}}
-            </th>
-          <th>
-            {% if is_organizer %}
-            <div class="btn-group">
-                <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Delete</button>
-              <div class="dropdown-menu">
-                <p class="dropdown-item" href="">Are you sure?</p>
-                <a class="dropdown-item" href="{% url 'deleteSlot' slot_id=slot.id %}?next={{ request.path|urlencode }}"><button class="btn btn-danger">Yes</button></a>
+      <tr>
+          <td><a href="/volunteer/slot/{{slot.id}}">{{slot.title}}</a></td>
+          <td>{{slot.start}}</td>
+          <td>{{slot.end}}</td>
+          <td>
+              {% for user_slot in slot.user_slot_set.all %}
+              {{user_slot.volunteer.username}}
+              {% endfor %}
+          </td>
+          <td>
+              {{slot.user_slot_set.all|volunteer_count}}/{{slot.maxVolunteers}}
+          </td>
+          <td>
+              {% if is_organizer %}
+              <div class="btn-group">
+                  <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Delete</button>
+                  <div class="dropdown-menu">
+                      <p class="dropdown-item" href="">Are you sure?</p>
+                      <a class="dropdown-item"
+                         href="{% url 'deleteSlot' slot_id=slot.id %}?next={{ request.path|urlencode }}">
+                          <button class="btn btn-danger">Yes</button>
+                      </a>
+                  </div>
               </div>
-            </div>
-            {% endif %}
-          </th>
-        </tr>
+              {% endif %}
+          </td>
+      </tr>
       {% endfor %}
-    </tbody>
+      </tbody>
   </table>
 
-  <th><a href="/sheets/fromevent/{{event.id}}"><button class="btn btn-success">Generate Spreasheet</button></a></th>
+  <th><a href="/sheets/fromevent/{{event.id}}"><button class="btn btn-success">Generate Spreadsheet</button></a></th>
 
 
 {% endblock %}

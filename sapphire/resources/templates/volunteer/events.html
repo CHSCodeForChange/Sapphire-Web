@@ -3,24 +3,24 @@
 
 {% block content %}
 
-<h1>Events <a href="/organizer/addEvent/">+</a></h1>
+<h1 class="display-3">Events <a href="/organizer/addEvent/">+</a></h1>
 
 <table class="table table-hover">
-  <thread>
-    <tr>
-      <th>Name</th>
-      <th>Location</th>
-      <th>Start</th>
-      <th>End</th>
-    </tr>
-  </thread>
+  <tr>
+    <th>Name</th>
+    <th>Group</th>
+    <th>Location</th>
+    <th>Start</th>
+    <th>End</th>
+  </tr>
   <tbody>
     {% for event in events %}
       <tr>
-          <th><a href="/volunteer/event/{{event.id}}">{{event.name}}</a></th>
-        <th>{{event.location}}</th>
-        <th>{{event.start}}</th>
-        <th>{{event.end}}</th>
+        <td><a href="/volunteer/event/{{event.id}}">{{event.name}}</a></td>
+        <td><a href="/groups/{{event.parentGroup.id}}">{{event.parentGroup.name}}</a></td>
+        <td>{{event.location}}</td>
+        <td>{{event.start}}</td>
+        <td>{{event.end}}</td>
       </tr>
     {% endfor %}
   </tbody>

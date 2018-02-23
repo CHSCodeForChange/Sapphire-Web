@@ -2,24 +2,23 @@
 
 {% block content %}
 
-<h1>Pick A Group</h1>
-<a href="/volunteer/eventNeeds/"><button class="btn btn-secondary">View Events</button></a>
-
+<h1 class="display-3">Pick A Group</h1>
+<a href="/volunteer/eventNeeds/"><button class="btn btn-primary">View Events</button></a>
+<h1></h1>
 <table class="table table-hover">
-  <!--thread>
+  <thread>
     <tr>
       <th>Name</th>
       <th>Location</th>
-      <th>Start</th>
-      <th>End</th>
+      <th>Tagline</th>
     </tr>
-  </thread-->
+  </thread>
   <tbody>
     {% for group in groups %}
       <tr>
-        <th><a href="{{group.id}}">{{group.name}}</a></th>
-        <th>{{group.location}}</th>
-        <th>{{group.tagline}}</th>
+        <td><a href="{{group.id}}">{{group.name}}</a></th>
+        <td>{{group.location}}</th>
+        <td>{{group.tagline}}</th>
       </tr>
     {% endfor %}
   </tbody>

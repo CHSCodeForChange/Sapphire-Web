@@ -7,4 +7,5 @@ from django.views.generic import ListView, DetailView
 
 urlpatterns = [
     url(r'^$', views.feed, name='feed'),
+    url(r'^group/(?P<group_id>[0-9]+)/$$', views.filterByGroup, name='filterByGroup'),
 ]
