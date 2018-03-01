@@ -12,23 +12,7 @@
     </div>
 
     <div class="row">
-      {% if is_owner %}
-      <div class="col-md-6">
-        <a href = "chat">
-          <button type="button" class="col md-6 btn btn-primary btn-block">Chat</button>
-        </a>
-      </div>
-      <div class="col-md-3">
-        <a href = "update">
-          <button type="button" class="col md-6 btn btn-info btn-block">Edit</button>
-        </a>
-      </div>
-      <div class="col-md-3">
-        <a href = "leave">
-          <button type="button" class="col md-6 btn btn-danger btn-block">Leave</button>
-        </a>
-      </div>
-      {% elif is_member %}
+      {% if is_member %}
         <div class="col-md-6">
           <a href = "chat">
             <button type="button" class="col md-6 btn btn-primary btn-block">Chat</button>
@@ -46,6 +30,13 @@
             <button type="button" class="btn btn-primary btn-block">Join</button>
           </a>
         </div>
+      {% endif %}
+    {% if is_owner %}
+    <div class="col-md-6">
+      <a href = "update">
+        <button type="button" class="col md-6 btn btn-danger btn-block">Edit</button>
+      </a>
+    </div>
     {% endif %}
   </div>
 

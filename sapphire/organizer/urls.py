@@ -15,7 +15,6 @@ urlpatterns = [
     url(r'^deleteUserSlot/(?P<user_slot_id>[0-9]+)/$', views.removeUserSlot, name='delete_user_slot'),
     url(r'^addSlot/(?P<event_id>[0-9]+)/$', views.addSlot, name='addSlot'),# DetailView.as_view(model = Event, template_name = "organizer/add_slot.html")), (?P<pk>\d+)/
     url(r'^deleteEvent/(?P<event_id>[0-9]+)/$', views.deleteEvent, name='deleteEvent'),
-    url(r'^updateEvent/(?P<event_id>[0-9]+)/$', views.editEvent, name='updateEvent'),
     url(r'^deleteSlot/(?P<slot_id>[0-9]+)/$', views.deleteSlot, name='deleteSlot'),
     url(r'^$', views.index, name='index'),      #NOTE This must be last otherwise it will always take precedent
 ]

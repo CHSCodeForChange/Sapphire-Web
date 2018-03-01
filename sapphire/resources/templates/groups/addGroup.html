@@ -1,7 +1,7 @@
 {% extends "header.html" %}
 
 {% block content %}
-  <h1 class="display-3">Add Group</h1>
+  <h1>Add Group</h1>
   <form method="post">
     {% csrf_token %}
       {% for field in form %}

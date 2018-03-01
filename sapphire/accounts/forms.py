@@ -92,10 +92,10 @@ class SignupForm(forms.Form):
         attrs={'type': 'text',
                'class': 'form-control'}))
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput(
-        attrs={'type': 'password',
+        attrs={'type': 'text',
                'class': 'form-control'}))
     password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput(
-        attrs={'type': 'password',
+        attrs={'type': 'text',
                'class': 'form-control'}))
 
     # May only contain alphabetical characters

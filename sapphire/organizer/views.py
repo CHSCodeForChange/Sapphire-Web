@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from datetime import datetime, timezone
 import string
 
-from .forms import NewEventForm, NewSingleSlotForm, NewSlotForm, UpdateEventForm
+from .forms import NewEventForm, NewSingleSlotForm, NewSlotForm
 from utility.models import Event, Slot, User_Slot
 from feed.models import Feed_Entry
 from groups.models import Group
@@ -101,36 +101,6 @@ def addEvent(request, group_id):
         else:
             form = NewEventForm(user=request.user)
         return render(request, 'organizer/add_event.html', {'form':form, 'groups':my_groups})"""
-
-def editEvent(request, event_id):
-    event = Event.objects.get(id=event_id)
-    if request.user.is_authenticated():
-        form = UpdateEventForm(request.POST, id=event_id)
-        if form.is_valid():
-            data = form.save(commit=False)
-            event.name = data['title']
-            event.description = data['description']
-            event.location = data['location']
-            event.address = data['address']
-            event.city = data['city']
-            event.state = data['state']
-            event.zip_code = data['zip_code']
-            event.start = data['start']
-            event.end = data['end']
-
-            event.save()
-
-            alert = Alert(user=request.user, text="Updated Event "+event.name, color=Alert.getBlue())
-            alert.saveIP(request)
-
-            return redirect('eventView', event_id)
-
-    form = UpdateEventForm(id=event_id, initial={'title':event.name,
-    'description':event.description,
-    'location':event.location, 'address':event.address, 'city':event.city,
-    'state':event.state, 'zip_code':event.zip_code, 'start':event.start, 'end':event.end})
-
-    return render(request, 'organizer/edit_event.html', {'form':form})
 
 def addSlot(request, event_id):
     parentEvent = Event.objects.get(pk=event_id)
