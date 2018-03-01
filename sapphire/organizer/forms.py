@@ -240,6 +240,82 @@ class NewEventForm(forms.Form):
             #is_single=False,
             #type='event')
         return event
+
+class UpdateEventForm(forms.Form):
+    title = forms.CharField(label='Title', max_length=30, widget=forms.TextInput(
+        attrs={'type': 'text',
+               'class': 'form-control'}))
+    description = forms.CharField(label='Description', widget=forms.TextInput(
+        attrs={ 'type': 'text',
+                'class': 'form-control'}))
+
+    start = forms.DateTimeField(label='Start time', input_formats=['%Y-%m-%dT%H:%M'],
+    widget=forms.DateTimeInput(
+        attrs={'type': 'datetime-local',
+               'class': 'form-control'}))
+    end = forms.DateTimeField(label='End time', input_formats=['%Y-%m-%dT%H:%M'],
+    widget=forms.DateTimeInput(
+        attrs={'type': 'datetime-local',
+               'class': 'form-control'}))
+
+    location = forms.CharField(label='Location', max_length=240, widget=forms.TextInput(
+        attrs={ 'type': 'text',
+                'class': 'form-control'}))
+    address = forms.CharField(label='Address', max_length=240, widget=forms.TextInput(
+        attrs={ 'type': 'text',
+                'class': 'form-control'}))
+    city = forms.CharField(label='City', max_length=240, widget=forms.TextInput(
+        attrs={ 'type': 'text',
+                'class': 'form-control'}))
+    state = forms.CharField(label='State', max_length=2, widget=forms.TextInput(
+        attrs={ 'type': 'text',
+                'class': 'form-control'}))
+    zip_code = forms.IntegerField(label='Zip Code', widget=forms.NumberInput(
+        attrs={ 'type': 'number',
+                'max': '99999',
+                'class': 'form-control'}))
+
+    def __init__(self, *args, **kwargs):
+        self.event_id = kwargs.pop('id')
+        super(UpdateEventForm, self).__init__(*args, **kwargs)
+    def clean_title(self):
+        title = self.cleaned_data['title']
+        return title
+    def clean_description(self):
+        description = self.cleaned_data['description']
+        return description
+    def clean_location(self):
+        user = self.cleaned_data['location']
+        return user
+    def clean_address(self):
+        user = self.cleaned_data['address']
+        return user
+    def clean_city(self):
+        user = self.cleaned_data['city']
+        return user
+    def clean_state(self):
+        user = self.cleaned_data['state']
+        return user
+    def clean_zip_code(self):
+        user = self.cleaned_data['zip_code']
+        return user
+    def clean_start(self):
+        start = self.cleaned_data['start']
+        return start
+    def clean_end(self):
+        end = self.cleaned_data['end']
+        return end
+
+    def feed_entry(self, commit=True):
+        feed_entry = Feed_Entry(
+            user=self.user,
+            datetime=self.datetime,
+            description="Updated event \"" + self.cleaned_data['title'] + "\""
+        )
+
+        return feed_entry
+    def save(self, commit=True):
+        return self.cleaned_data
 class NewSlotForm(forms.Form):
     title = forms.CharField(label='Title', max_length=30, widget=forms.TextInput(
         attrs={'type': 'text',
