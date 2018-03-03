@@ -78,37 +78,59 @@
   <table class="table table-hover">
     <tbody>
       <thead>
-      <th>User</th>
-      <th></th>
-      <th></th>
-      <th>Signin</th>
-      <th>Signout</th>
-      <th>Difference</th>
-      {% if is_organizer %}
-        <th>Delete</th>
-      {% endif %}
+        <th>User</th>
+        <th>Signin</th>
+        <th>Signout</th>
+        <th>Time</th>
+        {% if is_organizer %}
+          <th>Delete</th>
+        {% endif %}
       </thead>
-      {% for user_slot in user_slots %}
-        <tr>
-          <td>{{user_slot.volunteer.username}}</td>
-          {% if is_organizer %}
+      <tbody>
+        {% for user_slot in user_slots %}
+          <tr>
+            {% if user_slot.is_volunteer_null %}
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+              {% if is_organizer %}
+                <td><a href="/organizer/deleteUserSlot/{{user_slot.id}}"><button class="btn btn-danger">Delete</button></a></td>
+              {% endif %}
 
-          <td><a href="/volunteer/signin/{{user_slot.id}}">
-            <button class="btn btn-primary">Sign In</button>
-          </a></td>
-          <td><a href="/volunteer/signout/{{user_slot.id}}">
-            <button class="btn btn-primary">Sign Out</button>
-          </a></td>
-          {% endif %}
-            <td>{{user_slot.signin}}</td>
-            <td>{{user_slot.signout}}</td>
-            <td>{{user_slot.difference}}</td>
-            {% if is_organizer %}
-              <td><a href="/organizer/deleteUserSlot/{{user_slot.id}}"><button class="btn btn-danger">Delete</button></a></td>
+              
+            {% else %}
+              <td>{{user_slot.volunteer.username}}</td>
+
+              {% if user_slot.is_signin_null %}
+                {% if is_organizer %}
+                  <td><a href="/volunteer/signin/{{user_slot.id}}"><button class="btn btn-primary">Sign In</button></a></td>
+                {% else %}
+                  <td>-</td>
+                {% endif %}
+              {% else %}
+                <td>{{user_slot.signin}}</td>
+              {% endif %}
+
+              {% if user_slot.is_signout_null %}
+                {% if is_organizer %}
+                  <td><a href="/volunteer/signout/{{user_slot.id}}"><button class="btn btn-primary">Sign Out</button></a></td>
+                {% else %}
+                  <td>-</td>
+                {% endif %}
+              {% else %}
+                <td>{{user_slot.signout}}</td>
+              {% endif %}
+
+              <td>{{user_slot.difference}}</td>
+
+              {% if is_organizer %}
+                <td><a href="/organizer/deleteUserSlot/{{user_slot.id}}"><button class="btn btn-danger">Delete</button></a></td>
+              {% endif %}
             {% endif %}
-        </tr>
-      {% endfor %}
-    </tbody>
+          </tr>
+        {% endfor %}
+      </tbody>
   </table>
 
   <th><a href="/sheets/fromslot/{{slot.id}}"><button class="btn btn-success">

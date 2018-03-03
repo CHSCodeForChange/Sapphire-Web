@@ -1,7 +1,7 @@
 {% extends "header.html" %}
 
 {% block content %}
-  <h1>Feed</h1>
+  <h1 class="display-3">Feed</h1>
 
   {% for entry in feed_entries %}
   <div class="row">
@@ -17,5 +17,6 @@
       </div>
     </div>
   </div>
+  <h1></h1>
   {% endfor %}
 {% endblock %}

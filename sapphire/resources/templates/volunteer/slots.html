@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="container containmarg maxautowidth">
-<h1>Slots</h1>
+<h1 class="display-3">Slots</h1>
 <table class="table table-hover">
   <thread>
     <tr>
@@ -15,10 +15,10 @@
   <tbody>
     {% for slot in slots %}
       <tr>
-        <th><a href="http://127.0.0.1:8000/volunteer/slot/{{slot.id}}">{{slot.title}}</a></th>
-        <th>{{slot.parentEvent.name}}</th>
-        <th>{{slot.start}}</th>
-        <th>{{slot.end}}</th>
+        <td><a href="http://127.0.0.1:8000/volunteer/slot/{{slot.id}}">{{slot.title}}</a></td>
+        <td>{{slot.parentEvent.name}}</td>
+        <td>{{slot.start}}</td>
+        <td>{{slot.end}}</td>
       </tr>
     {% endfor %}
   </tbody>
