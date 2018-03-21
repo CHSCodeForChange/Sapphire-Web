@@ -341,6 +341,13 @@ class NewSlotForm(forms.Form):
         attrs={'type': 'number',
                'min': '1',
                'class': 'form-control'}))
+
+
+    paymentPerHour = forms.DecimalField(label='Payment Per Hour', widget=forms.NumberInput(
+        attrs={'type': 'number',
+               'min': '0',
+               'class': 'form-control'}))
+
     user = models.User()
     parentEvent = Event()
     datetime = datetime.now(timezone.utc)
@@ -385,6 +392,10 @@ class NewSlotForm(forms.Form):
         maxVolunteers = self.cleaned_data['maxVolunteers']
         return maxVolunteers
 
+    def clean_paymentPerHour(self):
+        paymentPerHour = self.cleaned_data['paymentPerHour']
+        return paymentPerHour
+
 
     def save(self, commit=True):
         slot = Slot(
@@ -395,7 +406,8 @@ class NewSlotForm(forms.Form):
             end=self.cleaned_data['end'],
             location=self.cleaned_data['location'],
             minVolunteers=1,
-            maxVolunteers=self.cleaned_data['maxVolunteers'],#self.parentEvent.maxVolunteers,
+            maxVolunteers=self.cleaned_data['maxVolunteers'],
+            paymentPerHour=self.cleaned_data['paymentPerHour']#self.parentEvent.maxVolunteers,
             # title=self.cleaned_data['title'],
             # description=self.cleaned_data['description'],
             # location=self.cleaned_data['location'],

@@ -1,22 +1,24 @@
-<div class="container-fluid">
-  <div class="text-center">
-    <div class="row">
-      <div class="col-md-2"></div>
-      <div class="col-md-8">
-        <div id="message">
-          <div style="padding: 20px;">
-            {% for alert in alerts %}
-              <div class="alert {{alert.color}} alert-dismissable fade show" role="alert">
-                {{alert.text}}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-                {% if alert.deleteAlert %}{% endif %}
-              </div>
-            {% endfor %}
+<div class="notif">
+  <div class="container-fluid">
+    <div class="text-center">
+      <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+          <div id="message">
+            <div style="padding: 20px;">
+              {% for alert in alerts %}
+                <div class="alert {{alert.color}} alert-dismissable fade show" role="alert">
+                  {{alert.text}}
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  {% if alert.deleteAlert %}{% endif %}
+                </div>
+              {% endfor %}
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div
+</div>

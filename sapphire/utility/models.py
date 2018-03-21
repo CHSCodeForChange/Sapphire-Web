@@ -77,6 +77,11 @@ class Slot(models.Model):
     # The Integer zip code of the Event
     zip_code = models.IntegerField(null=True)
 
+    paymentPerHour = models.DecimalField(null=True, default=0, max_digits=5, decimal_places=2)
+
+    def is_payment_nonzero(self):
+        return self.paymentPerHour!=0
+
     def get_users_groups_slots(user):
         groups = Group.get_is_member_list(user)
         events = None
@@ -128,6 +133,9 @@ class User_Slot(models.Model):
       return self.volunteer == None
 
     difference = models.CharField(max_length=100, null=True)
+
+    payment = models.DecimalField(null=False, default=0, max_digits=10, decimal_places=2)
+
 
 
 class Event(models.Model):

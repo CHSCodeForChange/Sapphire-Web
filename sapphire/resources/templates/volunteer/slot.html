@@ -9,7 +9,9 @@
 </p>
   <div class="jumbotron">
     <h1 class="display-1">{{slot.title}}</h1>
-    <h4 class="lead">{{slot.start}} - {{slot.end}}</h4>
+    <h4 class="lead">{{slot.start}} - {{slot.end}}{% if slot.is_payment_nonzero %}, Payment Per Hour: ${{slot.paymentPerHour}}{% endif %}
+    </h4>
+
     <h5 class="mb-0">{{slot.location}} - {{event.location}}: {{event.address}} {{event.city}}, {{event.state}} {{event.zip_code}}</h5>
     <h1></h1>
 
@@ -71,7 +73,7 @@
   <h3>Volunteers
 
     {% if is_organizer %}
-      <a href="/organizer/addUserSlot/{{slot.id}}">+</a>
+      <a class="plus" href="/organizer/addUserSlot/{{slot.id}}">+</a>
     {% endif %}
 
   </h3>
@@ -79,9 +81,14 @@
     <tbody>
       <thead>
         <th>User</th>
-        <th>Signin</th>
-        <th>Signout</th>
+        <th>Sign In</th>
+        <th>Sign Out</th>
         <th>Time</th>
+
+        {% if slot.is_payment_nonzero %}
+          <th>Payment</th>
+        {% endif %}
+
         {% if is_organizer %}
           <th>Delete</th>
         {% endif %}
@@ -94,11 +101,16 @@
               <td>-</td>
               <td>-</td>
               <td>-</td>
+
+              {% if slot.is_payment_nonzero %}
+                <th>-</th>
+              {% endif %}
+
               {% if is_organizer %}
                 <td><a href="/organizer/deleteUserSlot/{{user_slot.id}}"><button class="btn btn-danger">Delete</button></a></td>
               {% endif %}
 
-              
+
             {% else %}
               <td>{{user_slot.volunteer.username}}</td>
 
@@ -123,6 +135,10 @@
               {% endif %}
 
               <td>{{user_slot.difference}}</td>
+
+              {% if slot.is_payment_nonzero %}
+                <td>{{user_slot.payment}}</td>
+              {% endif %}
 
               {% if is_organizer %}
                 <td><a href="/organizer/deleteUserSlot/{{user_slot.id}}"><button class="btn btn-danger">Delete</button></a></td>

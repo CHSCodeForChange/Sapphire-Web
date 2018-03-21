@@ -126,6 +126,8 @@ def signout(request, user_slot_id):
         seconds = seconds - minutes*60
 
         user_slot.difference = str(timedelta(seconds=seconds, minutes=minutes, hours=hours))
+        user_slot.payment = hours+minutes/60+seconds/60/60
+        
         user_slot.save()
 
         alert = Alert(user=request.user, text="Signed out " + user_slot.volunteer.username, color=Alert.getYellow())
