@@ -6,6 +6,7 @@ from utility.models import *
 from feed.models import Feed_Entry
 from groups.models import Group
 from alerts.models import Alert
+from organizer.views import addUserSlot
 
 def index(request):
     # Run processes to build dataset after login
@@ -77,6 +78,42 @@ def volunteer(request, slot_id):
 
     alert = Alert(user=request.user, text="Volunteered for "+slot.title, color=Alert.getGreen())
     alert.saveIP(request)
+
+    return redirect('/volunteer/slot/'+str(slot.id))
+
+def volunteerForUser(request, slot_id, user_id):
+    thisUser = User.objects.get(id=user_id)
+    #next = request.GET.get('next')
+    slot = Slot.objects.get(id=slot_id)
+    if slot.parentEvent.parentGroup.get_is_organzer(request.user):
+        user_slot = User_Slot.objects.filter(parentSlot=slot, volunteer__isnull=True).first()
+        slots_filled_by_this_user = User_Slot.objects.filter(parentSlot=slot, volunteer=thisUser).first()
+        if (slots_filled_by_this_user != None):
+            alert = Alert(user=thisUser, text="Already volunteered", color=Alert.getRed())
+            alert.saveIP(request)
+
+            return redirect('/volunteer/slot/'+str(slot_id))
+        if (user_slot == None):
+            addUserSlot(request, slot_id)
+            user_slot = User_Slot.objects.filter(parentSlot=slot, volunteer__isnull=True).first()
+
+        user_slot.volunteer = thisUser
+        user_slot.save()
+
+        name = slot.title
+        event = slot.parentEvent
+
+
+        feed_entry = Feed_Entry(
+            group = event.parentGroup,
+            user=thisUser,
+            datetime=datetime.now(timezone.utc),
+            description="Volunteered for \"" + name + "\" in event \"" + event.name + "\"",
+            url="/volunteer/slot/" + str(slot.id))
+        feed_entry.save()
+
+        alert = Alert(user=thisUser, text="Volunteered for "+slot.title, color=Alert.getGreen())
+        alert.saveIP(request)
 
     return redirect('/volunteer/slot/'+str(slot.id))
 

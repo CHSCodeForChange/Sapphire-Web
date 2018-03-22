@@ -80,7 +80,11 @@
   <table class="table table-hover">
     <tbody>
       <thead>
-        <th>User</th>
+        {% if is_organizer %}
+          <th>User <a href="/organizer/addUserManually/{{slot.id}}">+</a></th>
+        {% else %}
+          <th>User</th>
+        {% endif %}
         <th>Sign In</th>
         <th>Sign Out</th>
         <th>Time</th>

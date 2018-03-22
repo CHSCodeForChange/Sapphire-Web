@@ -90,16 +90,17 @@ class Slot(models.Model):
                 events = Event.objects.filter(parentGroup=group)
             else:
                 groups_events = Event.objects.filter(parentGroup=group)
-                events = events.union(groups_events)
+                events = events | groups_events
         slots = None
+        if events == None:
+            return None
+            
         for event in events:
             if (slots == None):
                 slots = Slot.objects.filter(parentEvent=event)
-                print (slots)
             else:
                 events_slots = Slot.objects.filter(parentEvent=event)
-                print (events_slots)
-                slots = slots.union(events_slots)
+                slots = slots | events_slots
 
         if (slots==None):
             return slots

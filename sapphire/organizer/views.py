@@ -21,6 +21,13 @@ def pick_group(request):
     my_groups = Group.get_is_organizer_list(request.user)
     return render(request, 'organizer/pick_group.html', {'groups':my_groups})
 
+def addUserManually(request, slot_id):
+    slot = Slot.objects.get(id=slot_id)
+    group = slot.parentEvent.parentGroup
+    if (group.get_is_organzer(request.user)):
+        return render(request, 'organizer/pick_volunteer.html', {'slot': slot, 'group':group})
+    return redirect('/volunteer/slot/'+str(user_slot.parentSlot.id))
+
 def addEvent(request, group_id):
     group = Group.objects.get(id=group_id)
     if not Group.get_is_organzer(group, request.user):

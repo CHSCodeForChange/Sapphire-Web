@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'^addEvent/$', views.pick_group, name='pick_group'),
     url(r'^addEvent/(?P<group_id>[0-9]+)/$', views.addEvent, name='add_event'),
     url(r'^addUserSlot/(?P<slot_id>[0-9]+)/$', views.addUserSlot, name='add_user_slot'),
+    url(r'^addUserManually/(?P<slot_id>[0-9]+)/$', views.addUserManually, name='addUserManually'),
     url(r'^deleteUserSlot/(?P<user_slot_id>[0-9]+)/$', views.removeUserSlot, name='delete_user_slot'),
     url(r'^addSlot/(?P<event_id>[0-9]+)/$', views.addSlot, name='addSlot'),# DetailView.as_view(model = Event, template_name = "organizer/add_slot.html")), (?P<pk>\d+)/
     url(r'^deleteEvent/(?P<event_id>[0-9]+)/$', views.deleteEvent, name='deleteEvent'),
