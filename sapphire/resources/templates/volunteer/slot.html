@@ -116,7 +116,7 @@
 
               {% if user_slot.is_signin_null %}
                 {% if is_organizer %}
-                  <td><a href="/volunteer/signin/{{user_slot.id}}"><button class="btn btn-primary">Sign In</button></a></td>
+                  <td><a href="/volunteer/signin/{{user_slot.id}}?next=/volunteer/slot/{{slot.id}}"><button class="btn btn-primary">Sign In</button></a></td>
                 {% else %}
                   <td>-</td>
                 {% endif %}
@@ -126,7 +126,7 @@
 
               {% if user_slot.is_signout_null %}
                 {% if is_organizer %}
-                  <td><a href="/volunteer/signout/{{user_slot.id}}"><button class="btn btn-primary">Sign Out</button></a></td>
+                  <td><a href="/volunteer/signout/{{user_slot.id}}?next=/volunteer/slot/{{slot.id}}"><button class="btn btn-primary">Sign Out</button></a></td>
                 {% else %}
                   <td>-</td>
                 {% endif %}

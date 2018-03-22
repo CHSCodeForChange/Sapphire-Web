@@ -26,13 +26,13 @@
                   <td>{{user_slot.parentSlot.parentEvent.name}}</td>
 
                   {% if user_slot.is_signin_null %}
-                      <td><a href="/volunteer/signin/{{user_slot.id}}"><button class="btn btn-primary">Sign In</button></a></td>
+                      <td><a href="/volunteer/signin/{{user_slot.id}}?next=/groups/{{group.id}}/console"><button class="btn btn-primary">Sign In</button></a></td>
                   {% else %}
                     <td>{{user_slot.signin}}</td>
                   {% endif %}
 
                   {% if user_slot.is_signout_null %}
-                    <td><a href="/volunteer/signout/{{user_slot.id}}"><button class="btn btn-primary">Sign Out</button></a></td>
+                    <td><a href="/volunteer/signout/{{user_slot.id}}?next=/groups/{{group.id}}/console"><button class="btn btn-primary">Sign Out</button></a></td>
                   {% else %}
                     <td>{{user_slot.signout}}</td>
                   {% endif %}

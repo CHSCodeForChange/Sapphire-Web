@@ -101,19 +101,24 @@ def unvolunteer(request, slot_id):
 
 
 def signin(request, user_slot_id):
+    next = request.GET.get('next')
+
     user_slot = User_Slot.objects.get(id=user_slot_id)
-    if (user_slot.volunteer != None):
+    group = user_slot.parentSlot.parentEvent.parentGroup
+    if (user_slot.volunteer != None and group.get_is_organzer(request.user)):
         user_slot.signin = datetime.now(timezone.utc)
         user_slot.save()
 
         alert = Alert(user=request.user, text="Signed in " + user_slot.volunteer.username, color=Alert.getYellow())
         alert.saveIP(request)
-    return redirect('/volunteer/slot/'+str(user_slot.parentSlot.id))
+    return redirect(next)
 
 
 def signout(request, user_slot_id):
+    next = request.GET.get('next')
     user_slot = User_Slot.objects.get(id=user_slot_id)
-    if (user_slot.volunteer != None):
+    group = user_slot.parentSlot.parentEvent.parentGroup
+    if (user_slot.volunteer != None and group.get_is_organzer(request.user)):
         user_slot.signout = datetime.now(timezone.utc)
         deltaTime = user_slot.signout - user_slot.signin
 
@@ -136,4 +141,4 @@ def signout(request, user_slot_id):
         alert = Alert(user=request.user, text="Signed out " + user_slot.volunteer.username, color=Alert.getYellow())
         alert.saveIP(request)
 
-    return redirect('/volunteer/slot/'+str(user_slot.parentSlot.id))
+    return redirect(next)
