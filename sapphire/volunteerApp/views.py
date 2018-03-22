@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 from utility.models import *
 from feed.models import Feed_Entry
@@ -38,7 +38,6 @@ def slot(request, slot_id):
     is_organizer = Group.get_is_organzer(slot.parentEvent.parentGroup, request.user)
     user_slots = User_Slot.objects.filter(parentSlot=slot)
     is_volunteered = not(User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first() == None)
-    print (is_volunteered)
 
     percentFilled = int(len(User_Slot.objects.filter(parentSlot=slot).exclude(volunteer=None))/len(User_Slot.objects.filter(parentSlot=slot))*100)
     return render(request, 'volunteer/slot.html', {'slot':slot, 'user_slots':user_slots, 'event':event, 'is_organizer':is_organizer, 'percentFilled':percentFilled, 'is_volunteered':is_volunteered})
@@ -118,16 +117,20 @@ def signout(request, user_slot_id):
         user_slot.signout = datetime.now(timezone.utc)
         deltaTime = user_slot.signout - user_slot.signin
 
-        seconds = float(deltaTime.days)*86400+float(deltaTime.seconds)
-        minutes = seconds/60
-        hours = minutes/60
+        seconds = deltaTime.seconds
+        minutes = seconds/60 - (seconds/60)%1
+        hours = minutes/60 - (minutes/60)%1
 
         minutes = minutes - hours*60
-        seconds = seconds - minutes*60
+        seconds = seconds - minutes*60 - hours*60*60
+
+        print(seconds)
+        print(minutes)
+        print(hours)
 
         user_slot.difference = str(timedelta(seconds=seconds, minutes=minutes, hours=hours))
-        user_slot.payment = hours+minutes/60+seconds/60/60
-        
+        user_slot.payment = (hours+minutes/60+seconds/60/60)*(float(user_slot.parentSlot.paymentPerHour))
+
         user_slot.save()
 
         alert = Alert(user=request.user, text="Signed out " + user_slot.volunteer.username, color=Alert.getYellow())
