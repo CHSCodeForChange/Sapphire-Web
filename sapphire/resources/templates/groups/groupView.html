@@ -12,10 +12,15 @@
     </div>
 
     <div class="row">
-      {% if is_owner %}
-      <div class="col-md-6">
+      {% if is_organizer %}
+      <div class="col-md-3">
         <a href = "chat">
           <button type="button" class="col md-6 btn btn-primary btn-block">Chat</button>
+        </a>
+      </div>
+      <div class="col-md-3">
+        <a href = "console">
+          <button type="button" class="col md-6 btn btn-primary btn-block">Console</button>
         </a>
       </div>
       <div class="col-md-3">

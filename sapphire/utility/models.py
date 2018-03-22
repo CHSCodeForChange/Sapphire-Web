@@ -136,6 +136,29 @@ class User_Slot(models.Model):
 
     payment = models.DecimalField(null=False, default=0, max_digits=10, decimal_places=2)
 
+    def getUserSlots(group):
+        events = Event.objects.filter(parentGroup=group)
+        slots = None
+
+        for event in events:
+            if (slots == None):
+                slots = Slot.objects.filter(parentEvent=event)
+
+            else:
+                slots = slots | Slot.objects.filter(parentEvent=event)
+
+        user_slots = None
+
+        for slot in slots:
+            if (user_slots == None):
+                user_slots = User_Slot.objects.filter(parentSlot=slot)
+
+            else:
+                user_slots = user_slots | User_Slot.objects.filter(parentSlot=slot)
+
+        return user_slots
+
+
 
 
 class Event(models.Model):

@@ -6,6 +6,8 @@ from utility.models import Event
 from groups.forms import NewGroupForm, NewChatEntryForm, EditGroupForm
 from django.contrib.auth.models import User
 from alerts.models import Alert
+from utility.models import *
+from feed.models import Feed_Entry
 
 
 
@@ -14,6 +16,18 @@ def list(request):
     groups = Group.objects.order_by('hours')
     if request.user.is_authenticated():
         return render(request, 'groups/groupListView.html', {'groups': groups})
+    else:
+        return redirect('login')
+
+def console(request, group_id):
+    group = Group.objects.get(id=group_id)
+    if request.user.is_authenticated():
+        if group.get_is_organzer(request.user):
+            user_slots = User_Slot.getUserSlots(group)
+            feed_entries = Feed_Entry.objects.filter(group=group).order_by('-datetime')[:10]
+            return render(request, 'groups/console.html', {'group':group, 'user_slots':user_slots, 'feed_entries':feed_entries})
+        else:
+            return redirect('/groups/'+str(group_id))
     else:
         return redirect('login')
 
@@ -53,7 +67,6 @@ def group(request, group_id):
     group = Group.objects.get(id=group_id)
     events = Event.objects.filter(parentGroup=group)
     is_owner = group.owner == request.user
-    print(is_owner)
     return render(request, 'groups/groupView.html', {'group':group, 'events':events,
         'is_member':group.get_is_member(request.user), 'is_owner':is_owner, 'is_organizer':group.get_is_organzer(request.user)})
 
