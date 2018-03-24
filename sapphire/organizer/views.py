@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from datetime import datetime, timezone
 import string
 
-from .forms import NewEventForm, NewSingleSlotForm, NewSlotForm, UpdateEventForm
+from .forms import NewEventForm, NewSingleSlotForm, NewSlotForm, UpdateEventForm, EditTimeForm
 from utility.models import Event, Slot, User_Slot
 from feed.models import Feed_Entry
 from groups.models import Group
@@ -56,58 +56,6 @@ def addEvent(request, group_id):
     # Filter this by single slot events in the future
     return render(request, 'organizer/add_event.html', {'form':form})
 
-
-"""def add(request):
-    # Makes sure the user is an organizer
-    is_organizer = False
-    for g in request.user.groups.all():
-        if g.name == 'Organizer':
-            is_organizer = True
-    if not is_organizer:
-        return HttpResponse('You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
-    # Gets the page type
-    type = request.GET.get('type', 'html')
-
-    my_groups = Group.get_is_organizer_list(request.user)
-
-    # If the page type is normal, send them to the single slot page for now
-    if type == 'html' or type == 'singleSlot':
-        if(request.method == 'POST'):
-            form = NewSingleSlotForm(request.POST, user=request.user)
-            if form.is_valid():
-                event = form.save(commit=False)
-                event.save()
-
-                feed_entry = Feed_Entry(
-                    user=request.user,
-                    datetime=datetime.now(),
-                    description="Created single slot \"" + event.name + "\"",
-                    url="/volunteer/event/" + str(event.id))
-                feed_entry.save()
-
-                return redirect('/volunteer/eventNeeds')
-        else:
-            form = NewSingleSlotForm(user=request.user)
-        # Filter this by single slot events in the future
-        return render(request, 'organizer/add_single_slot.html', {'form':form, 'groups':my_groups})
-    elif type == 'event':
-        if(request.method == 'POST'):
-            form = NewEventForm(request.POST, user=request.user)
-            if form.is_valid():
-                event = form.save(commit=False)
-                event.save()
-
-                feed_entry = feed_entry = Feed_Entry(
-                    user=request.user,
-                    datetime=datetime.now(),
-                    description="Created event \"" + event.name + "\"",
-                    url="/volunteer/event/" + str(event.id))
-                feed_entry.save()
-
-                return redirect('/volunteer/eventNeeds')
-        else:
-            form = NewEventForm(user=request.user)
-        return render(request, 'organizer/add_event.html', {'form':form, 'groups':my_groups})"""
 
 def editEvent(request, event_id):
     event = Event.objects.get(id=event_id)
@@ -208,6 +156,49 @@ def removeUserSlot(request, user_slot_id):
 
     return redirect('/volunteer/slot/'+str(user_slot.parentSlot.id))
 
+
+def editSignIn(request, user_slot_id):
+    user_slot = User_Slot.objects.get(id=user_slot_id)
+    group = user_slot.parentSlot.parentEvent.parentGroup
+    if (group.get_is_organzer(request.user)):
+        if (request.method == 'POST'):
+            form = EditTimeForm(request.POST)
+            if form.is_valid():
+                sign_in = form.save()
+                user_slot.signin = sign_in
+                user_slot.save()
+                user_slot.updateDeltaTimes()
+                return redirect('/volunteer/slot/'+str(user_slot.parentSlot.id))
+
+        else:
+            form = EditTimeForm()
+
+        return render(request, 'organizer/editSignIn.html', {'form':form, 'user_slot':user_slot})
+
+
+    return redirect('/volunteer/slot/'+str(user_slot.parentSlot.id))
+
+
+def editSignOut(request, user_slot_id):
+    user_slot = User_Slot.objects.get(id=user_slot_id)
+    group = user_slot.parentSlot.parentEvent.parentGroup
+    if (group.get_is_organzer(request.user)):
+        if (request.method == 'POST'):
+            form = EditTimeForm(request.POST)
+            if form.is_valid():
+                signout = form.save()
+                user_slot.signout = signout
+                user_slot.save()
+                user_slot.updateDeltaTimes()
+                return redirect('/volunteer/slot/'+str(user_slot.parentSlot.id))
+
+        else:
+            form = EditTimeForm()
+
+        return render(request, 'organizer/editSignOut.html', {'form':form, 'user_slot':user_slot})
+
+
+    return redirect('/volunteer/slot/'+str(user_slot.parentSlot.id))
 
 def edit(request):
     # Makes sure the user is an organizer

@@ -322,7 +322,8 @@ class NewSlotForm(forms.Form):
                'class': 'form-control'}))
     description = forms.CharField(label='Description', widget=forms.TextInput(
         attrs={ 'type': 'text',
-                'class': 'form-control'}))
+                'class': 'form-control',
+                'required': False}))
 
     start = forms.DateTimeField(label='Start time', input_formats=['%Y-%m-%dT%H:%M'],
     widget=forms.DateTimeInput(
@@ -382,9 +383,13 @@ class NewSlotForm(forms.Form):
         return user
 
     def clean_start(self):
+        if (start == None):
+            start = parentEvent.start
         start = self.cleaned_data['start']
         return start
     def clean_end(self):
+        if (end == None):
+            end = parentEvent.end
         end = self.cleaned_data['end']
         return end
 
@@ -417,3 +422,16 @@ class NewSlotForm(forms.Form):
             # zip_code=self.cleaned_data['zip_code']
             )
         return slot
+
+class EditTimeForm(forms.Form):
+    time = forms.DateTimeField(label='Time', input_formats=['%Y-%m-%dT%H:%M'],
+    widget=forms.DateTimeInput(
+        attrs={'type': 'datetime-local',
+               'class': 'form-control'}))
+
+    def __init__(self, *args, **kwargs):
+        super(EditTimeForm, self).__init__(*args, **kwargs)
+
+
+    def save(self):
+        return self.cleaned_data['time']

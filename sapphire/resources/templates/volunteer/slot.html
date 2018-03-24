@@ -125,7 +125,11 @@
                   <td>-</td>
                 {% endif %}
               {% else %}
-                <td>{{user_slot.signin}}</td>
+                {% if is_organizer %}
+                  <td><a href="/organizer/editSignIn/{{user_slot.id}}"><button type="button" name="button" class="btn btn-light">{{user_slot.signin}}</button></a></td>
+                {% else %}
+                  <td>{{user_slot.signin}}</td>
+                {% endif %}
               {% endif %}
 
               {% if user_slot.is_signout_null %}
@@ -135,7 +139,11 @@
                   <td>-</td>
                 {% endif %}
               {% else %}
-                <td>{{user_slot.signout}}</td>
+                {% if is_organizer %}
+                  <td><a href="/organizer/editSignOut/{{user_slot.id}}"><button type="button" name="button" class="btn btn-light">{{user_slot.signout}}</button></a></td>
+                {% else %}
+                  <td>{{user_slot.signout}}</td>
+                {% endif %}
               {% endif %}
 
               <td>{{user_slot.difference}}</td>

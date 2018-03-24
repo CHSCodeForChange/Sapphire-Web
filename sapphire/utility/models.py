@@ -64,20 +64,20 @@ class Slot(models.Model):
 
     title = models.CharField(max_length=240)
     # The String descriptionof the event
-    description = models.CharField(max_length=960)
+    description = models.CharField(max_length=960, blank=True, null=True)
 
     # The String location Name of the Event
-    location = models.CharField(max_length=240)
+    location = models.CharField(max_length=240, blank=True, null=True)
     # The String address of the Event
-    address = models.CharField(max_length=240)
+    address = models.CharField(max_length=240, blank=True, null=True)
     # The String city of the Event'
-    city = models.CharField(max_length=240)
+    city = models.CharField(max_length=240, blank = True, null=True)
     # The String state of event
-    state = models.CharField(max_length=2)
+    state = models.CharField(max_length=2, blank = True, null=True)
     # The Integer zip code of the Event
-    zip_code = models.IntegerField(null=True)
+    zip_code = models.IntegerField(blank=True, null=True)
 
-    paymentPerHour = models.DecimalField(null=True, default=0, max_digits=5, decimal_places=2)
+    paymentPerHour = models.DecimalField(blank=True, null=True, default=0, max_digits=5, decimal_places=2)
 
     def is_payment_nonzero(self):
         return self.paymentPerHour!=0
@@ -94,7 +94,7 @@ class Slot(models.Model):
         slots = None
         if events == None:
             return None
-            
+
         for event in events:
             if (slots == None):
                 slots = Slot.objects.filter(parentEvent=event)
@@ -136,6 +136,25 @@ class User_Slot(models.Model):
     difference = models.CharField(max_length=100, null=True)
 
     payment = models.DecimalField(null=False, default=0, max_digits=10, decimal_places=2)
+
+    def updateDeltaTimes(self):
+        if self.signin != None:
+            deltaTime = self.signout - self.signin
+
+            seconds = deltaTime.seconds
+            minutes = seconds/60 - (seconds/60)%1
+            hours = minutes/60 - (minutes/60)%1
+
+            minutes = minutes - hours*60
+            seconds = seconds - minutes*60 - hours*60*60
+
+            self.difference = str(timedelta(seconds=seconds, minutes=minutes, hours=hours))
+            self.payment = (hours+minutes/60+seconds/60/60)*(float(self.parentSlot.paymentPerHour))
+
+            self.save()
+
+
+
 
     def getUserSlots(group):
         events = Event.objects.filter(parentGroup=group)

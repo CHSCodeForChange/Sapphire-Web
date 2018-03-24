@@ -40,7 +40,10 @@ def slot(request, slot_id):
     user_slots = User_Slot.objects.filter(parentSlot=slot)
     is_volunteered = not(User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first() == None)
 
-    percentFilled = int(len(User_Slot.objects.filter(parentSlot=slot).exclude(volunteer=None))/len(User_Slot.objects.filter(parentSlot=slot))*100)
+    if (len(User_Slot.objects.filter(parentSlot=slot)) != 0):
+        percentFilled = int(len(User_Slot.objects.filter(parentSlot=slot).exclude(volunteer=None))/len(User_Slot.objects.filter(parentSlot=slot))*100)
+    else:
+        percentFilled = 0
     return render(request, 'volunteer/slot.html', {'slot':slot, 'user_slots':user_slots, 'event':event, 'is_organizer':is_organizer, 'percentFilled':percentFilled, 'is_volunteered':is_volunteered})
 
 def slotNeeds(request):
@@ -157,23 +160,8 @@ def signout(request, user_slot_id):
     group = user_slot.parentSlot.parentEvent.parentGroup
     if (user_slot.volunteer != None and group.get_is_organzer(request.user)):
         user_slot.signout = datetime.now(timezone.utc)
-        deltaTime = user_slot.signout - user_slot.signin
-
-        seconds = deltaTime.seconds
-        minutes = seconds/60 - (seconds/60)%1
-        hours = minutes/60 - (minutes/60)%1
-
-        minutes = minutes - hours*60
-        seconds = seconds - minutes*60 - hours*60*60
-
-        print(seconds)
-        print(minutes)
-        print(hours)
-
-        user_slot.difference = str(timedelta(seconds=seconds, minutes=minutes, hours=hours))
-        user_slot.payment = (hours+minutes/60+seconds/60/60)*(float(user_slot.parentSlot.paymentPerHour))
-
         user_slot.save()
+        user_slot.updateDeltaTimes()
 
         alert = Alert(user=request.user, text="Signed out " + user_slot.volunteer.username, color=Alert.getYellow())
         alert.saveIP(request)
