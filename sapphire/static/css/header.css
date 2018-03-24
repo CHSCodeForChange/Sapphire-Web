@@ -1,3 +1,8 @@
+div.dropdown-form{
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
 .plus:hover{
   text-decoration: none;
   color: #51b5c2;

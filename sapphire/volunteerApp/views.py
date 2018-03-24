@@ -7,6 +7,7 @@ from feed.models import Feed_Entry
 from groups.models import Group
 from alerts.models import Alert
 from organizer.views import addUserSlot
+from .forms import FilterTimeForm
 
 def index(request):
     # Run processes to build dataset after login
@@ -21,8 +22,15 @@ def calendar(request):
 
 def eventNeeds(request):
     if request.user.is_authenticated():
-        events = Event.get_users_groups_events(request.user)
-        return render(request, 'volunteer/events.html', {'events':events})
+        if(request.method == 'POST'):
+            form = FilterTimeForm(request.POST)
+            if form.is_valid():
+                events  = Event.get_users_groups_events(request.user).filter(start__range=[form.getStart(), form.getEnd()])
+        else:
+            form = FilterTimeForm()
+            events = Event.get_users_groups_events(request.user)
+
+        return render(request, 'volunteer/events.html', {'events':events, 'form':form})
     else:
         return redirect('login')
 
@@ -48,8 +56,15 @@ def slot(request, slot_id):
 
 def slotNeeds(request):
     if request.user.is_authenticated():
-        slots = Slot.get_users_groups_slots(request.user)
-        return render(request, 'volunteer/slots.html', {'slots':slots})
+        if(request.method == 'POST'):
+            form = FilterTimeForm(request.POST)
+            if form.is_valid():
+                slots  = Slot.get_users_groups_slots(request.user).filter(start__range=[form.getStart(), form.getEnd()])
+        else:
+            form = FilterTimeForm()
+            slots = Slot.get_users_groups_slots(request.user)
+
+        return render(request, 'volunteer/slots.html', {'slots':slots, 'form':form})
     else:
         return redirect('login')
 
