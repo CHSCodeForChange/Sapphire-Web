@@ -138,7 +138,7 @@ class User_Slot(models.Model):
     payment = models.DecimalField(null=False, default=0, max_digits=10, decimal_places=2)
 
     def updateDeltaTimes(self):
-        if self.signin != None:
+        if (self.signin != None and self.signout != None):
             deltaTime = self.signout - self.signin
 
             seconds = deltaTime.seconds

@@ -2,15 +2,16 @@
 
 
 {% block content %}
-  <img class="img-responsive" src="/static/img/logos.ico/WithText.jpg" alt="Sapphire Logo">
+  <div class="login">
+    <img class="img-responsive" src="/static/img/logos.ico/WithText.jpg" alt="Sapphire Logo">
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-primary">Login</button>
+      <a href="/accounts/signup">
+        <button type="button" class="btn btn-secondary">Sign Up</button>
+      </a>
 
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Login</button>
-    <a href="/accounts/signup">
-      <button type="button" class="btn btn-secondary">Sign Up</button>
-    </a>
-
-  </form>
+    </form>
+  </div>
 {% endblock %}

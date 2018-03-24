@@ -12,6 +12,7 @@ import csv
 
 #models
 from utility.models import Slot, User_Slot, Event
+import datetime as dt
 
 # Create your views here.
 
@@ -34,13 +35,13 @@ def fromslot(request, slot_id):
         if (slot.volunteer == None):
             writer.writerow(["[No Volunteer]",
                          "[No Volunteer]",
-                         slot.signin,
-                         slot.signout])
+                         excel_date(date1=slot.signin),
+                         excel_date(date1=slot.signout)])
         else:
             writer.writerow([slot.volunteer.first_name,
                          slot.volunteer.last_name,
-                         slot.signin,
-                         slot.signout])
+                         excel_date(date1=slot.signin),
+                         excel_date(date1=slot.signout)])
 
     #scope = ['https://spreadsheets.google.com/feeds']
     #cred = ServiceAccountCredentials.from_json_keyfile_name('sapphire.json')
@@ -80,13 +81,19 @@ def fromevent(request, event_id):
             if (user_slot.volunteer == None):
                 writer.writerow(["[No Volunteer]",
                              "[No Volunteer]",
-                             user_slot.signin,
-                             user_slot.signout])
+                             excel_date(date1=user_slot.signin),
+                             excel_date(date1=user_slot.signout)])
             else:
                 writer.writerow([user_slot.volunteer.first_name,
                              user_slot.volunteer.last_name,
-                             user_slot.signin,
-                             user_slot.signout])
+                             excel_date(date1=user_slot.signin),
+                             excel_date(date1=user_slot.signout)])
 
 
     return response
+
+
+def excel_date(date1):
+    if (date1!=None):
+        return date1.strftime('%x %X')
+    return None
