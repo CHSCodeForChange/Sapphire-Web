@@ -427,7 +427,8 @@ class EditTimeForm(forms.Form):
     time = forms.DateTimeField(label='Time', input_formats=['%Y-%m-%dT%H:%M'],
     widget=forms.DateTimeInput(
         attrs={'type': 'datetime-local',
-               'class': 'form-control'}))
+               'class': 'form-control',
+               'value': datetime.now().strftime("%Y-%m-%dT%H:%M")}))
 
     def __init__(self, *args, **kwargs):
         super(EditTimeForm, self).__init__(*args, **kwargs)
