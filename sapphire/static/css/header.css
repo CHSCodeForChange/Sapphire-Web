@@ -1,3 +1,18 @@
+@media (max-width: 600px) {
+  h1.display-1 {
+    font-size: 300%;
+  }
+  div.navbar-right {
+    display: none;
+  }
+}
+
+@media (max-width: 350px) {
+  footer.footer > div > span {
+    font-size: 80%;
+  }
+}
+
 div.login {
   padding-top: 17%;
 }
