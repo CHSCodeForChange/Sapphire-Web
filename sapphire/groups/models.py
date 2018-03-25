@@ -8,6 +8,7 @@ class Group(models.Model):
     objects = models.Manager()
 
     name = models.CharField(max_length=120)
+    image =  models.ImageField(upload_to='profile_image', blank=True)
 
 
     # A super short description of the group
@@ -16,7 +17,6 @@ class Group(models.Model):
     description = models.CharField(max_length=960)
 
     email = models.EmailField(null=True)
-
     website = models.URLField(blank=True)
 
     owner = models.ForeignKey(
@@ -25,7 +25,6 @@ class Group(models.Model):
         null=True,
         related_name="group_owner"
     )
-
     organizers = models.ManyToManyField(User, related_name="group_organizers")
     volunteers = models.ManyToManyField(User, related_name="group_volunteers")
     pendingUsers = models.ManyToManyField(User, related_name="group_pending_users")

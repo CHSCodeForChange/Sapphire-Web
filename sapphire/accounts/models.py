@@ -6,6 +6,7 @@ from django.dispatch import receiver
 # Custom Profile linked to a User
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    image =  models.ImageField(upload_to='profile_image', blank=True)
     # The manager to get Profile objects
     objects = models.Manager()
     # The primary key
