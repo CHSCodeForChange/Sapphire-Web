@@ -3,7 +3,7 @@
 
 {% block content %}
   <div class="login">
-    <img class="img-responsive" src="/static/img/logos.ico/WithText.jpg" alt="Sapphire Logo">
+    <img class="img-fluid" src="/static/img/logos.ico/WithText.jpg" alt="Sapphire Logo">
     <form method="post">
       {% csrf_token %}
       {{ form.as_p }}

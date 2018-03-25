@@ -70,53 +70,55 @@
 
   <h3>Volunteer Slots
     {% if is_organizer %}
-    <a href="{% url 'addSlot' event_id=event.id %}">
+    <a class="plus" href="{% url 'addSlot' event_id=event.id %}">
       +
     </a>
     {% endif %}
   </h3>
 
-  <table class="table table-hover" style="margin:20px;">
-      <tr>
-        <th>Name</th>
-        <th>Start</th>
-        <th>End</th>
-        <th>Volunteers</th>
-          <th>Slots Taken</th>
-        <th></th>
-      </tr>
-      <tbody>
-      {% for slot in event.slot_set.all|dictsort:"start" %}
-      <tr>
-          <td><a href="/volunteer/slot/{{slot.id}}">{{slot.title}}</a></td>
-          <td>{{slot.start}}</td>
-          <td>{{slot.end}}</td>
-          <td>
-              {% for user_slot in slot.user_slot_set.all %}
-              {{user_slot.volunteer.username}}
-              {% endfor %}
-          </td>
-          <td>
-              {{slot.user_slot_set.all|volunteer_count}}/{{slot.maxVolunteers}}
-          </td>
-          <td>
-              {% if is_organizer %}
-              <div class="btn-group">
-                  <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Delete</button>
-                  <div class="dropdown-menu">
-                      <p class="dropdown-item" href="">Are you sure?</p>
-                      <a class="dropdown-item"
-                         href="{% url 'deleteSlot' slot_id=slot.id %}?next={{ request.path|urlencode }}">
-                          <button class="btn btn-danger">Yes</button>
-                      </a>
-                  </div>
-              </div>
-              {% endif %}
-          </td>
-      </tr>
-      {% endfor %}
-      </tbody>
-  </table>
+  <div class="table-responsive">
+    <table class="table table-hover" style="margin:20px;">
+        <tr>
+          <th>Name</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Volunteers</th>
+            <th>Slots Taken</th>
+          <th></th>
+        </tr>
+        <tbody>
+        {% for slot in event.slot_set.all|dictsort:"start" %}
+        <tr>
+            <td><a href="/volunteer/slot/{{slot.id}}">{{slot.title}}</a></td>
+            <td>{{slot.start}}</td>
+            <td>{{slot.end}}</td>
+            <td>
+                {% for user_slot in slot.user_slot_set.all %}
+                {{user_slot.volunteer.username}}
+                {% endfor %}
+            </td>
+            <td>
+                {{slot.user_slot_set.all|volunteer_count}}/{{slot.maxVolunteers}}
+            </td>
+            <td>
+                {% if is_organizer %}
+                <div class="btn-group">
+                    <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Delete</button>
+                    <div class="dropdown-menu">
+                        <p class="dropdown-item" href="">Are you sure?</p>
+                        <a class="dropdown-item"
+                           href="{% url 'deleteSlot' slot_id=slot.id %}?next={{ request.path|urlencode }}">
+                            <button class="btn btn-danger">Yes</button>
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+  </div>
 
   <th><a href="/sheets/fromevent/{{event.id}}"><button class="btn btn-success">Generate Spreadsheet</button></a></th>
 

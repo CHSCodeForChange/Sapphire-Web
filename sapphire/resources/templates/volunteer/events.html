@@ -3,29 +3,31 @@
 
 {% block content %}
 
-<h1 class="display-3">Events <a href="/organizer/addEvent/">+</a></h1>
+<h1 class="display-3">Events <a class="plus" href="/organizer/addEvent/">+</a></h1>
 <div class="row">
   <div class="col-md-11">
-    <table class="table table-hover">
-      <tr>
-        <th>Name</th>
-        <th>Group</th>
-        <th>Location</th>
-        <th>Start</th>
-        <th>End</th>
-      </tr>
-      <tbody>
-        {% for event in events %}
-          <tr>
-            <td><a href="/volunteer/event/{{event.id}}">{{event.name}}</a></td>
-            <td><a href="/groups/{{event.parentGroup.id}}">{{event.parentGroup.name}}</a></td>
-            <td>{{event.location}}</td>
-            <td>{{event.start}}</td>
-            <td>{{event.end}}</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <tr>
+          <th>Name</th>
+          <th>Group</th>
+          <th>Location</th>
+          <th>Start</th>
+          <th>End</th>
+        </tr>
+        <tbody>
+          {% for event in events %}
+            <tr>
+              <td><a href="/volunteer/event/{{event.id}}">{{event.name}}</a></td>
+              <td><a href="/groups/{{event.parentGroup.id}}">{{event.parentGroup.name}}</a></td>
+              <td>{{event.location}}</td>
+              <td>{{event.start}}</td>
+              <td>{{event.end}}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
   <div class="col-md-1">
     <div class="dropdown">
@@ -33,8 +35,6 @@
         Filter
       </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <div class="text-center"><h4>Filter<h4></div>
-        <div class="dropdown-divider"></div>
         <form method="post">
           {% csrf_token %}
             {% for field in form %}
@@ -50,11 +50,7 @@
                 <h1></h1>
             {% endfor %}
 
-            <div class="form-group row">
-              <label class="col-sm-3 col-form-label"></label>
-
-              <div class="col-sm-6"><button class="btn btn-primary btn-block" type="submit">Filter</button></div>
-            </div>
+          <div class="text-center"><button class="btn btn-primary" type="submit">Filter</button></div>
         </form>
       </div>
     </div>

@@ -72,77 +72,84 @@
 
   <div class="col-md-4">
     <h1 class="text-center">Events</h1>
-    <table class="table table-hover">
-      <tr>
-        <th>Name</th>
-        <th>Time</th>
-        <th>Location</th>
-      </tr>
-      <tbody>
-        {% for event in events %}
+    <div class="table-responsive">
+      <table class="table table-hover">
         <tr>
-          <td><a href="/volunteer/event/{{event.id}}">{{event.name}}</a></td>
-          <td>{{event.start}}</td>
-          <td>{{event.location}}</td>
+          <th>Name</th>
+          <th>Time</th>
+          <th>Location</th>
         </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+        <tbody>
+          {% for event in events %}
+          <tr>
+            <td><a href="/volunteer/event/{{event.id}}">{{event.name}}</a></td>
+            <td>{{event.start}}</td>
+            <td>{{event.location}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
 
-  <div class="col-md-2">
+  <div class="col-md-3">
     <h1 class="text-center">Members</h1>
-    <table class="table table-hover">
-      <tr>
-        <th>Name</th>
-        <th>Role</th>
-      </tr>
-      <tbody>
+    <div class="table-responsive">
+      <table class="table table-hover">
         <tr>
-          <td>{{group.owner.username}}</td>
-          <td>owner</td>
+          <th>Name</th>
+          <th>Role</th>
+          {% if is_owner %}
+            <th>Action</th>
+          {% endif %}
         </tr>
+        <tbody>
+          <tr>
+            <td>{{group.owner.username}}</td>
+            <td>owner</td>
+          </tr>
 
-        {% for u in group.organizers.all %}
-        <tr>
-          <td>{{u.username}}</td>
-          <td>organizer</td>
-            {% if is_owner %}
-          <td><a href="switchPermissionLevel/{{u.id}}">
-                  <button class="btn btn-primary">Make Volunteer</button>
-          </a></td>
-            {% endif %}
-        </tr>
-        {% endfor %}
+          {% for u in group.organizers.all %}
+          <tr>
+            <td>{{u.username}}</td>
+            <td>organizer</td>
+              {% if is_owner %}
+            <td><a href="switchPermissionLevel/{{u.id}}">
+                    <button class="btn btn-primary">Make Volunteer</button>
+            </a></td>
+              {% endif %}
+          </tr>
+          {% endfor %}
 
-        {% for u in group.volunteers.all %}
-        <tr>
-          <td>{{u.username}}</td>
-          <td>volunteer</td>
-            {% if is_owner %}
-          <td><a href="switchPermissionLevel/{{u.id}}">
-                  <button class="btn btn-primary">Make Organizer</button>
-          </a></td>
-            {% endif %}
-        </tr>
-        {% endfor %}
+          {% for u in group.volunteers.all %}
+          <tr>
+            <td>{{u.username}}</td>
+            <td>volunteer</td>
+              {% if is_owner %}
+            <td><a href="switchPermissionLevel/{{u.id}}">
+                    <button class="btn btn-primary">Make Organizer</button>
+            </a></td>
+              {% endif %}
+          </tr>
+          {% endfor %}
 
-        {% for u in group.pendingUsers.all %}
-        <tr>
-          <td>{{u.username}}</td>
-          <td>pending</td>
-            {% if is_organizer %}
-          <td><a href="approve/{{u.id}}">
-                  <button class="btn btn-primary">
-                    Approve <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
-                  </button>
-          </a></td>
-            {% endif %}
-        </tr>
-        {% endfor %}
+          {% for u in group.pendingUsers.all %}
+          <tr>
+            <td>{{u.username}}</td>
+            <td>pending</td>
+              {% if is_organizer %}
+            <td><a href="approve/{{u.id}}">
+                    <button class="btn btn-primary">
+                      Approve <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+                    </button>
+            </a></td>
+              {% endif %}
+          </tr>
+          {% endfor %}
 
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 

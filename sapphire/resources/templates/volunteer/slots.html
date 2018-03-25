@@ -4,26 +4,28 @@
   <h1 class="display-3">Slots</h1>
   <div class="row">
     <div class="col-md-11">
-      <table class="table table-hover">
-        <thread>
-          <tr>
-            <th>Name</th>
-            <th>Event</th>
-            <th>Start</th>
-            <th>End</th>
-          </tr>
-        </thread>
-        <tbody>
-          {% for slot in slots %}
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thread>
             <tr>
-              <td><a href="http://127.0.0.1:8000/volunteer/slot/{{slot.id}}">{{slot.title}}</a></td>
-              <td>{{slot.parentEvent.name}}</td>
-              <td>{{slot.start}}</td>
-              <td>{{slot.end}}</td>
+              <th>Name</th>
+              <th>Event</th>
+              <th>Start</th>
+              <th>End</th>
             </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+          </thread>
+          <tbody>
+            {% for slot in slots %}
+              <tr>
+                <td><a href="/volunteer/slot/{{slot.id}}">{{slot.title}}</a></td>
+                <td><a href="/volunteer/event/{{slot.parentEvent.id}}"> {{slot.parentEvent.name}}</a></td>
+                <td>{{slot.start}}</td>
+                <td>{{slot.end}}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
     <div class="col-md-1">
       <div class="dropdown">
@@ -31,8 +33,6 @@
           Filter
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <div class="text-center"><h4>Filter<h4></div>
-          <div class="dropdown-divider"></div>
           <form method="post">
             {% csrf_token %}
               {% for field in form %}
@@ -48,10 +48,8 @@
                   <h1></h1>
               {% endfor %}
 
-              <div class="form-group row">
-                <label class="col-sm-3 col-form-label"></label>
-
-                <div class="col-sm-6"><button class="btn btn-primary btn-block" type="submit">Filter</button></div>
+              <div class="text-center">
+                <button class="btn btn-primary" type="submit">Filter</button>
               </div>
           </form>
         </div>
