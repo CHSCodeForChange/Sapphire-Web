@@ -14,15 +14,15 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='alert',
-            name='ip',
-            field=models.GenericIPAddressField(default='127.0.0.1'),
-            preserve_default=False,
-        ),
-        migrations.AlterField(
-            model_name='alert',
-            name='user',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
-        ),
+        # migrations.AddField(
+        #     model_name='alert',
+        #     name='ip',
+        #     field=models.GenericIPAddressField(default='127.0.0.1'),
+        #     preserve_default=False,
+        # ),
+        # migrations.AlterField(
+        #     model_name='alert',
+        #     name='user',
+        #     field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+        # ),
     ]

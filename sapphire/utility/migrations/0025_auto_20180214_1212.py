@@ -12,9 +12,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
-            model_name='user_slot',
-            name='difference',
-            field=models.DateTimeField(null=True),
-        ),
+        # Can be commented sine the datatype is changeed to charfield in a later migration
+        # migrations.AlterField(
+        #     model_name='user_slot',
+        #     name='difference',
+        #     field=models.DateTimeField(null=True, blank=True, auto_now_add=True),
+        # ),
     ]

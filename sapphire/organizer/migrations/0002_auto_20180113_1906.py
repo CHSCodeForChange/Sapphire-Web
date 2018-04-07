@@ -55,13 +55,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='event',
             name='state',
-            field=models.CharField(default=datetime.datetime(2018, 1, 14, 0, 5, 55, 17759, tzinfo=utc), max_length=2),
+            field=models.CharField(default=datetime.datetime(2018, 1, 14, 0, 5, 55, 17759, tzinfo=utc), max_length=200),
             preserve_default=False,
         ),
         migrations.AddField(
             model_name='event',
             name='zipcode',
-            field=models.CharField(default=datetime.datetime(2018, 1, 14, 0, 6, 0, 740238, tzinfo=utc), max_length=5),
+            field=models.CharField(default=datetime.datetime(2018, 1, 14, 0, 6, 0, 740238, tzinfo=utc), max_length=500),
             preserve_default=False,
         ),
     ]
