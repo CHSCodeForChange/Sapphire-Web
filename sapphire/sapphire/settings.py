@@ -26,10 +26,10 @@ SECRET_KEY = 'not secret' #this is a testing secrect key
 
 # Set DEBUG = False to test 404 and 500 pages
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]'] use this when debug=False
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.herokuapp.com']
 
 
 # Application definition
