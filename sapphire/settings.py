@@ -94,12 +94,12 @@ WSGI_APPLICATION = 'sapphire.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dbftpnjg8bq4lf',
-        'USER': 'bphjhqdnrwnaws',
-        'PASSWORD': 'c2822dc48880710442fe9fd3686edc318a0f1797e0a750901455ed01151b4d21',
-        'HOST': 'ec2-54-221-192-231.compute-1.amazonaws.com',
-        'PORT': '5432',
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': 'dbftpnjg8bq4lf',
+#        'USER': 'bphjhqdnrwnaws',
+#        'PASSWORD': 'c2822dc48880710442fe9fd3686edc318a0f1797e0a750901455ed01151b4d21',
+#        'HOST': 'ec2-54-221-192-231.compute-1.amazonaws.com',
+#        'PORT': '5432',
     }
 }
 
