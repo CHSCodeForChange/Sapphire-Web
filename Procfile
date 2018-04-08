@@ -1,1 +1,1 @@
-web: gunicorn sapphire.wsgi --log-file -
+web: gunicorn sapphire.wsgi.application --log-file -
