@@ -26,16 +26,17 @@ SECRET_KEY = 'not secret' #this is a testing secrect key
 
 # Set DEBUG = False to test 404 and 500 pages
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]'] use this when debug=False
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
 
 INSTALLED_APPS = [
     'crispy_forms',
+    'gunicorn',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -93,8 +94,12 @@ WSGI_APPLICATION = 'sapphire.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'dbftpnjg8bq4lf',
+        'USER': 'bphjhqdnrwnaws',
+        'PASSWORD': 'c2822dc48880710442fe9fd3686edc318a0f1797e0a750901455ed01151b4d21',
+        'HOST': 'ec2-54-221-192-231.compute-1.amazonaws.com',
+        'PORT': '5432',
     }
 }
 

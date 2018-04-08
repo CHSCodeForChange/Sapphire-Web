@@ -73,7 +73,8 @@ class Slot(models.Model):
     # The String city of the Event'
     city = models.CharField(max_length=240, blank = True, null=True)
     # The String state of event
-    state = models.CharField(max_length=2, blank = True, null=True)
+    # TODO: This should be restored to 2 if that was not an accident
+    state = models.CharField(max_length=200, blank = True, null=True)
     # The Integer zip code of the Event
     zip_code = models.IntegerField(blank=True, null=True)
 
@@ -208,7 +209,7 @@ class Event(models.Model):
     # The String city of the Event'
     city = models.CharField(max_length=240)
     # The String state of event
-    state = models.CharField(max_length=2)
+    state = models.CharField(max_length=200)
     # The Integer zip code of the Event
     zip_code = models.IntegerField(null=True)
 

@@ -12,9 +12,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
-            model_name='feed_entry',
-            name='user',
-            field=models.GenericIPAddressField(),
-        ),
+        # migrations.AlterField(
+        #     model_name='feed_entry',
+        #     name='user',
+        #     field=models.GenericIPAddressField(),
+        # ),
     ]

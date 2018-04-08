@@ -12,10 +12,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
-            model_name='alert',
-            name='user',
-            field=models.GenericIPAddressField(default='141.134.6.14'),
-            preserve_default=False,
-        ),
+        # migrations.AlterField(
+        #     model_name='alert',
+        #     name='ip',
+        #     field=models.GenericIPAddressField(default='141.134.6.14'),
+        #     preserve_default=False,
+        # ),
     ]

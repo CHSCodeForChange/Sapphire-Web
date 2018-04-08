@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='event',
             name='state',
-            field=models.CharField(default=datetime.datetime(2018, 1, 14, 0, 6, 7, 119340, tzinfo=utc), max_length=2),
+            field=models.CharField(default=datetime.datetime(2018, 1, 14, 0, 6, 7, 119340, tzinfo=utc), max_length=200),
             preserve_default=False,
         ),
         migrations.AddField(
