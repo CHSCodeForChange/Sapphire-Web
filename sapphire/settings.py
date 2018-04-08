@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'not secret' #this is a testing secrect key
+SECRET_KEY = os.environ['S_KEY']
 
 # Set DEBUG = False to test 404 and 500 pages
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -93,14 +93,7 @@ WSGI_APPLICATION = 'sapphire.wsgi.application'
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dbftpnjg8bq4lf',
-        'USER': 'bphjhqdnrwnaws',
-        'PASSWORD': 'c2822dc48880710442fe9fd3686edc318a0f1797e0a750901455ed01151b4d21',
-        'HOST': 'ec2-54-221-192-231.compute-1.amazonaws.com',
-        'PORT': '5432',
-    }
+    'default': {}
 }
 
 db_from_env = dj_database_url.config()
@@ -166,5 +159,5 @@ LOGIN_REDIRECT_URL = '/home/'
 EMAIL_HOST_USER = 'testemail2081@gmail.com' #this is a testing account
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_PASSWORD = 'securestuff'
+EMAIL_HOST_PASSWORD = os.environ['EMAIL_PASSWORD']
 EMAIL_PORT = 587
