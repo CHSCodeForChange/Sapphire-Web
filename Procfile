@@ -1,1 +1,1 @@
-web: gunicorn sapphire.wsgi.application --log-file -
+web: python manage.py run_gunicorn --log-file -
