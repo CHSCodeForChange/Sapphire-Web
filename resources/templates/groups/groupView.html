@@ -1,0 +1,156 @@
+{% extends "header_not_centered.html" %}
+
+{% block content %}
+<p></p>
+<div class="row">
+  <div class="col-md-5">
+    <div class="row">
+      <img class="col-md-3 left-block img-responsive img-circle" src="{{group.image.url}}" alt="profile picture" width="10%" height="10%">
+      <div class="col-md-9">
+        <h1 class="display-3"> {{group.name}}</h1>
+      </div>
+    </div>
+
+    <div class="row">
+      {% if is_organizer %}
+      <div class="col-md-3">
+        <a href = "chat">
+          <button type="button" class="col md-6 btn btn-primary btn-block">Chat</button>
+        </a>
+      </div>
+      <div class="col-md-3">
+        <a href = "console">
+          <button type="button" class="col md-6 btn btn-primary btn-block">Console</button>
+        </a>
+      </div>
+      <div class="col-md-3">
+        <a href = "update">
+          <button type="button" class="col md-6 btn btn-info btn-block">Edit</button>
+        </a>
+      </div>
+      <div class="col-md-3">
+        <a href = "leave">
+          <button type="button" class="col md-6 btn btn-danger btn-block">Leave</button>
+        </a>
+      </div>
+      {% elif is_member %}
+        <div class="col-md-6">
+          <a href = "chat">
+            <button type="button" class="col md-6 btn btn-primary btn-block">Chat</button>
+          </a>
+        </div>
+
+        <div class="col-md-6">
+          <a href = "leave">
+            <button type="button" class="col md-6 btn btn-danger btn-block">Leave</button>
+          </a>
+        </div>
+      {% else %}
+        <div class="col-md-12">
+          <a href = "join">
+            <button type="button" class="btn btn-primary btn-block">Join</button>
+          </a>
+        </div>
+    {% endif %}
+  </div>
+
+
+    <h1></h1>
+    <h5>Email: <a href = "{{group.email}}">{{group.email}}</a>,
+      Website: <a href = "{{group.website}}">{{group.website}}</a></h5>
+    <p class="text-left">
+      {{group.description}}
+    </p>
+
+    <h4>{{group.location}}: {{group.address}}, {{group.city}} {{group.state}} {{group.zip_code}}</h4>
+    <div class="embed-responsive embed-responsive-16by9">
+      <iframe class=embed-responsive-item
+              src="https://www.google.com/maps/embed/v1/search?q={{group.address}}, {{group.city}} {{group.state}} {{group.zip_code}}&key=AIzaSyB-YQD-s4ery8KQRnzX7FhZsBC4SeFRcjA"
+              allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <h1 class="text-center">Events</h1>
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <tr>
+          <th>Name</th>
+          <th>Time</th>
+          <th>Location</th>
+        </tr>
+        <tbody>
+          {% for event in events %}
+          <tr>
+            <td><a href="/volunteer/event/{{event.id}}">{{event.name}}</a></td>
+            <td>{{event.start}}</td>
+            <td>{{event.location}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <h1 class="text-center">Members</h1>
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <tr>
+          <th>Name</th>
+          <th>Role</th>
+          {% if is_owner %}
+            <th>Action</th>
+          {% endif %}
+        </tr>
+        <tbody>
+          <tr>
+            <td>{{group.owner.username}}</td>
+            <td>owner</td>
+          </tr>
+
+          {% for u in group.organizers.all %}
+          <tr>
+            <td>{{u.username}}</td>
+            <td>organizer</td>
+              {% if is_owner %}
+            <td><a href="switchPermissionLevel/{{u.id}}">
+                    <button class="btn btn-primary">Make Volunteer</button>
+            </a></td>
+              {% endif %}
+          </tr>
+          {% endfor %}
+
+          {% for u in group.volunteers.all %}
+          <tr>
+            <td>{{u.username}}</td>
+            <td>volunteer</td>
+              {% if is_owner %}
+            <td><a href="switchPermissionLevel/{{u.id}}">
+                    <button class="btn btn-primary">Make Organizer</button>
+            </a></td>
+              {% endif %}
+          </tr>
+          {% endfor %}
+
+          {% for u in group.pendingUsers.all %}
+          <tr>
+            <td>{{u.username}}</td>
+            <td>pending</td>
+              {% if is_organizer %}
+            <td><a href="approve/{{u.id}}">
+                    <button class="btn btn-primary">
+                      Approve <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+                    </button>
+            </a></td>
+              {% endif %}
+          </tr>
+          {% endfor %}
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

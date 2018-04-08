@@ -1,0 +1,72 @@
+{% extends "header_not_centered.html" %}
+
+{% block content %}
+<p></p>
+<div class="row">
+  <div class="col-md-5">
+    <div>
+      <div class="row">
+        {% if profile.image %}
+        <img class="col-md-2 left-block img-responsive img-circle" src="{{profile.image.url}}" alt="profile picture" width="10%" height="10%">
+        {% else %}
+        <img class="col-md-2 left-block img-responsive img-circle" src="/static/img/test-user-icon.jpg" alt="profile picture" width="10%" height="10%">
+        {% endif %}
+        <div class="col-md-10">
+          <h1 class="display-3"> {{user.username}}</h1>
+        </div>
+      </div>
+      {% if this_user %}
+        <h1></h1>
+        <div class="row">
+          <a class="col-md-6" href="/logout">
+            <button type="button" class="btn btn-danger btn-block">Logout</button>
+          </a>
+          <a class="col-md-6" href="/accounts/profile/edit/">
+            <button type="button" class="btn btn-primary btn-block">Edit Profile</button>
+          </a>
+        </div>
+      {% endif %}
+    </div>
+
+    <h1></h1>
+    <h1></h1>
+    <p class="text-left">
+      {{profile.bio}}
+    </p>
+  </div>
+
+  <div class="col-md-2">
+    <h1 class="text-center">Groups</h1>
+    <table class="table table-hover">
+      <thread>
+        <tr>
+          <th>Name</th>
+        </tr>
+      </thread>
+      <tbody>
+        {% for group in groups %}
+        <tr>
+            <td><a href="/groups/{{group.id}}">{{group.name}}</a></th>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col-md-4">
+    <h2>Recent Activity</h2>
+    <!--only shows 10 most recent right now,
+        to change to a different number go to
+      Sapphire-web/sapphire/accounts/views.py line 37,
+      and change [:10] to the number of items needed,
+      or remove [:10] to get all elements-->
+    {% for entry in feed_entries %}
+    <h5>{{entry.datetime}}</h5>
+    <p>
+      <a href="{{entry.url}}">{{entry.description}}</a>
+    </p>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

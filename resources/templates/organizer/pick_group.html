@@ -1,0 +1,27 @@
+{% extends "header.html" %}
+
+{% block content %}
+
+<h1 class="display-3">Pick A Group</h1>
+<a href="/volunteer/eventNeeds/"><button class="btn btn-primary">View Events</button></a>
+<h1></h1>
+<table class="table table-hover">
+  <thread>
+    <tr>
+      <th>Name</th>
+      <th>Location</th>
+      <th>Tagline</th>
+    </tr>
+  </thread>
+  <tbody>
+    {% for group in groups %}
+      <tr>
+        <td><a href="{{group.id}}">{{group.name}}</a></th>
+        <td>{{group.location}}</th>
+        <td>{{group.tagline}}</th>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
