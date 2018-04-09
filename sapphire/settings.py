@@ -93,7 +93,14 @@ WSGI_APPLICATION = 'sapphire.wsgi.application'
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 DATABASES = {
-    'default': {}
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': '',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': '',
+    }
 }
 
 db_from_env = dj_database_url.config()
