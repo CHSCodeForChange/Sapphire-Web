@@ -49,7 +49,6 @@ def update(request, group_id):
             group.state = data['state']
             group.zip_code = data['zip_code']
             group.approvalNeeded = data['approvalNeeded']
-            group.image = data['image']
 
             group.save()
 
@@ -60,7 +59,7 @@ def update(request, group_id):
 
     form = EditGroupForm(id=group_id, initial={'name':group.name, 'tagline':group.tagline, 'description':group.description,
     'email':group.email, 'website':group.website, 'location':group.location, 'address':group.address, 'city':group.city,
-    'state':group.state, 'zip_code':group.zip_code, 'approvalNeeded':'approvalNeeded', 'image':'image'})
+    'state':group.state, 'zip_code':group.zip_code, 'approvalNeeded':'approvalNeeded'})
 
     return render(request, 'groups/editGroup.html', {'form':form})
 

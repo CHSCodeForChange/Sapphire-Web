@@ -8,7 +8,6 @@ class Group(models.Model):
     objects = models.Manager()
 
     name = models.CharField(max_length=120)
-    image =  models.ImageField(upload_to='profile_image', blank=True)
 
 
     # A super short description of the group

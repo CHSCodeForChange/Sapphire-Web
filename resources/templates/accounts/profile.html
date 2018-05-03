@@ -6,11 +6,7 @@
   <div class="col-md-5">
     <div>
       <div class="row">
-        {% if profile.image %}
-        <img class="col-md-2 left-block img-responsive img-circle" src="{{profile.image.url}}" alt="profile picture" width="10%" height="10%">
-        {% else %}
         <img class="col-md-2 left-block img-responsive img-circle" src="/static/img/test-user-icon.jpg" alt="profile picture" width="10%" height="10%">
-        {% endif %}
         <div class="col-md-10">
           <h1 class="display-3"> {{user.username}}</h1>
         </div>
