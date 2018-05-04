@@ -87,6 +87,7 @@ class NewGroupForm(forms.Form):
 
     def save(self, commit=True):
         group = Group(
+            image="static/img/test-user-icon.jpg",
             name=self.cleaned_data['name'],
             tagline=self.cleaned_data['tagline'],
             description=self.cleaned_data['description'],

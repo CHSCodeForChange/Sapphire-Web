@@ -9,6 +9,7 @@ class Group(models.Model):
 
     name = models.CharField(max_length=120)
 
+    image =  models.ImageField(upload_to='profile_image', blank=True)
 
     # A super short description of the group
     tagline = models.CharField(max_length=120)
