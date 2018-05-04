@@ -238,7 +238,7 @@ class NewEventForm(forms.Form):
             start=self.cleaned_data['start'],
             end=self.cleaned_data['end'],)
             #is_single=False,
-            #type='event')
+            type='event')
         return event
 
 class UpdateEventForm(forms.Form):
