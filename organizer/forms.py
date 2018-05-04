@@ -236,7 +236,7 @@ class NewEventForm(forms.Form):
             #minVolunteers=1,
             #volunteers=None,
             start=self.cleaned_data['start'],
-            end=self.cleaned_data['end'],)
+            end=self.cleaned_data['end'],
             #is_single=False,
             type='event')
         return event
