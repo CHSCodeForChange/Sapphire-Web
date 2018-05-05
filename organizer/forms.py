@@ -382,13 +382,11 @@ class NewSlotForm(forms.Form):
         return user
 
     def clean_start(self):
-        if (start == None):
-            start = parentEvent.start
+
         start = self.cleaned_data['start']
         return start
     def clean_end(self):
-        if (end == None):
-            end = parentEvent.end
+        
         end = self.cleaned_data['end']
         return end
 
