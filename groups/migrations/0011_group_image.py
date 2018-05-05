@@ -17,8 +17,4 @@ class Migration(migrations.Migration):
             name='image',
             field=models.ImageField(blank=True, upload_to='profile_image'),
         ),
-        migrations.RemoveField(
-            model_name='group',
-            name='image',
-        ),
     ]
