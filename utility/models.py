@@ -188,7 +188,7 @@ class Event(models.Model):
         on_delete=models.CASCADE,
         null=False,
     )
-    #is_single = models.BooleanField(default=False)
+    is_single = models.BooleanField(default=False)
     #type = models.CharField(max_length=80)
     objects = models.Manager()
     # The organizer of the Event
