@@ -210,6 +210,7 @@ class Event(models.Model):
     city = models.CharField(max_length=240)
     # The String state of event
     state = models.CharField(max_length=200)
+    type = models.CharField(max_length=30)
     # The Integer zip code of the Event
     zip_code = models.IntegerField(null=True)
 
