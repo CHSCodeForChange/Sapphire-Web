@@ -160,11 +160,3 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 LOGIN_REDIRECT_URL = '/home/'
-
-# Settings for sending out emails
-
-EMAIL_HOST_USER = 'testemail2081@gmail.com' #this is a testing account
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_PASSWORD = os.environ['EMAIL_PASSWORD']
-EMAIL_PORT = 587
