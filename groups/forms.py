@@ -37,7 +37,7 @@ class NewGroupForm(forms.Form):
         attrs={ 'type': 'number',
                 'max': '99999',
                 'class': 'form-control'}))
-    approvalNeeded = forms.BooleanField(label='Approval Needed')
+    approvalNeeded = forms.BooleanField(label='Approval Needed', required=False)
 
     owner = models.User()
 
