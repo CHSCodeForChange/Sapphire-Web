@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from datetime import datetime, timezone
 import string
 
-from .forms import NewEventForm, NewSingleSlotForm, NewSlotForm, UpdateEventForm, EditTimeForm
+from .forms import NewEventForm, NewSingleSlotForm, NewSlotForm, UpdateEventForm, EditTimeForm, FieldForm
 from utility.models import Event, Slot, User_Slot
 from feed.models import Feed_Entry
 from groups.models import Group
@@ -104,8 +104,11 @@ def addSlot(request, event_id):
             slot = form.save(commit=False)
             slot.save()
 
+            ans = {}
+            for i in slot.get_extra():
+                ans[i] = '-'
             for x in range(0,slot.maxVolunteers):
-                user_slot = User_Slot(volunteer=None, parentSlot=slot)
+                user_slot = User_Slot(volunteer=None, parentSlot=slot, extraFields=ans)
                 user_slot.save()
 
             feed_entry = Feed_Entry(
@@ -128,7 +131,7 @@ def addUserSlot(request, slot_id):
     slot = Slot.objects.get(id=slot_id)
     group = slot.parentEvent.parentGroup
     if (group.get_is_organzer(request.user)):
-        user_slot = User_Slot(parentSlot=slot)
+        user_slot = User_Slot(parentSlot=slot, extraFields=slot.extraFields)
         user_slot.save()
 
         alert = Alert(user=request.user, text="Added a volunteer openning", color=Alert.getBlue())
@@ -156,6 +159,24 @@ def removeUserSlot(request, user_slot_id):
 
     return redirect('/volunteer/slot/'+str(user_slot.parentSlot.id))
 
+def editField(request, user_slot_id, field):
+    user_slot = User_Slot.objects.get(id=user_slot_id)
+    group = user_slot.parentSlot.parentEvent.parentGroup
+    if (group.get_is_organzer(request.user)):
+        if (request.method == 'POST'):
+            form = FieldForm(request.POST)
+            if form.is_valid():
+                newVal = form.save()
+                user_slot.set_extra(field, newVal)
+                user_slot.save()
+                return redirect('/volunteer/slot/' + str(user_slot.parentSlot.id))
+
+        else:
+            form = FieldForm()
+
+        return render(request, 'organizer/editSignIn.html', {'form': form, 'user_slot': user_slot})
+
+    return redirect('/volunteer/slot/' + str(user_slot.parentSlot.id))
 
 def editSignIn(request, user_slot_id):
     user_slot = User_Slot.objects.get(id=user_slot_id)

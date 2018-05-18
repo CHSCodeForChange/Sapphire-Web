@@ -5,7 +5,7 @@ from datetime import datetime, timedelta, timezone
 from django.contrib.auth.models import User, UserManager
 from accounts.models import Profile
 from groups.models import Group
-
+import ast
 """
 Notes:
 I have used models.CASCADE in all the db relationship on_delete cases. I do not
@@ -80,6 +80,8 @@ class Slot(models.Model):
 
     paymentPerHour = models.DecimalField(blank=True, null=True, default=0, max_digits=5, decimal_places=2)
 
+    extraFields = models.CharField(max_length=255, blank=True, null=True)
+
     def is_payment_nonzero(self):
         return self.paymentPerHour!=0
 
@@ -107,6 +109,8 @@ class Slot(models.Model):
             return slots
         return slots.order_by('start')#Slot.objects.filter(Q(parentEvent.parentGroup.get_is_member(user))).objects.order_by('start')
 
+    def get_extra(self):
+        return self.extraFields.split(',')
 
 class User_Slot(models.Model):
     volunteer = models.ForeignKey(
@@ -137,6 +141,10 @@ class User_Slot(models.Model):
     difference = models.CharField(max_length=100, null=True)
 
     payment = models.DecimalField(null=False, default=0, max_digits=10, decimal_places=2)
+
+    extraFields = models.CharField(max_length=240, null=True)
+
+    value = None  # this is used to export the extra fields to html
 
     def updateDeltaTimes(self):
         if (self.signin != None and self.signout != None):
@@ -179,8 +187,20 @@ class User_Slot(models.Model):
 
         return user_slots
 
+    def get_extra(self):
+        try:
+            return ast.literal_eval(self.extraFields)
+        except:
+            return {}
 
+    def set_extra(self, field, newVal):
+        self.extraFields = self.get_extra()
+        print('shit', self.extraFields)
+        self.extraFields[field] = newVal
+        print('shit', self.extraFields[field])
 
+    def prep_html(self):
+        self.value = list(self.get_extra().items())
 
 class Event(models.Model):
     parentGroup = models.ForeignKey(

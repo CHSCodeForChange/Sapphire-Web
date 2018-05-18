@@ -93,6 +93,9 @@
             <th>Payment</th>
           {% endif %}
 
+          {% for a in extra %}
+                <th>{{a}}</th>
+            {% endfor %}
           {% if is_organizer %}
             <th>Delete</th>
           {% endif %}
@@ -109,6 +112,10 @@
                 {% if slot.is_payment_nonzero %}
                   <th>-</th>
                 {% endif %}
+
+                  {% for a in extra %}
+                          <td>-</td>
+                    {% endfor %}
 
                 {% if is_organizer %}
                   <td><a href="/organizer/deleteUserSlot/{{user_slot.id}}"><button class="btn btn-danger">Delete</button></a></td>
@@ -151,6 +158,10 @@
                 {% if slot.is_payment_nonzero %}
                   <td>${{user_slot.payment}}</td>
                 {% endif %}
+
+                  {% for a,b in user_slot.value %}
+                        <td><a href="/organizer/editField/{{user_slot.id}}/{{ a }}"><button type="button" name="button" class="btn btn-light">{{b}}</button></a></td>
+                    {% endfor %}
 
                 {% if is_organizer %}
                   <td><a href="/organizer/deleteUserSlot/{{user_slot.id}}"><button class="btn btn-danger">Delete</button></a></td>

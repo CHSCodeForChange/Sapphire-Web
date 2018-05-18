@@ -11,6 +11,7 @@ from . import views
 urlpatterns = [
     url(r'^editSignIn/(?P<user_slot_id>[0-9]+)/$', views.editSignIn, name='editSignIn'),
     url(r'^editSignOut/(?P<user_slot_id>[0-9]+)/$', views.editSignOut, name='editSignOut'),
+    url(r'^editField/(?P<user_slot_id>[0-9]+)/(?P<field>[\w\-]+)/$', views.editField, name='editField'),
 
     url(r'^addEvent/$', views.pick_group, name='pick_group'),
     url(r'^addEvent/(?P<group_id>[0-9]+)/$', views.addEvent, name='add_event'),

@@ -52,7 +52,9 @@ def slot(request, slot_id):
         percentFilled = int(len(User_Slot.objects.filter(parentSlot=slot).exclude(volunteer=None))/len(User_Slot.objects.filter(parentSlot=slot))*100)
     else:
         percentFilled = 0
-    return render(request, 'volunteer/slot.html', {'slot':slot, 'user_slots':user_slots, 'event':event, 'is_organizer':is_organizer, 'percentFilled':percentFilled, 'is_volunteered':is_volunteered})
+    for i in user_slots:
+        i.prep_html()
+    return render(request, 'volunteer/slot.html', {'slot':slot, 'user_slots':user_slots, 'event':event, 'is_organizer':is_organizer, 'percentFilled':percentFilled, 'is_volunteered':is_volunteered, 'extra': list(user_slots[0].get_extra().keys())})
 
 def slotNeeds(request):
     if request.user.is_authenticated():
@@ -145,7 +147,7 @@ def unvolunteer(request, slot_id):
         return redirect('/volunteer/slot/'+str(slot_id))
     else:
         slots_filled_by_this_user.delete()
-        user_slot = User_Slot(parentSlot=slot)
+        user_slot = User_Slot(parentSlot=slot, extraFields=slot.get_extra())
         user_slot.save()
 
         alert = Alert(user=request.user, text="unvolunteered for "+slot.title, color=Alert.getRed())
