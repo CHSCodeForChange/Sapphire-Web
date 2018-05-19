@@ -55,7 +55,9 @@ class NewSingleSlotForm(forms.Form):
     user = models.User()
     datetime = datetime.now(timezone.utc)
 
-    extraFields = forms.CharField(label='Extra fields separated by comma', max_length=240)
+    extraFields = forms.CharField(label='Extra Fields (Seperate w/ Commas)', max_length=240, widget=forms.TextInput(
+        attrs={'type': 'text',
+               'class': 'form-control'}))
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user')
@@ -394,7 +396,10 @@ class NewSlotForm(forms.Form):
     parentEvent = Event()
     datetime = datetime.now(timezone.utc)
 
-    extraFields = forms.CharField(label='Extra fields separated by comma', max_length=240)
+    extraFields = forms.CharField(label='Extra Fields', max_length=240, widget=forms.TextInput(
+        attrs={'type': 'text',
+               'placeholder': '[Field 1], [Field 2], [Field 3] ...',
+               'class': 'form-control'}))
 
     """in_person = forms.BooleanField(label='In person', widget=forms.CheckboxInput(
         attrs={'type': 'checkbox',
