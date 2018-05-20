@@ -422,12 +422,6 @@ class NewSlotForm(forms.Form):
         user = self.cleaned_data['user']
         return user
 
-    """def clean_maxVolunteers(self):
-        description = self.cleaned_data['maxVolunteers']
-        return description
-    def clean_in_person(self):
-        in_person = self.cleaned_data['in_person']"""
-
     def clean_location(self):
         user = self.cleaned_data['location']
         return user
@@ -512,11 +506,6 @@ class UpdateSlotForm(forms.Form):
         attrs={ 'type': 'text',
                 'class': 'form-control'}))
 
-    maxVolunteers = forms.IntegerField(label='# Slots', widget=forms.NumberInput(
-        attrs={'type': 'number',
-               'min': '1',
-               'class': 'form-control'}))
-
 
     paymentPerHour = forms.DecimalField(label='Payment Per Hour', widget=forms.NumberInput(
         attrs={'type': 'number',
@@ -530,48 +519,48 @@ class UpdateSlotForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.slot_id = kwargs.pop('id')
         super(UpdateSlotForm, self).__init__(*args, **kwargs)
+
     def clean_title(self):
         title = self.cleaned_data['title']
         return title
+
     def clean_description(self):
         description = self.cleaned_data['description']
         return description
+
     def clean_user(self):
         user = self.cleaned_data['user']
         return user
-    """def clean_maxVolunteers(self):
-        description = self.cleaned_data['maxVolunteers']
-        return description
-    def clean_in_person(self):
-        in_person = self.cleaned_data['in_person']"""
 
     def clean_location(self):
         user = self.cleaned_data['location']
         return user
 
     def clean_start(self):
-        if (start == None):
-            start = parentEvent.start
         start = self.cleaned_data['start']
         return start
+
     def clean_end(self):
-        if (end == None):
-            end = parentEvent.end
+
         end = self.cleaned_data['end']
         return end
-
-    def clean_maxVolunteers(self):
-        maxVolunteers = self.cleaned_data['maxVolunteers']
-        return maxVolunteers
 
     def clean_paymentPerHour(self):
         paymentPerHour = self.cleaned_data['paymentPerHour']
         return paymentPerHour
 
+        def clean_extra(self):
+            a = self.cleaned_data['extraFields']
+            print(a)
+            ans = {}
+            for i in a.split(','):
+                ans[i] = '-'
+
+        return ans
 
     def save(self, commit=True):
         return self.cleaned_data
-        
+
 class EditTimeForm(forms.Form):
     time = forms.DateTimeField(label='Time', input_formats=['%Y-%m-%dT%H:%M'],
                                widget=forms.DateTimeInput(

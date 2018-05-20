@@ -130,6 +130,8 @@ def addSlot(request, event_id):
 def editSlot(request, slot_id):
 
     slot = Slot.objects.get(id=slot_id)
+    parentEvent = slot.parentEvent
+    group = parentEvent.parentGroup
 
     if request.user.is_authenticated():
         form = UpdateSlotForm(request.POST, id=slot_id)
@@ -137,7 +139,6 @@ def editSlot(request, slot_id):
             data = form.save(commit=False)
             slot.start = data['start']
             slot.end = data['end']
-            slot.maxVolunteers = data['maxVolunteers']
             slot.title = data['title']
             slot.description = data['description']
             slot.location = data['location']
@@ -153,13 +154,13 @@ def editSlot(request, slot_id):
                 url="/volunteer/slot/" + str(slot.id))
             feed_entry.save()
 
-            alert = Alert(user=request.user, text="Updated Slot "+event.name, color=Alert.getBlue())
+            alert = Alert(user=request.user, text="Updated Slot "+ slot.title, color=Alert.getBlue())
             alert.saveIP(request)
 
-            return redirect('slotView', slot.parentEvent.event_id)
+            return redirect('slotView', slot.id)
 
     form = UpdateSlotForm(id=slot_id, initial={'title':slot.title,
-    'description':slot.description, 'maxVolunteers':slot.maxVolunteers,
+    'description':slot.description,
     'location':slot.location, 'start':slot.start, 'end':slot.end, 'paymentPerHour':slot.paymentPerHour})
 
     return render(request, 'organizer/edit_slot.html', {'form':form})
