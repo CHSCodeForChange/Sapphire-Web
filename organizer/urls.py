@@ -13,6 +13,8 @@ urlpatterns = [
     url(r'^editSignOut/(?P<user_slot_id>[0-9]+)/$', views.editSignOut, name='editSignOut'),
     url(r'^editField/(?P<user_slot_id>[0-9]+)/(?P<field>[\w\-]+)/$', views.editField, name='editField'),
 
+    url(r'^editSlot/(?P<slot_id>[0-9]+)/$', views.editSlot, name='editSlot'),
+
     url(r'^addEvent/$', views.pick_group, name='pick_group'),
     url(r'^addEvent/(?P<group_id>[0-9]+)/$', views.addEvent, name='add_event'),
     url(r'^addUserSlot/(?P<slot_id>[0-9]+)/$', views.addUserSlot, name='add_user_slot'),
