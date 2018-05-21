@@ -196,6 +196,9 @@ class User_Slot(models.Model):
         self.extraFields = self.get_extra()
         self.extraFields[field] = newVal
 
+    def remove_extra(self, field):
+        self.extraFields = self.get_extra()
+        del self.extraFields[feild]
     def prep_html(self):
         self.value = list(self.get_extra().items())
 

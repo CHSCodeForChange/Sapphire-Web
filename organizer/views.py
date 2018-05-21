@@ -152,8 +152,24 @@ def editSlot(request, slot_id):
             slot.description = data['description']
             slot.location = data['location']
             slot.paymentPerHour = data['paymentPerHour']
+            slot.extraFields = data['extraFields']
 
             slot.save()
+
+            newFields = slot.get_extra()
+            for user in User_Slot.objects.filter(parentSlot=slot):
+                ans = {}
+                for a in newFields:
+                    val = ''
+                    if a in list(user.get_extra().keys()):
+                        val = user.get_extra()[a]
+
+                    if val != '':
+                        ans[a] = val
+                    else:
+                        ans[a] = '-'
+                user.extraFields = ans
+                user.save()
 
             feed_entry = Feed_Entry(
                 group=group,
@@ -171,7 +187,8 @@ def editSlot(request, slot_id):
     form = UpdateSlotForm(id=slot_id, initial={'title': slot.title,
                                                'description': slot.description,
                                                'location': slot.location, 'start': slot.start, 'end': slot.end,
-                                               'paymentPerHour': slot.paymentPerHour})
+                                               'paymentPerHour': slot.paymentPerHour,
+                                               'extraFields': slot.extraFields})
 
     return render(request, 'organizer/edit_slot.html', {'form': form})
 

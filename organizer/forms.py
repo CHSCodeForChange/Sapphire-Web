@@ -442,12 +442,11 @@ class NewSlotForm(forms.Form):
         paymentPerHour = self.cleaned_data['paymentPerHour']
         return paymentPerHour
 
-        def clean_extra(self):
-            a = self.cleaned_data['extraFields']
-            print(a)
-            ans = {}
-            for i in a.split(','):
-                ans[i] = '-'
+    def clean_extra(self):
+        a = self.cleaned_data['extraFields']
+        ans = {}
+        for i in a.split(','):
+            ans[i] = '-'
 
         return ans
 
@@ -552,14 +551,8 @@ class UpdateSlotForm(forms.Form):
         paymentPerHour = self.cleaned_data['paymentPerHour']
         return paymentPerHour
 
-        def clean_extra(self):
-            a = self.cleaned_data['extraFields']
-            print(a)
-            ans = {}
-            for i in a.split(','):
-                ans[i] = '-'
-
-        return ans
+    def clean_extra(self):
+        return self.cleaned_data['extraFields']
 
     def save(self, commit=True):
         return self.cleaned_data
