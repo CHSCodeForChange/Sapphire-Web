@@ -396,9 +396,9 @@ class NewSlotForm(forms.Form):
     parentEvent = Event()
     datetime = datetime.now(timezone.utc)
 
-    extraFields = forms.CharField(label='Extra Fields', max_length=240, widget=forms.TextInput(
+    extraFields = forms.CharField(label='Extra Fields', required=False, max_length=240, widget=forms.TextInput(
         attrs={'type': 'text',
-               'placeholder': '[Field 1], [Field 2], [Field 3] ...',
+               'placeholder': '[Not required],[Field 2],[Field 3] ...',
                'class': 'form-control'}))
 
     """in_person = forms.BooleanField(label='In person', widget=forms.CheckboxInput(
@@ -431,7 +431,6 @@ class NewSlotForm(forms.Form):
         return start
 
     def clean_end(self):
-
         end = self.cleaned_data['end']
         return end
 
@@ -474,42 +473,47 @@ class NewSlotForm(forms.Form):
         )
         return slot
 
+
 class FieldForm(forms.Form):
     field = forms.CharField(label='field', max_length=30)
 
     def __init__(self, *args, **kwargs):
         super(FieldForm, self).__init__(*args, **kwargs)
 
-
     def save(self):
         return self.cleaned_data['field']
+
 
 class UpdateSlotForm(forms.Form):
     title = forms.CharField(label='Title', max_length=30, widget=forms.TextInput(
         attrs={'type': 'text',
                'class': 'form-control'}))
     description = forms.CharField(label='Description', widget=forms.TextInput(
-        attrs={ 'type': 'text',
-                'class': 'form-control',
-                'required': False}))
+        attrs={'type': 'text',
+               'class': 'form-control',
+               'required': False}))
 
     start = forms.DateTimeField(label='Start time', input_formats=['%Y-%m-%dT%H:%M'],
-    widget=forms.DateTimeInput(
-        attrs={'type': 'datetime-local',
-               'class': 'form-control'}))
+                                widget=forms.DateTimeInput(
+                                    attrs={'type': 'datetime-local',
+                                           'class': 'form-control'}))
     end = forms.DateTimeField(label='End time', input_formats=['%Y-%m-%dT%H:%M'],
-    widget=forms.DateTimeInput(
-        attrs={'type': 'datetime-local',
-               'class': 'form-control'}))
+                              widget=forms.DateTimeInput(
+                                  attrs={'type': 'datetime-local',
+                                         'class': 'form-control'}))
 
     location = forms.CharField(label='Location', max_length=240, widget=forms.TextInput(
-        attrs={ 'type': 'text',
-                'class': 'form-control'}))
-
+        attrs={'type': 'text',
+               'class': 'form-control'}))
 
     paymentPerHour = forms.DecimalField(label='Payment Per Hour', widget=forms.NumberInput(
         attrs={'type': 'number',
                'min': '0',
+               'class': 'form-control'}))
+
+    extraFields = forms.CharField(label='Extra Fields', required=False, max_length=240, widget=forms.TextInput(
+        attrs={'type': 'text',
+               'placeholder': '[Not required],[Field 2],[Field 3] ...',
                'class': 'form-control'}))
 
     user = models.User()
@@ -541,7 +545,6 @@ class UpdateSlotForm(forms.Form):
         return start
 
     def clean_end(self):
-
         end = self.cleaned_data['end']
         return end
 
@@ -560,6 +563,7 @@ class UpdateSlotForm(forms.Form):
 
     def save(self, commit=True):
         return self.cleaned_data
+
 
 class EditTimeForm(forms.Form):
     time = forms.DateTimeField(label='Time', input_formats=['%Y-%m-%dT%H:%M'],

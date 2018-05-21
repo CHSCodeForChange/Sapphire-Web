@@ -6,6 +6,7 @@ from django.contrib.auth.models import User, UserManager
 from accounts.models import Profile
 from groups.models import Group
 import ast
+
 """
 Notes:
 I have used models.CASCADE in all the db relationship on_delete cases. I do not
@@ -41,7 +42,6 @@ time. It has a parent Event.
     )"""
 
 
-
 class Slot(models.Model):
     objects = models.Manager()
     # TODO make sure this can only point to one Event and not more than that
@@ -71,10 +71,10 @@ class Slot(models.Model):
     # The String address of the Event
     address = models.CharField(max_length=240, blank=True, null=True)
     # The String city of the Event'
-    city = models.CharField(max_length=240, blank = True, null=True)
+    city = models.CharField(max_length=240, blank=True, null=True)
     # The String state of event
     # TODO: This should be restored to 2 if that was not an accident
-    state = models.CharField(max_length=200, blank = True, null=True)
+    state = models.CharField(max_length=200, blank=True, null=True)
     # The Integer zip code of the Event
     zip_code = models.IntegerField(blank=True, null=True)
 
@@ -83,7 +83,7 @@ class Slot(models.Model):
     extraFields = models.CharField(max_length=255, blank=True, null=True)
 
     def is_payment_nonzero(self):
-        return self.paymentPerHour!=0
+        return self.paymentPerHour != 0
 
     def get_users_groups_slots(user):
         groups = Group.get_is_member_list(user)
@@ -105,12 +105,14 @@ class Slot(models.Model):
                 events_slots = Slot.objects.filter(parentEvent=event)
                 slots = slots | events_slots
 
-        if (slots==None):
+        if (slots == None):
             return slots
-        return slots.order_by('start')#Slot.objects.filter(Q(parentEvent.parentGroup.get_is_member(user))).objects.order_by('start')
+        return slots.order_by(
+            'start')  # Slot.objects.filter(Q(parentEvent.parentGroup.get_is_member(user))).objects.order_by('start')
 
     def get_extra(self):
         return self.extraFields.split(',')
+
 
 class User_Slot(models.Model):
     volunteer = models.ForeignKey(
@@ -136,7 +138,7 @@ class User_Slot(models.Model):
         return self.signout == None
 
     def is_volunteer_null(self):
-      return self.volunteer == None
+        return self.volunteer == None
 
     difference = models.CharField(max_length=100, null=True)
 
@@ -151,19 +153,16 @@ class User_Slot(models.Model):
             deltaTime = self.signout - self.signin
 
             seconds = deltaTime.seconds
-            minutes = seconds/60 - (seconds/60)%1
-            hours = minutes/60 - (minutes/60)%1
+            minutes = seconds / 60 - (seconds / 60) % 1
+            hours = minutes / 60 - (minutes / 60) % 1
 
-            minutes = minutes - hours*60
-            seconds = seconds - minutes*60 - hours*60*60
+            minutes = minutes - hours * 60
+            seconds = seconds - minutes * 60 - hours * 60 * 60
 
             self.difference = str(timedelta(seconds=seconds, minutes=minutes, hours=hours))
-            self.payment = (hours+minutes/60+seconds/60/60)*(float(self.parentSlot.paymentPerHour))
+            self.payment = (hours + minutes / 60 + seconds / 60 / 60) * (float(self.parentSlot.paymentPerHour))
 
             self.save()
-
-
-
 
     def getUserSlots(group):
         events = Event.objects.filter(parentGroup=group)
@@ -195,12 +194,11 @@ class User_Slot(models.Model):
 
     def set_extra(self, field, newVal):
         self.extraFields = self.get_extra()
-        print('shit', self.extraFields)
         self.extraFields[field] = newVal
-        print('shit', self.extraFields[field])
 
     def prep_html(self):
         self.value = list(self.get_extra().items())
+
 
 class Event(models.Model):
     parentGroup = models.ForeignKey(
@@ -209,7 +207,7 @@ class Event(models.Model):
         null=False,
     )
     is_single = models.BooleanField(default=False)
-    #type = models.CharField(max_length=80)
+    # type = models.CharField(max_length=80)
     objects = models.Manager()
     # The organizer of the Event
     organizer = models.ForeignKey(
@@ -230,7 +228,7 @@ class Event(models.Model):
     city = models.CharField(max_length=240)
     # The String state of event
     state = models.CharField(max_length=200)
-    #type = models.CharField(max_length=30)
+    # type = models.CharField(max_length=30)
     # The Integer zip code of the Event
     zip_code = models.IntegerField(null=True)
 
@@ -251,20 +249,19 @@ class Event(models.Model):
     )
     start = models.DateTimeField(null=True)
     end = models.DateTimeField(null=True)
+
     # The minimun number of volunteers this slot needs to have. Set by Event
     # organizer and factored into slot priority
-    #minVolunteers = models.IntegerField(null=True)
+    # minVolunteers = models.IntegerField(null=True)
     # The maximum number of volunteers this slot can have. Set by Event
     # organizer and stops too many Profiles from signing up
-    #maxVolunteers = models.IntegerField(null=True)
+    # maxVolunteers = models.IntegerField(null=True)
     # TODO allow a getPriority() function to get the instantanious priority of
     # the Event object
-    #in_person = models.NullBooleanField(null=True)
+    # in_person = models.NullBooleanField(null=True)
     # A one to many relationship holding the Slots for an Event object
 
-
     # RAISING ERRORS
-
 
     # slots = models.ForeignKey(
     #     'Slot',
@@ -287,10 +284,9 @@ class Event(models.Model):
                 groups_events = Event.objects.filter(parentGroup=group)
                 events = events.union(groups_events)
 
-        if (events==None):
+        if (events == None):
             return events
         return events.order_by('start')
-
 
 
 """
