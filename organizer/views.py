@@ -43,7 +43,7 @@ def addEvent(request, group_id):
                 group=group,
                 user=request.user,
                 datetime=datetime.now(timezone.utc),
-                description="Created single slot \"" + event.name + "\"",
+                description="Created Event \"" + event.name + "\"",
                 url="/volunteer/event/" + str(event.id))
             feed_entry.save()
 
