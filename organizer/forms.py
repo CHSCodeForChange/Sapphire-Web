@@ -552,7 +552,7 @@ class UpdateSlotForm(forms.Form):
         return paymentPerHour
 
     def clean_extra(self):
-        return self.cleaned_data['extraFields'].replace(" ", "")
+        return self.cleaned_data['extraFields']
 
     def save(self, commit=True):
         return self.cleaned_data
