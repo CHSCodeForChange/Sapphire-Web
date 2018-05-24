@@ -64,6 +64,10 @@ def addEvent(request, group_id):
 
 def editEvent(request, event_id):
     event = Event.objects.get(id=event_id)
+    group = event.parentGroup
+    if not Group.get_is_organzer(group, request.user):
+        return HttpResponse(
+            'You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
     if request.user.is_authenticated():
         form = UpdateEventForm(request.POST, id=event_id)
         if form.is_valid():
@@ -141,7 +145,9 @@ def editSlot(request, slot_id):
     slot = Slot.objects.get(id=slot_id)
     parentEvent = slot.parentEvent
     group = parentEvent.parentGroup
-
+    if not Group.get_is_organzer(group, request.user):
+        return HttpResponse(
+            'You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
     if request.user.is_authenticated():
         form = UpdateSlotForm(request.POST, id=slot_id)
         if form.is_valid():
@@ -196,6 +202,9 @@ def editSlot(request, slot_id):
 def addUserSlot(request, slot_id):
     slot = Slot.objects.get(id=slot_id)
     group = slot.parentEvent.parentGroup
+    if not Group.get_is_organzer(group, request.user):
+        return HttpResponse(
+            'You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
     if (group.get_is_organzer(request.user)):
         ans = {}
         for i in slot.get_extra():
@@ -213,8 +222,12 @@ def addUserSlot(request, slot_id):
 
 
 def removeUserSlot(request, user_slot_id):
+
     user_slot = User_Slot.objects.get(id=user_slot_id)
     group = user_slot.parentSlot.parentEvent.parentGroup
+    if not Group.get_is_organzer(group, request.user):
+        return HttpResponse(
+            'You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
     if (group.get_is_organzer(request.user) and len(User_Slot.objects.all()) > 1):
         user_slot.delete()
 
@@ -236,6 +249,9 @@ def removeUserSlot(request, user_slot_id):
 def editField(request, user_slot_id, field):
     user_slot = User_Slot.objects.get(id=user_slot_id)
     group = user_slot.parentSlot.parentEvent.parentGroup
+    if not Group.get_is_organzer(group, request.user):
+        return HttpResponse(
+            'You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
     if (group.get_is_organzer(request.user)):
         if (request.method == 'POST'):
             form = FieldForm(request.POST)
@@ -256,6 +272,9 @@ def editField(request, user_slot_id, field):
 def editSignIn(request, user_slot_id):
     user_slot = User_Slot.objects.get(id=user_slot_id)
     group = user_slot.parentSlot.parentEvent.parentGroup
+    if not Group.get_is_organzer(group, request.user):
+        return HttpResponse(
+            'You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
     if (group.get_is_organzer(request.user)):
         if (request.method == 'POST'):
             form = EditTimeForm(request.POST)
@@ -277,6 +296,9 @@ def editSignIn(request, user_slot_id):
 def editSignOut(request, user_slot_id):
     user_slot = User_Slot.objects.get(id=user_slot_id)
     group = user_slot.parentSlot.parentEvent.parentGroup
+    if not Group.get_is_organzer(group, request.user):
+        return HttpResponse(
+            'You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
     if (group.get_is_organzer(request.user)):
         if (request.method == 'POST'):
             form = EditTimeForm(request.POST)
@@ -335,6 +357,9 @@ def index(request):
 def deleteEvent(request, event_id):
     object = Event.objects.get(id=event_id)
     group = object.parentGroup
+    if not Group.get_is_organzer(group, request.user):
+        return HttpResponse(
+            'You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
     if (group.get_is_organzer(request.user)):
         name = object.name
 
@@ -364,6 +389,9 @@ def deleteEvent(request, event_id):
 def deleteSlot(request, slot_id):
     slot = Slot.objects.get(id=slot_id)
     group = slot.parentEvent.parentGroup
+    if not Group.get_is_organzer(group, request.user):
+        return HttpResponse(
+            'You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
     if (group.get_is_organzer(request.user)):
         name = slot.title
         event = slot.parentEvent
