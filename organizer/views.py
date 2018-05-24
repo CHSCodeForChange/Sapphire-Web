@@ -197,7 +197,11 @@ def addUserSlot(request, slot_id):
     slot = Slot.objects.get(id=slot_id)
     group = slot.parentEvent.parentGroup
     if (group.get_is_organzer(request.user)):
-        user_slot = User_Slot(parentSlot=slot, extraFields=slot.extraFields)
+        ans = {}
+        for i in slot.get_extra():
+            if i != '':
+                ans[i] = '-'
+        user_slot = User_Slot(parentSlot=slot, extraFields=ans)
         user_slot.save()
 
         alert = Alert(user=request.user, text="Added a volunteer openning", color=Alert.getBlue())
