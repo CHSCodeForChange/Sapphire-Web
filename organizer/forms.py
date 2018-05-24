@@ -460,7 +460,7 @@ class NewSlotForm(forms.Form):
             location=self.cleaned_data['location'],
             minVolunteers=1,
             maxVolunteers=self.cleaned_data['maxVolunteers'],
-            extraFields=self.cleaned_data['extraFields'],
+            extraFields=self.cleaned_data['extraFields'].replace(" ", ""),
             paymentPerHour=self.cleaned_data['paymentPerHour']  # self.parentEvent.maxVolunteers,
             # title=self.cleaned_data['title'],
             # description=self.cleaned_data['description'],
@@ -552,7 +552,7 @@ class UpdateSlotForm(forms.Form):
         return paymentPerHour
 
     def clean_extra(self):
-        return self.cleaned_data['extraFields']
+        return self.cleaned_data['extraFields'].replace(" ", "")
 
     def save(self, commit=True):
         return self.cleaned_data
