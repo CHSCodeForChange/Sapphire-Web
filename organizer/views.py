@@ -93,8 +93,8 @@ def editEvent(request, event_id):
                                                  'description': event.description,
                                                  'location': event.location, 'address': event.address,
                                                  'city': event.city,
-                                                 'state': event.state, 'zip_code': event.zip_code, 'start': event.start,
-                                                 'end': event.end})
+                                                 'state': event.state, 'zip_code': event.zip_code, 'start': event.start.strftime("%Y-%m-%dT%H:%M:%S.00"),
+                                                 'end': event.end.strftime("%Y-%m-%dT%H:%M:%S.00")})
 
     return render(request, 'organizer/edit_event.html', {'form': form})
 
@@ -129,7 +129,7 @@ def addSlot(request, event_id):
                 group=group,
                 user=request.user,
                 datetime=datetime.now(timezone.utc),
-                description="Created slot \"" + str(slot.title) + "\" in event \"" + str(slot.parentEvent) + "\"",
+                description="Created slot \"" + str(slot.title) + "\" in event \"" + str(slot.parentEvent.name) + "\"",
                 url="/volunteer/slot/" + str(slot.id))
             feed_entry.save()
 
@@ -181,7 +181,7 @@ def editSlot(request, slot_id):
                 group=group,
                 user=request.user,
                 datetime=datetime.now(timezone.utc),
-                description="Updated slot \"" + str(slot.title) + "\" in event \"" + str(slot.parentEvent) + "\"",
+                description="Updated slot \"" + str(slot.title) + "\" in event \"" + str(slot.parentEvent.name) + "\"",
                 url="/volunteer/slot/" + str(slot.id))
             feed_entry.save()
 
@@ -192,7 +192,7 @@ def editSlot(request, slot_id):
 
     form = UpdateSlotForm(id=slot_id, initial={'title': slot.title,
                                                'description': slot.description,
-                                               'location': slot.location, 'start': slot.start, 'end': slot.end,
+                                               'location': slot.location, 'start': slot.start.strftime("%Y-%m-%dT%H:%M:%S.00"), 'end': slot.end.strftime("%Y-%m-%dT%H:%M:%S.00"),
                                                'paymentPerHour': slot.paymentPerHour,
                                                'extraFields': slot.extraFields})
 

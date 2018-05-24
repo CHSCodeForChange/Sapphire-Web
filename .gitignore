@@ -71,3 +71,4 @@ sapphire/.vscode/launch.json
 sapphire/sapphire.json
 
 .env
+db\.sqlite3
