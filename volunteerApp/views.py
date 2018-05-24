@@ -63,7 +63,7 @@ def slot(request, slot_id):
     return render(request, 'volunteer/slot.html',
                   {'slot': slot, 'user_slots': user_slots, 'event': event, 'is_organizer': is_organizer,
                    'percentFilled': percentFilled, 'is_volunteered': is_volunteered,
-                   'extra': list(user_slots[0].get_extra().keys())})
+                   'extra': (list(user_slots[0].get_extra().keys()) if (len(user_slots) > 0) else [])})
 
 
 def slotNeeds(request):

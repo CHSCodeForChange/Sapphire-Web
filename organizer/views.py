@@ -159,7 +159,7 @@ def editSlot(request, slot_id):
             slot.description = data['description']
             slot.location = data['location']
             slot.paymentPerHour = data['paymentPerHour']
-            slot.extraFields = data['extraFields']
+            slot.extraFields = data['extraFields'].replace(" ", "")
 
             slot.save()
 
