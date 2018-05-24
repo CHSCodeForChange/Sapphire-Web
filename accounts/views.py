@@ -92,6 +92,7 @@ def signup(request):
             # Sets the user to deactive until they confirm email
             user.is_active = False
             # Saves the user to the server
+            user.save()
             # Gets the current domain in order to send the email
             current_site = get_current_site(request)
             # Sends the user an email based on the email template and the info passed in here
@@ -104,10 +105,7 @@ def signup(request):
             mail_subject = 'Activate your Sapphire account (named by Armaan Goel).'
             to_email = form.cleaned_data.get('email')
             email = EmailMessage(mail_subject, message, to=[to_email])
-
             email.send()
-
-            user.save()
             return render(request, 'accounts/please_confirm.html')
     else:
         form = SignupForm()
