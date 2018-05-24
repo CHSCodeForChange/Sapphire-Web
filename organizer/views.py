@@ -93,7 +93,8 @@ def editEvent(request, event_id):
                                                  'description': event.description,
                                                  'location': event.location, 'address': event.address,
                                                  'city': event.city,
-                                                 'state': event.state, 'zip_code': event.zip_code, 'start': event.start.strftime("%Y-%m-%dT%H:%M:%S.00"),
+                                                 'state': event.state, 'zip_code': event.zip_code,
+                                                 'start': event.start.strftime("%Y-%m-%dT%H:%M:%S.00"),
                                                  'end': event.end.strftime("%Y-%m-%dT%H:%M:%S.00")})
 
     return render(request, 'organizer/edit_event.html', {'form': form})
@@ -192,7 +193,9 @@ def editSlot(request, slot_id):
 
     form = UpdateSlotForm(id=slot_id, initial={'title': slot.title,
                                                'description': slot.description,
-                                               'location': slot.location, 'start': slot.start.strftime("%Y-%m-%dT%H:%M:%S.00"), 'end': slot.end.strftime("%Y-%m-%dT%H:%M:%S.00"),
+                                               'location': slot.location,
+                                               'start': slot.start.strftime("%Y-%m-%dT%H:%M:%S.00"),
+                                               'end': slot.end.strftime("%Y-%m-%dT%H:%M:%S.00"),
                                                'paymentPerHour': slot.paymentPerHour,
                                                'extraFields': slot.extraFields})
 
@@ -222,7 +225,6 @@ def addUserSlot(request, slot_id):
 
 
 def removeUserSlot(request, user_slot_id):
-
     user_slot = User_Slot.objects.get(id=user_slot_id)
     group = user_slot.parentSlot.parentEvent.parentGroup
     if not Group.get_is_organzer(group, request.user):
