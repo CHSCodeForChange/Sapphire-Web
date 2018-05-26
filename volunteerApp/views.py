@@ -49,7 +49,10 @@ def event(request, event_id):
 def slot(request, slot_id):
     slot = Slot.objects.get(id=slot_id)
     event = slot.parentEvent
-    is_organizer = Group.get_is_organzer(slot.parentEvent.parentGroup, request.user)
+    if (slot.parentEvent != None):
+        is_organizer = Group.get_is_organzer(slot.parentEvent.parentGroup, request.user)
+    else:
+        is_organizer = Group.get_is_organzer(slot.parentGroup, request.user)
     user_slots = User_Slot.objects.filter(parentSlot=slot)
     is_volunteered = not (User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first() == None)
 
@@ -60,8 +63,14 @@ def slot(request, slot_id):
         percentFilled = 0
     for i in user_slots:
         i.prep_html()
-    return render(request, 'volunteer/slot.html',
+    if (slot.parentEvent != None):
+        return render(request, 'volunteer/slot.html',
                   {'slot': slot, 'user_slots': user_slots, 'event': event, 'is_organizer': is_organizer,
+                   'percentFilled': percentFilled, 'is_volunteered': is_volunteered,
+                   'extra': (list(user_slots[0].get_extra().keys()) if (len(user_slots) > 0) else [])})
+    else:
+        return render(request, 'volunteer/singleSlot.html',
+                  {'slot': slot, 'user_slots': user_slots, 'is_organizer': is_organizer,
                    'percentFilled': percentFilled, 'is_volunteered': is_volunteered,
                    'extra': (list(user_slots[0].get_extra().keys()) if (len(user_slots) > 0) else [])})
 

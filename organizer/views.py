@@ -23,6 +23,10 @@ def pick_group(request):
     my_groups = Group.get_is_organizer_list(request.user)
     return render(request, 'organizer/pick_group.html', {'groups': my_groups})
 
+def pick_group_for_slot(request):
+    my_groups = Group.get_is_organizer_list(request.user)
+    return render(request, 'organizer/pick_group.html', {'groups': my_groups})
+
 
 def addUserManually(request, slot_id):
     slot = Slot.objects.get(id=slot_id)
@@ -141,11 +145,54 @@ def addSlot(request, event_id):
 
     return render(request, 'organizer/add_slot.html', {'form': form})
 
+def addSingleSlot(request, group_id):
+    group = Group.objects.get(id=group_id)
+    if not Group.get_is_organzer(group, request.user):
+        alert = Alert(user=request.user, text="Only organizers can add single slots", color=Alert.getRed())
+        alert.saveIP(request)
+        return redirect('/volunteer/slots')
+
+
+    if (request.method == 'GET'):
+        form = NewSlotForm(user=request.user, parentEvent=None)
+    else:
+        # This line assumes the contents of the GET side of the if statement have already run (they should have) but its kinda janky
+        form = NewSlotForm(request.POST, user=request.user, parentEvent=None)
+        if form.is_valid():
+            slot = form.save(commit=False)
+            slot.parentGroup = group
+            slot.save()
+
+            ans = {}
+            for i in slot.get_extra():
+                if i != '':
+                    ans[i] = '-'
+            for x in range(0, slot.maxVolunteers):
+                user_slot = User_Slot(volunteer=None, parentSlot=slot, extraFields=ans)
+                user_slot.save()
+
+            feed_entry = Feed_Entry(
+                group=group,
+                user=request.user,
+                datetime=datetime.now(timezone.utc),
+                description="Created single slot \"" + str(slot.title),
+                url="/volunteer/slot/" + str(slot.id))
+            feed_entry.save()
+
+            alert = Alert(user=request.user, text="Created slot " + slot.title, color=Alert.getBlue())
+            alert.saveIP(request)
+
+            return redirect('/volunteer/slots/' + str(slot.id))
+
+    return render(request, 'organizer/add_slot.html', {'form': form})
+
 
 def editSlot(request, slot_id):
     slot = Slot.objects.get(id=slot_id)
     parentEvent = slot.parentEvent
-    group = parentEvent.parentGroup
+    group = slot.parentGroup
+    if (group == None):
+        group = slot.parentEvent.parentGroup
     if not Group.get_is_organzer(group, request.user):
         return HttpResponse(
             'You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
@@ -189,7 +236,7 @@ def editSlot(request, slot_id):
             alert = Alert(user=request.user, text="Updated Slot " + slot.title, color=Alert.getBlue())
             alert.saveIP(request)
 
-            return redirect('slotView', slot.id)
+            return redirect('/volunter/slot/'+str(slot.id))
 
     form = UpdateSlotForm(id=slot_id, initial={'title': slot.title,
                                                'description': slot.description,
@@ -204,7 +251,9 @@ def editSlot(request, slot_id):
 
 def addUserSlot(request, slot_id):
     slot = Slot.objects.get(id=slot_id)
-    group = slot.parentEvent.parentGroup
+    group = slot.parentGroup
+    if (group == None):
+        group = slot.parentEvent.parentGroup
     if not Group.get_is_organzer(group, request.user):
         return HttpResponse(
             'You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
@@ -226,7 +275,10 @@ def addUserSlot(request, slot_id):
 
 def removeUserSlot(request, user_slot_id):
     user_slot = User_Slot.objects.get(id=user_slot_id)
-    group = user_slot.parentSlot.parentEvent.parentGroup
+    slot = user_slot.parentSlot
+    group = slot.parentGroup
+    if (group == None):
+        group = slot.parentEvent.parentGroup
     if not Group.get_is_organzer(group, request.user):
         return HttpResponse(
             'You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
