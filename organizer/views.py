@@ -72,7 +72,7 @@ def editEvent(request, event_id):
     if not Group.get_is_organzer(group, request.user):
         return HttpResponse(
             'You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
-    if request.user.is_authenticated():
+    if request.method == 'POST':
         form = UpdateEventForm(request.POST, id=event_id)
         if form.is_valid():
             data = form.save(commit=False)
@@ -97,9 +97,8 @@ def editEvent(request, event_id):
                                                  'description': event.description,
                                                  'location': event.location, 'address': event.address,
                                                  'city': event.city,
-                                                 'state': event.state, 'zip_code': event.zip_code,
-                                                 'start': event.start.strftime("%Y-%m-%dT%H:%M:%S.00"),
-                                                 'end': event.end.strftime("%Y-%m-%dT%H:%M:%S.00")})
+                                                 'state': event.state, 'zip_code': event.zip_code, 'start': event.start.strftime("%Y-%m-%dT%H:%M"),
+                                                 'end': event.end.strftime("%Y-%m-%dT%H:%M")})
 
     return render(request, 'organizer/edit_event.html', {'form': form})
 
@@ -196,7 +195,7 @@ def editSlot(request, slot_id):
     if not Group.get_is_organzer(group, request.user):
         return HttpResponse(
             'You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
-    if request.user.is_authenticated():
+    if request.method=='POST':
         form = UpdateSlotForm(request.POST, id=slot_id)
         if form.is_valid():
             data = form.save(commit=False)
@@ -206,7 +205,7 @@ def editSlot(request, slot_id):
             slot.description = data['description']
             slot.location = data['location']
             slot.paymentPerHour = data['paymentPerHour']
-            slot.extraFields = data['extraFields'].replace(" ", "")
+            slot.extraFields = data['extraFields']
 
             slot.save()
 
@@ -240,9 +239,7 @@ def editSlot(request, slot_id):
 
     form = UpdateSlotForm(id=slot_id, initial={'title': slot.title,
                                                'description': slot.description,
-                                               'location': slot.location,
-                                               'start': slot.start.strftime("%Y-%m-%dT%H:%M:%S.00"),
-                                               'end': slot.end.strftime("%Y-%m-%dT%H:%M:%S.00"),
+                                               'location': slot.location, 'start': slot.start.strftime("%Y-%m-%dT%H:%M"), 'end': slot.end.strftime("%Y-%m-%dT%H:%M"),
                                                'paymentPerHour': slot.paymentPerHour,
                                                'extraFields': slot.extraFields})
 
@@ -258,11 +255,7 @@ def addUserSlot(request, slot_id):
         return HttpResponse(
             'You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
     if (group.get_is_organzer(request.user)):
-        ans = {}
-        for i in slot.get_extra():
-            if i != '':
-                ans[i] = '-'
-        user_slot = User_Slot(parentSlot=slot, extraFields=ans)
+        user_slot = User_Slot(parentSlot=slot, extraFields=slot.extraFields)
         user_slot.save()
 
         alert = Alert(user=request.user, text="Added a volunteer openning", color=Alert.getBlue())
@@ -274,6 +267,7 @@ def addUserSlot(request, slot_id):
 
 
 def removeUserSlot(request, user_slot_id):
+
     user_slot = User_Slot.objects.get(id=user_slot_id)
     slot = user_slot.parentSlot
     group = slot.parentGroup
