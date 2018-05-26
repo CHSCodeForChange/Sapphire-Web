@@ -124,7 +124,8 @@ class Slot(models.Model):
             'start')  # Slot.objects.filter(Q(parentEvent.parentGroup.get_is_member(user))).objects.order_by('start')
 
     def get_extra(self):
-        return self.extraFields.split(',')
+        if (self.extraFields != None):
+            return self.extraFields.split(',')
 
 
 class User_Slot(models.Model):

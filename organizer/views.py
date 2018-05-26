@@ -30,7 +30,10 @@ def pick_group_for_slot(request):
 
 def addUserManually(request, slot_id):
     slot = Slot.objects.get(id=slot_id)
-    group = slot.parentEvent.parentGroup
+    if (slot.parentEvent != None):
+        group = slot.parentEvent.parentGroup
+    else:
+        group = slot.parentGroup
     if (group.get_is_organzer(request.user)):
         return render(request, 'organizer/pick_volunteer.html', {'slot': slot, 'group': group})
     return redirect('/volunteer/slot/' + str(user_slot.parentSlot.id))
@@ -228,14 +231,14 @@ def editSlot(request, slot_id):
                 group=group,
                 user=request.user,
                 datetime=datetime.now(timezone.utc),
-                description="Updated slot \"" + str(slot.title) + "\" in event \"" + str(slot.parentEvent.name) + "\"",
+                description="Updated slot \"" + str(slot.title),
                 url="/volunteer/slot/" + str(slot.id))
             feed_entry.save()
 
             alert = Alert(user=request.user, text="Updated Slot " + slot.title, color=Alert.getBlue())
             alert.saveIP(request)
 
-            return redirect('/volunter/slot/'+str(slot.id))
+            return redirect('/volunteer/slot/'+str(slot.id))
 
     form = UpdateSlotForm(id=slot_id, initial={'title': slot.title,
                                                'description': slot.description,
@@ -319,7 +322,12 @@ def editField(request, user_slot_id, field):
 
 def editSignIn(request, user_slot_id):
     user_slot = User_Slot.objects.get(id=user_slot_id)
-    group = user_slot.parentSlot.parentEvent.parentGroup
+
+    if (user_slot.parentSlot.parentEvent != None):
+        group = user_slot.parentSlot.parentEvent.parentGroup
+    else:
+        group = user_slot.parentSlot.parentGroup
+
     if not Group.get_is_organzer(group, request.user):
         return HttpResponse(
             'You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
@@ -343,7 +351,12 @@ def editSignIn(request, user_slot_id):
 
 def editSignOut(request, user_slot_id):
     user_slot = User_Slot.objects.get(id=user_slot_id)
-    group = user_slot.parentSlot.parentEvent.parentGroup
+
+    if (user_slot.parentSlot.parentEvent != None):
+        group = user_slot.parentSlot.parentEvent.parentGroup
+    else:
+        group = user_slot.parentSlot.parentGroup
+
     if not Group.get_is_organzer(group, request.user):
         return HttpResponse(
             'You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
