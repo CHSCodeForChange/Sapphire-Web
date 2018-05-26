@@ -9,7 +9,6 @@ class Group(models.Model):
 
     name = models.CharField(max_length=120)
 
-
     # A super short description of the group
     tagline = models.CharField(max_length=120)
     # The String descriptionof the event

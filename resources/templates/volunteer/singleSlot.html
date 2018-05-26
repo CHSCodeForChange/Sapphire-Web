@@ -5,14 +5,14 @@
 {% block content %}
 <p></p>
 <p class="text-right">
-  <a href="/volunteer/event/{{slot.parentEvent.id}}">{{slot.parentEvent.name}}</a> / <a href="/groups/{{slot.parentEvent.parentGroup.id}}">{{slot.parentEvent.parentGroup.name}}</a>
+  <a href="/groups/{{slot.parentGroup.id}}">{{slot.parentGroup.name}}</a>
 </p>
   <div class="jumbotron">
     <h1 class="display-1">{{slot.title}}</h1>
     <h4 class="lead">{{slot.start}} - {{slot.end}}{% if slot.is_payment_nonzero %}, Payment Per Hour: ${{slot.paymentPerHour}}{% endif %}
     </h4>
 
-    <h5 class="mb-0">{{slot.location}} - {{event.location}}: {{event.address}} {{event.city}}, {{event.state}} {{event.zip_code}}</h5>
+    <h5 class="mb-0">{{slot.location}} - {{slot.parentGroup.location}}: {{slot.parentGroup.address}} {{slot.parentGroup.city}}, {{slot.parentGroup.state}} {{slot.parentGroup.zip_code}}</h5>
     <h1></h1>
 
     <div class="progress">
