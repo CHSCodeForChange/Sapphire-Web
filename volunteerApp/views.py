@@ -49,7 +49,10 @@ def event(request, event_id):
 def slot(request, slot_id):
     slot = Slot.objects.get(id=slot_id)
     event = slot.parentEvent
-    is_organizer = Group.get_is_organzer(slot.parentEvent.parentGroup, request.user)
+    if (slot.parentEvent != None):
+        is_organizer = Group.get_is_organzer(slot.parentEvent.parentGroup, request.user)
+    else:
+        is_organizer = Group.get_is_organzer(slot.parentGroup, request.user)
     user_slots = User_Slot.objects.filter(parentSlot=slot)
     is_volunteered = not (User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first() == None)
 
@@ -60,8 +63,14 @@ def slot(request, slot_id):
         percentFilled = 0
     for i in user_slots:
         i.prep_html()
-    return render(request, 'volunteer/slot.html',
+    if (slot.parentEvent != None):
+        return render(request, 'volunteer/slot.html',
                   {'slot': slot, 'user_slots': user_slots, 'event': event, 'is_organizer': is_organizer,
+                   'percentFilled': percentFilled, 'is_volunteered': is_volunteered,
+                   'extra': (list(user_slots[0].get_extra().keys()) if (len(user_slots) > 0) else [])})
+    else:
+        return render(request, 'volunteer/singleSlot.html',
+                  {'slot': slot, 'user_slots': user_slots, 'is_organizer': is_organizer,
                    'percentFilled': percentFilled, 'is_volunteered': is_volunteered,
                    'extra': (list(user_slots[0].get_extra().keys()) if (len(user_slots) > 0) else [])})
 
@@ -86,6 +95,12 @@ def volunteer(request, slot_id):
     slot = Slot.objects.get(id=slot_id)
     user_slot = User_Slot.objects.filter(parentSlot=slot, volunteer__isnull=True).first()
     slots_filled_by_this_user = User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first()
+
+    if (slot.parentEvent != None):
+        group = slot.parentEvent.parentGroup
+    else:
+        group = slot.parentGroup
+
     if (user_slot == None or slots_filled_by_this_user != None):
         alert = Alert(user=request.user, text="Already volunteered", color=Alert.getRed())
         alert.saveIP(request)
@@ -94,21 +109,23 @@ def volunteer(request, slot_id):
 
     user_slot.volunteer = request.user
 
-    ans = {}
-    for i in slot.get_extra():
-        if i != '':
-            ans[i] = '-'
-    user_slot.extraFields = ans
+    if (slot.get_extra() != None):
+        ans = {}
+
+        for i in slot.get_extra():
+            if i != '':
+                ans[i] = '-'
+        user_slot.extraFields = ans
     user_slot.save()
 
     name = slot.title
     event = slot.parentEvent
 
     feed_entry = Feed_Entry(
-        group=event.parentGroup,
+        group=group,
         user=request.user,
         datetime=datetime.now(timezone.utc),
-        description="Volunteered for \"" + name + "\" in event \"" + event.name + "\"",
+        description="Volunteered for \"" + name,
         url="/volunteer/slot/" + str(slot.id))
     feed_entry.save()
 
@@ -122,7 +139,13 @@ def volunteerForUser(request, slot_id, user_id):
     thisUser = User.objects.get(id=user_id)
     # next = request.GET.get('next')
     slot = Slot.objects.get(id=slot_id)
-    if slot.parentEvent.parentGroup.get_is_organzer(request.user):
+
+    if (slot.parentEvent != None):
+        group = slot.parentEvent.parentGroup
+    else:
+        group = slot.parentGroup
+
+    if group.get_is_organzer(request.user):
         user_slot = User_Slot.objects.filter(parentSlot=slot, volunteer__isnull=True).first()
         slots_filled_by_this_user = User_Slot.objects.filter(parentSlot=slot, volunteer=thisUser).first()
         if (slots_filled_by_this_user != None):
@@ -141,10 +164,10 @@ def volunteerForUser(request, slot_id, user_id):
         event = slot.parentEvent
 
         feed_entry = Feed_Entry(
-            group=event.parentGroup,
+            group=group,
             user=thisUser,
             datetime=datetime.now(timezone.utc),
-            description="Volunteered for \"" + name + "\" in event \"" + event.name + "\"",
+            description="Volunteered for \"" + name,
             url="/volunteer/slot/" + str(slot.id))
         feed_entry.save()
 
@@ -177,7 +200,12 @@ def signin(request, user_slot_id):
     next = request.GET.get('next')
 
     user_slot = User_Slot.objects.get(id=user_slot_id)
-    group = user_slot.parentSlot.parentEvent.parentGroup
+
+    if (user_slot.parentSlot.parentEvent != None):
+        group = user_slot.parentSlot.parentEvent.parentGroup
+    else:
+        group = user_slot.parentSlot.parentGroup
+
     if (user_slot.volunteer != None and group.get_is_organzer(request.user)):
         user_slot.signin = datetime.now(timezone.utc)
         user_slot.save()
@@ -190,7 +218,12 @@ def signin(request, user_slot_id):
 def signout(request, user_slot_id):
     next = request.GET.get('next')
     user_slot = User_Slot.objects.get(id=user_slot_id)
-    group = user_slot.parentSlot.parentEvent.parentGroup
+
+    if (user_slot.parentSlot.parentEvent != None):
+        group = user_slot.parentSlot.parentEvent.parentGroup
+    else:
+        group = user_slot.parentSlot.parentGroup
+
     if (user_slot.volunteer != None and group.get_is_organzer(request.user)):
         user_slot.signout = datetime.now(timezone.utc)
         user_slot.save()

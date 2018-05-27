@@ -48,7 +48,12 @@ class Slot(models.Model):
     parentEvent = models.ForeignKey(
         'Event',
         on_delete=models.CASCADE,
-        null=False
+        null=True
+    )
+    parentGroup = models.ForeignKey(
+        Group,
+        on_delete=models.CASCADE,
+        null=True
     )
     start = models.DateTimeField()
     end = models.DateTimeField()
@@ -88,13 +93,20 @@ class Slot(models.Model):
     def get_users_groups_slots(user):
         groups = Group.get_is_member_list(user)
         events = None
+        slots = None
         for group in groups:
             if (events == None):
                 events = Event.objects.filter(parentGroup=group)
             else:
                 groups_events = Event.objects.filter(parentGroup=group)
                 events = events | groups_events
-        slots = None
+
+            if (slots == None):
+                slots = Slot.objects.filter(parentGroup=group)
+            else:
+                groups_slots = Slot.objects.filter(parentGroup=group)
+                slots = slots | groups_slots
+
         if events == None:
             return None
 
@@ -105,13 +117,15 @@ class Slot(models.Model):
                 events_slots = Slot.objects.filter(parentEvent=event)
                 slots = slots | events_slots
 
+
         if (slots == None):
             return slots
         return slots.order_by(
             'start')  # Slot.objects.filter(Q(parentEvent.parentGroup.get_is_member(user))).objects.order_by('start')
 
     def get_extra(self):
-        return self.extraFields.split(',')
+        if (self.extraFields != None):
+            return self.extraFields.split(',')
 
 
 class User_Slot(models.Model):
@@ -166,7 +180,9 @@ class User_Slot(models.Model):
 
     def getUserSlots(group):
         events = Event.objects.filter(parentGroup=group)
-        slots = None
+        slots = Slot.objects.filter(parentGroup=group)
+
+        print(slots)
 
         for event in events:
             if (slots == None):
