@@ -216,7 +216,6 @@ def editSlot(request, slot_id):
             for user in User_Slot.objects.filter(parentSlot=slot):
                 ans = {}
                 for a in newFields:
-                    print('!'+a+'!')
                     if a != '':
                         val = ''
                         if a in list(user.get_extra().keys()):
