@@ -126,7 +126,7 @@ def addSlot(request, event_id):
 
             ans = {}
             for i in slot.get_extra():
-                if i != '':
+                if i != '' and i != ' ':
                     ans[i] = '-'
             for x in range(0, slot.maxVolunteers):
                 user_slot = User_Slot(volunteer=None, parentSlot=slot, extraFields=ans)
@@ -167,7 +167,7 @@ def addSingleSlot(request, group_id):
 
             ans = {}
             for i in slot.get_extra():
-                if i != '':
+                if i != '' and i != ' ':
                     ans[i] = '-'
             for x in range(0, slot.maxVolunteers):
                 user_slot = User_Slot(volunteer=None, parentSlot=slot, extraFields=ans)
@@ -208,7 +208,7 @@ def editSlot(request, slot_id):
             slot.description = data['description']
             slot.location = data['location']
             slot.paymentPerHour = data['paymentPerHour']
-            slot.extraFields = data['extraFields']
+            slot.extraFields = data['extraFields'].replace(' ', '')
 
             slot.save()
 
@@ -216,14 +216,15 @@ def editSlot(request, slot_id):
             for user in User_Slot.objects.filter(parentSlot=slot):
                 ans = {}
                 for a in newFields:
-                    val = ''
-                    if a in list(user.get_extra().keys()):
-                        val = user.get_extra()[a]
+                    if a != '':
+                        val = ''
+                        if a in list(user.get_extra().keys()):
+                            val = user.get_extra()[a]
 
-                    if val != '':
-                        ans[a] = val
-                    else:
-                        ans[a] = '-'
+                        if val != '' and val != ' ':
+                            ans[a] = val
+                        else:
+                            ans[a] = '-'
                 user.extraFields = ans
                 user.save()
 
