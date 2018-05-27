@@ -106,7 +106,11 @@ def signup(request):
             to_email = form.cleaned_data.get('email')
             email = EmailMessage(mail_subject, message, to=[to_email])
             email.send()
-            return render(request, 'accounts/please_confirm.html')
+
+            alert = Alert(user=request.user, text="Click on the link sent to your email to confirm your account", color=Alert.getYellow())
+            alert.saveIP(request)
+            return redirect('/login')
+            #return render(request, 'accounts/please_confirm.html')
     else:
         form = SignupForm()
 
