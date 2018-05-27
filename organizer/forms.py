@@ -392,8 +392,11 @@ class NewSlotForm(forms.Form):
                'min': '0',
                'class': 'form-control'}))
 
+    mailList = forms.ModelMultipleChoiceField(queryset=None)
+
     user = models.User()
     parentEvent = Event()
+    allMembers = models.User()
     datetime = datetime.now(timezone.utc)
 
     extraFields = forms.CharField(label='Extra Fields', required=False, max_length=240, widget=forms.TextInput(
@@ -408,7 +411,10 @@ class NewSlotForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user')
         self.parentEvent = kwargs.pop('parentEvent')
+        self.allMembers = kwargs.pop('all_members', None)
         super(NewSlotForm, self).__init__(*args, **kwargs)
+        self.fields['mailList'].queryset = self.allMembers
+
 
     def clean_title(self):
         title = self.cleaned_data['title']
@@ -449,6 +455,10 @@ class NewSlotForm(forms.Form):
             ans[i] = '-'
 
         return ans
+
+    def clean_mailList(self):
+        mailList = self.cleaned_data['mailList']
+        return mailList
 
     def save(self, commit=True):
         slot = Slot(

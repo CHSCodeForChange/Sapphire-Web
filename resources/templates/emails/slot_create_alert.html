@@ -1,11 +1,11 @@
 {% autoescape off %}
 Hi {{ user.first_name }} {{user.last_name}},
-Just letting you know that a slot has been created in the {{ group_name }} group that you are a part of!
+Just letting you know that a slot has been created in the {{ slot.parentGroup }} group that you are a part of!
     Here's the info:
     Name: {{ slot.title }}
     Description: {{ slot.description }}
     Location: {{ slot.location }}
     Time: {{ slot.start }} - {{ slot.end }}
     Number of Slots: {{ slot.maxVolunteers }}
-    If you care to participate, visit <a href="{{ domain }}/volunteer/slot/{{ slot.id }}">sign up!</a>
+    If you care to participate, visit <a href="http://{{ domain }}/volunteer/slot/{{ slot.id }}">sign up!</a>
 {% endautoescape %}
