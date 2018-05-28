@@ -9,6 +9,7 @@ from utility.models import Event, Slot, User_Slot
 from feed.models import Feed_Entry
 from groups.models import Group
 from alerts.models import Alert
+from collections import OrderedDict
 
 
 # Sending user object to the form, to verify which fields to display/remove (depending on group)
@@ -124,12 +125,14 @@ def addSlot(request, event_id):
             slot = form.save(commit=False)
             slot.save()
 
-            ans = {}
+            ans = OrderedDict()
             for i in slot.get_extra():
                 if i != '' and i != ' ':
                     ans[i] = '-'
+            print('ans for add is', ans)
             for x in range(0, slot.maxVolunteers):
-                user_slot = User_Slot(volunteer=None, parentSlot=slot, extraFields=ans)
+                user_slot = User_Slot(volunteer=None, parentSlot=slot)
+                user_slot.save_extra(ans)
                 user_slot.save()
 
             feed_entry = Feed_Entry(
@@ -165,12 +168,13 @@ def addSingleSlot(request, group_id):
             slot.parentGroup = group
             slot.save()
 
-            ans = {}
+            ans = OrderedDict()
             for i in slot.get_extra():
                 if i != '' and i != ' ':
                     ans[i] = '-'
             for x in range(0, slot.maxVolunteers):
-                user_slot = User_Slot(volunteer=None, parentSlot=slot, extraFields=ans)
+                user_slot = User_Slot(volunteer=None, parentSlot=slot)
+                user_slot.save_extra(ans)
                 user_slot.save()
 
             feed_entry = Feed_Entry(
@@ -214,7 +218,7 @@ def editSlot(request, slot_id):
 
             newFields = slot.get_extra()
             for user in User_Slot.objects.filter(parentSlot=slot):
-                ans = {}
+                ans = OrderedDict()
                 for a in newFields:
                     if a != '':
                         val = ''
@@ -225,7 +229,8 @@ def editSlot(request, slot_id):
                             ans[a] = val
                         else:
                             ans[a] = '-'
-                user.extraFields = ans
+                        print(ans)
+                user.save_extra(ans)
                 user.save()
 
             feed_entry = Feed_Entry(
@@ -259,7 +264,12 @@ def addUserSlot(request, slot_id):
         return HttpResponse(
             'You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
     if (group.get_is_organzer(request.user)):
-        user_slot = User_Slot(parentSlot=slot, extraFields=slot.extraFields)
+        ans = OrderedDict()
+        for i in slot.get_extra():
+            if i != '' and i != ' ':
+                ans[i] = '-'
+        user_slot = User_Slot(parentSlot=slot)
+        user_slot.save_extra(ans)
         user_slot.save()
 
         alert = Alert(user=request.user, text="Added a volunteer openning", color=Alert.getBlue())
