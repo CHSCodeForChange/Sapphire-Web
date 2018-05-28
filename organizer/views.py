@@ -324,9 +324,9 @@ def editField(request, user_slot_id, field):
                 return redirect('/volunteer/slot/' + str(user_slot.parentSlot.id))
 
         else:
-            form = FieldForm()
+            form = FieldForm(initial={ "field":  user_slot.get_extra()[field]})
 
-        return render(request, 'organizer/editSignIn.html', {'form': form, 'user_slot': user_slot})
+        return render(request, 'organizer/editField.html', {'form': form, 'user_slot': user_slot, 'slotField': field, 'val': user_slot.get_extra()[field]})
 
     return redirect('/volunteer/slot/' + str(user_slot.parentSlot.id))
 
@@ -355,7 +355,7 @@ def editSignIn(request, user_slot_id):
         else:
             form = EditTimeForm()
 
-        return render(request, 'organizer/editSignIn.html', {'form': form, 'user_slot': user_slot})
+        return render(request, 'organizer/editTime.html', {'form': form, 'user_slot': user_slot, 'type': 'In'})
 
     return redirect('/volunteer/slot/' + str(user_slot.parentSlot.id))
 
@@ -384,7 +384,7 @@ def editSignOut(request, user_slot_id):
         else:
             form = EditTimeForm()
 
-        return render(request, 'organizer/editSignOut.html', {'form': form, 'user_slot': user_slot})
+        return render(request, 'organizer/editTime.html', {'form': form, 'user_slot': user_slot, 'type': 'Out'})
 
     return redirect('/volunteer/slot/' + str(user_slot.parentSlot.id))
 
