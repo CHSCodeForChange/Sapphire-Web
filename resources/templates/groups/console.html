@@ -22,20 +22,20 @@
                 {% if user_slot.is_volunteer_null %}
                 {% else %}
                   <tr>
-                    <td>{{user_slot.volunteer.username}}</td>
-                    <td>{{user_slot.parentSlot.title}}</td>
-                    <td>{{user_slot.parentSlot.parentEvent.name}}</td>
+                    <td><a href="/accounts/profile/{{user_slot.volunteer.id}}">{{user_slot.volunteer.username}}</a></td>
+                    <td><a href="/volunteer/slot/{{user_slot.parentSlot.id}}">{{user_slot.parentSlot.title}}</a></td>
+                    <td><a href="/volunteer/event/{{user_slot.parentSlot.parentEvent.id}}">{{user_slot.parentSlot.parentEvent.name}}</a></td>
 
                     {% if user_slot.is_signin_null %}
                         <td><a href="/volunteer/signin/{{user_slot.id}}?next=/groups/{{group.id}}/console"><button class="btn btn-primary">Sign In</button></a></td>
                     {% else %}
-                      <td>{{user_slot.signin}}</td>
+                      <td><a href="/organizer/editSignIn/{{user_slot.id}}"><button type="button" name="button" class="btn btn-light">{{user_slot.signin}}</button></a></td>
                     {% endif %}
 
                     {% if user_slot.is_signout_null %}
                       <td><a href="/volunteer/signout/{{user_slot.id}}?next=/groups/{{group.id}}/console"><button class="btn btn-primary">Sign Out</button></a></td>
                     {% else %}
-                      <td>{{user_slot.signout}}</td>
+                      <td><a href="/organizer/editSignOut/{{user_slot.id}}"><button type="button" name="button" class="btn btn-light">{{user_slot.signout}}</button></a></td>
                     {% endif %}
                   </tr>
               {% endif %}

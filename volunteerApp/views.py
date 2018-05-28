@@ -61,7 +61,6 @@ def slot(request, slot_id):
             User_Slot.objects.filter(parentSlot=slot)) * 100)
     else:
         percentFilled = 0
-
     for i in user_slots:
         i.prep_html()
     if (slot.parentEvent != None):
