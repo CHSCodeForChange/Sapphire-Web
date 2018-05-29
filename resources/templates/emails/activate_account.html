@@ -1,6 +1,24 @@
 {% autoescape off %}
-Hi {{ user.first_name }} {{user.last_name}},
-Please click on the link to confirm your registration,
-
-http://{{ domain }}{% url 'accounts:activate' uidb64=uid token=token %}
+    {% load static from staticfiles %}
+    <div class="container">
+        <body style="font-family: 'Proxima Nova Soft', 'Helvetica Neue', sans-serif;">
+            <div align="center">
+                <img src="cid:logo" style="width:240px;height:80px;"/>
+                <div style="background:linear-gradient(to top, #d1d1d1, #ffffff);height:500px;width:800px;">
+                    <div style="position:relative;left:25px;top:25px;">
+                        <p style="font-size:32px;">
+                            Hi {{ user.first_name }} {{user.last_name}}!
+                        </p>
+                        <p style="font-size:18px;">
+                            Welcome to Sapphire,<br/>
+                            Time to confirm your account
+                        </p>
+                        <button type="button" style="background-color:#5c98f9;width:200px;height:50px;border-radius:5px">
+                            <a href="http://{{ domain }}{% url 'accounts:activate' uidb64=uid token=token %}" style="font-size:18px;text-decoration:none;color:#ffffff;">Get Started!</a>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </body>
+    </div>
 {% endautoescape %}

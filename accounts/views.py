@@ -1,3 +1,4 @@
+from email.mime.image import MIMEImage
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
@@ -8,7 +9,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from .tokens import account_activation_token
 from django.contrib.auth.models import User
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMultiAlternatives
 from .models import Profile
 from django.core.urlresolvers import reverse
 from django.views.generic.edit import UpdateView
@@ -102,9 +103,15 @@ def signup(request):
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': account_activation_token.make_token(user),
             })
-            mail_subject = 'Activate your Sapphire account (named by Armaan Goel).'
+            mail_subject = 'Activate your Sapphire Account!'
             to_email = form.cleaned_data.get('email')
-            email = EmailMessage(mail_subject, message, to=[to_email])
+            email = EmailMultiAlternatives(mail_subject, message, to=[to_email])
+            email.content_subtype = 'html'
+            email.mixed_subtype = 'related'
+            fp = open('static/img/logos.ico/WithText.jpg', 'rb')
+            logo = MIMEImage(fp.read())
+            logo.add_header('Content-ID', '<logo>')
+            email.attach(logo)
             email.send()
             return render(request, 'accounts/please_confirm.html')
     else:
