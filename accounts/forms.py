@@ -102,14 +102,14 @@ class SignupForm(forms.Form):
     def clean_firstname(self):
         first_name = self.cleaned_data['first_name'].title()
         if not first_name.isalpha():
-            raise ValidationError("You name must contain only letters")
+            raise ValidationError("Your name must contain only letters")
         return first_name
 
     # May only contain alphabetical characters
     def clean_lastname(self):
         last_name = self.cleaned_data['last_name'].title()
         if not last_name.isalpha():
-            raise ValidationError("You name must contain only letters")
+            raise ValidationError("Your name must contain only letters")
         return last_name
 
     # Must be unique
@@ -137,7 +137,7 @@ class SignupForm(forms.Form):
             raise ValidationError("Password don't match")
         # Passwords must be 16+ characters long or contain a digit
         if len(password1) < 16 and not any(char.isdigit() for char in password1):
-            raise ValidationError("You password must either be 16+ letters long or contain a digit.")
+            raise ValidationError("Your password must either be 16+ letters long or contain a digit.")
 
         return password2
 

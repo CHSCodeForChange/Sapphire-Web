@@ -113,7 +113,11 @@ def signup(request):
             logo.add_header('Content-ID', '<logo>')
             email.attach(logo)
             email.send()
-            return render(request, 'accounts/please_confirm.html')
+
+            alert = Alert(user=request.user, text="Click on the link sent to your email to confirm your account", color=Alert.getYellow())
+            alert.saveIP(request)
+            return redirect('/login')
+            #return render(request, 'accounts/please_confirm.html')
     else:
         form = SignupForm()
 

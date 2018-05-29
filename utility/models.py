@@ -6,6 +6,8 @@ from django.contrib.auth.models import User, UserManager
 from accounts.models import Profile
 from groups.models import Group
 import ast
+from collections import OrderedDict
+import json
 
 """
 Notes:
@@ -89,6 +91,7 @@ class Slot(models.Model):
 
     def is_payment_nonzero(self):
         return self.paymentPerHour != 0
+
 
     def get_users_groups_slots(user):
         groups = Group.get_is_member_list(user)
@@ -203,14 +206,15 @@ class User_Slot(models.Model):
         return user_slots
 
     def get_extra(self):
-        try:
-            return ast.literal_eval(self.extraFields)
-        except:
-            return {}
+        return json.loads(self.extraFields, object_pairs_hook=OrderedDict)
+
+    def save_extra(self, newList):
+        self.extraFields = json.dumps(newList)
 
     def set_extra(self, field, newVal):
-        self.extraFields = self.get_extra()
-        self.extraFields[field] = newVal
+        a = self.get_extra()
+        a[field] = newVal
+        self.save_extra(a)
 
     def remove_extra(self, field):
         self.extraFields = self.get_extra()

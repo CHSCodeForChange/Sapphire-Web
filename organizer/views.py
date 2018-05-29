@@ -9,6 +9,7 @@ from utility.models import Event, Slot, User_Slot
 from feed.models import Feed_Entry
 from groups.models import Group
 from alerts.models import Alert
+from collections import OrderedDict
 
 
 # Sending user object to the form, to verify which fields to display/remove (depending on group)
@@ -17,6 +18,21 @@ def get_form_kwargs(self):
     kwargs.update({'user': self.request.user})
     kwargs.update({'parentEvent': self.request.META.get('HTTP_REFERER')})
     return kwargs
+
+def console(request, event_id):
+    event = Event.objects.get(id=event_id)
+    slots = Slot.objects.filter(parentEvent=event)
+    print (slots)
+    user_slots = None
+
+    for slot in slots:
+        if (user_slots == None):
+            user_slots = User_Slot.objects.filter(parentSlot=slot)
+        else:
+            slots_user_slots = User_Slot.objects.filter(parentSlot=slot)
+            user_slots = user_slots | slots_user_slots
+
+    return render(request, 'organizer/console.html', {'event': event, 'slots': slots, 'user_slots': user_slots})
 
 
 def pick_group(request):
@@ -124,12 +140,14 @@ def addSlot(request, event_id):
             slot = form.save(commit=False)
             slot.save()
 
-            ans = {}
+            ans = OrderedDict()
             for i in slot.get_extra():
                 if i != '' and i != ' ':
                     ans[i] = '-'
+            print('ans for add is', ans)
             for x in range(0, slot.maxVolunteers):
-                user_slot = User_Slot(volunteer=None, parentSlot=slot, extraFields=ans)
+                user_slot = User_Slot(volunteer=None, parentSlot=slot)
+                user_slot.save_extra(ans)
                 user_slot.save()
 
             feed_entry = Feed_Entry(
@@ -165,12 +183,13 @@ def addSingleSlot(request, group_id):
             slot.parentGroup = group
             slot.save()
 
-            ans = {}
+            ans = OrderedDict()
             for i in slot.get_extra():
                 if i != '' and i != ' ':
                     ans[i] = '-'
             for x in range(0, slot.maxVolunteers):
-                user_slot = User_Slot(volunteer=None, parentSlot=slot, extraFields=ans)
+                user_slot = User_Slot(volunteer=None, parentSlot=slot)
+                user_slot.save_extra(ans)
                 user_slot.save()
 
             feed_entry = Feed_Entry(
@@ -214,7 +233,7 @@ def editSlot(request, slot_id):
 
             newFields = slot.get_extra()
             for user in User_Slot.objects.filter(parentSlot=slot):
-                ans = {}
+                ans = OrderedDict()
                 for a in newFields:
                     if a != '':
                         val = ''
@@ -225,7 +244,8 @@ def editSlot(request, slot_id):
                             ans[a] = val
                         else:
                             ans[a] = '-'
-                user.extraFields = ans
+                        print(ans)
+                user.save_extra(ans)
                 user.save()
 
             feed_entry = Feed_Entry(
@@ -259,7 +279,12 @@ def addUserSlot(request, slot_id):
         return HttpResponse(
             'You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
     if (group.get_is_organzer(request.user)):
-        user_slot = User_Slot(parentSlot=slot, extraFields=slot.extraFields)
+        ans = OrderedDict()
+        for i in slot.get_extra():
+            if i != '' and i != ' ':
+                ans[i] = '-'
+        user_slot = User_Slot(parentSlot=slot)
+        user_slot.save_extra(ans)
         user_slot.save()
 
         alert = Alert(user=request.user, text="Added a volunteer openning", color=Alert.getBlue())
@@ -314,9 +339,9 @@ def editField(request, user_slot_id, field):
                 return redirect('/volunteer/slot/' + str(user_slot.parentSlot.id))
 
         else:
-            form = FieldForm()
+            form = FieldForm(initial={ "field":  user_slot.get_extra()[field]})
 
-        return render(request, 'organizer/editSignIn.html', {'form': form, 'user_slot': user_slot})
+        return render(request, 'organizer/editField.html', {'form': form, 'user_slot': user_slot, 'slotField': field, 'val': user_slot.get_extra()[field]})
 
     return redirect('/volunteer/slot/' + str(user_slot.parentSlot.id))
 
@@ -345,7 +370,7 @@ def editSignIn(request, user_slot_id):
         else:
             form = EditTimeForm()
 
-        return render(request, 'organizer/editSignIn.html', {'form': form, 'user_slot': user_slot})
+        return render(request, 'organizer/editTime.html', {'form': form, 'user_slot': user_slot, 'type': 'In'})
 
     return redirect('/volunteer/slot/' + str(user_slot.parentSlot.id))
 
@@ -374,7 +399,7 @@ def editSignOut(request, user_slot_id):
         else:
             form = EditTimeForm()
 
-        return render(request, 'organizer/editSignOut.html', {'form': form, 'user_slot': user_slot})
+        return render(request, 'organizer/editTime.html', {'form': form, 'user_slot': user_slot, 'type': 'Out'})
 
     return redirect('/volunteer/slot/' + str(user_slot.parentSlot.id))
 
