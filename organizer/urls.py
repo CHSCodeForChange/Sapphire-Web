@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^deleteUserSlot/(?P<user_slot_id>[0-9]+)/$', views.removeUserSlot, name='delete_user_slot'),
     url(r'^deleteEvent/(?P<event_id>[0-9]+)/$', views.deleteEvent, name='deleteEvent'),
     url(r'^deleteSlot/(?P<slot_id>[0-9]+)/$', views.deleteSlot, name='deleteSlot'),
+    url(r'^event/(?P<event_id>[0-9]+)/console/$', views.console, name='console'),
 
     url(r'^updateEvent/(?P<event_id>[0-9]+)/$', views.editEvent, name='updateEvent'),
     url(r'^$', views.index, name='index'),      #NOTE This must be last otherwise it will always take precedent

@@ -19,6 +19,21 @@ def get_form_kwargs(self):
     kwargs.update({'parentEvent': self.request.META.get('HTTP_REFERER')})
     return kwargs
 
+def console(request, event_id):
+    event = Event.objects.get(id=event_id)
+    slots = Slot.objects.filter(parentEvent=event)
+    print (slots)
+    user_slots = None
+
+    for slot in slots:
+        if (user_slots == None):
+            user_slots = User_Slot.objects.filter(parentSlot=slot)
+        else:
+            slots_user_slots = User_Slot.objects.filter(parentSlot=slot)
+            user_slots = user_slots | slots_user_slots
+
+    return render(request, 'organizer/console.html', {'event': event, 'slots': slots, 'user_slots': user_slots})
+
 
 def pick_group(request):
     my_groups = Group.get_is_organizer_list(request.user)

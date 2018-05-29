@@ -92,6 +92,7 @@ class Slot(models.Model):
     def is_payment_nonzero(self):
         return self.paymentPerHour != 0
 
+
     def get_users_groups_slots(user):
         groups = Group.get_is_member_list(user)
         events = None
