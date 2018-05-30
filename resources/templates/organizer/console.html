@@ -62,7 +62,9 @@
           </tr>
 
           <tr>
-            <td>{{slot.user_slot_set.all|volunteer_count}}/{{slot.user_slot_set.all|length}}</td>
+            <td>
+                {{slot.user_slot_set.all|volunteer_count}}/{{slot.user_slot_set.all|length}}
+            </td>
           </tr>
           {% endfor %}
         </tbody>

@@ -116,6 +116,40 @@ def signup(request):
 
     return render(request, 'accounts/signup.html', {'form': form})
 
+def signup_foruser(request, group_id, user_slot_id):
+    # Checks if the user is sending their data (POST) or getting the form (GET)
+    if(request.method == 'POST'):
+        form = SignupForm(request.POST)
+        # Makes sure the user filled out the form correctly as dictated by forms.py
+        if form.is_valid():
+            user = form.save(commit=False)
+            # Sets the user to deactive until they confirm email
+            user.is_active = False
+            # Saves the user to the server
+            user.save()
+            # Gets the current domain in order to send the email
+            current_site = get_current_site(request)
+            # Sends the user an email based on the email template and the info passed in here
+            message = render_to_string('emails/activate_account.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user),
+            })
+            mail_subject = 'Activate your Sapphire account (named by Armaan Goel).'
+            to_email = form.cleaned_data.get('email')
+            email = EmailMessage(mail_subject, message, to=[to_email])
+            email.send()
+
+            alert = Alert(user=request.user, text="Click on the link sent to your email to confirm your account", color=Alert.getYellow())
+            alert.saveIP(request)
+            return redirect('/login')
+            #return render(request, 'accounts/please_confirm.html')
+    else:
+        form = SignupForm()
+
+    return render(request, 'accounts/signup.html', {'form': form})
+
 # The activation page for new users
 # The uidb64 and token are generated in signup
 def activate(request, uidb64, token):

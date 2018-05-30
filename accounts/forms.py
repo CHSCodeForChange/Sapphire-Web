@@ -158,6 +158,56 @@ class SignupForm(forms.Form):
             raise
 
 
+class SignupForUserForm(forms.Form):
+    first_name = forms.CharField(label='First Name', max_length=150, widget=forms.TextInput(
+        attrs={'type': 'text',
+               'class': 'form-control'}))
+    last_name = forms.CharField(label='Last Name', max_length=150, widget=forms.TextInput(
+        attrs={'type': 'text',
+               'class': 'form-control'}))
+
+    email = forms.EmailField(label='Email', max_length=200, widget=forms.EmailInput(
+        attrs={'type': 'text',
+               'class': 'form-control'}))
+
+    # May only contain alphabetical characters
+    def clean_firstname(self):
+        first_name = self.cleaned_data['first_name'].title()
+        if not first_name.isalpha():
+            raise ValidationError("Your name must contain only letters")
+        return first_name
+
+    # May only contain alphabetical characters
+    def clean_lastname(self):
+        last_name = self.cleaned_data['last_name'].title()
+        if not last_name.isalpha():
+            raise ValidationError("Your name must contain only letters")
+        return last_name
+
+    # Must be unique
+    def clean_email(self):
+        email = self.cleaned_data['email'].lower()
+        r = User.objects.filter(email=email)
+        if r.count():
+            raise ValidationError("Email already exists")
+        return email
+
+    # Save a new user and set their Group to Volunteer
+    def save(self, commit=True):
+        try:
+            user = User.objects.create_user(
+                None,
+                self.cleaned_data['email'],
+                None,
+            )
+            user.first_name = self.cleaned_data['first_name']
+            user.last_name = self.cleaned_data['last_name']
+            volunteer = Group.objects.get(name='Volunteer')
+            volunteer.user_set.add(user)
+            return user
+        except Exception as e:
+            raise
+
 class LoginForm(AuthenticationForm):
   username = UsernameField(
     max_length=254,
