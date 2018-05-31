@@ -7,6 +7,10 @@ from utility.models import Event, Slot
 from feed.models import Feed_Entry
 from groups.models import Group
 
+class SelectEmailRecipientField(forms.ModelMultipleChoiceField):
+	def label_from_instance(self, obj):
+		return "%s, %s (%s)" % (obj.first_name, obj.last_name, obj.email)
+
 
 class NewSingleSlotForm(forms.Form):
 		title = forms.CharField(label='Title', max_length=30, widget=forms.TextInput(
@@ -478,21 +482,34 @@ class NewSlotForm(forms.Form):
 				)
 				return slot
 
+
 class SlotOpeningMailListForm(forms.Form):
-	mailList = forms.ModelMultipleChoiceField(queryset=None, widget=forms.SelectMultiple(
+	volunteers = SelectEmailRecipientField(queryset=None, widget=forms.SelectMultiple(
 		attrs={'type': 'text',
 			'class': 'form-control'}))
 
-	allMembers = models.User()
+	organizers = SelectEmailRecipientField(queryset=None, widget=forms.SelectMultiple(
+		attrs={'type': 'text',
+			'class': 'form-control'}))
+
+	volunteer_list = models.User()
+	organizer_list = models.User()
 
 	def __init__(self, *args, **kwargs):
-		self.allMembers = kwargs.pop('all_members', None)
+		self.volunteer_list = kwargs.pop('volunteers', None)
+		self.organizer_list = kwargs.pop('organizers', None)
 		super(SlotOpeningMailListForm, self).__init__(*args, **kwargs)
-		self.fields['mailList'].queryset = self.allMembers
+		self.fields['volunteers'].queryset = self.volunteer_list
+		self.fields['organizers'].queryset = self.organizer_list
 
-	def clean_mailList(self):
-		mailList = self.cleaned_data['mailList']
-		return mailList
+	def clean_volunteers(self):
+		volunteers = self.cleaned_data['volunteers']
+		return volunteers
+
+	def clean_organizers(self):
+		organizers = self.cleaned_data['organizers']
+		return organizers
+
 
 class FieldForm(forms.Form):
 		field = forms.CharField(label='field', max_length=30)

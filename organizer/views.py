@@ -22,7 +22,8 @@ def get_form_kwargs(self):
 		kwargs = super(add, self).get_form_kwargs()
 		kwargs.update({'user': self.request.user})
 		kwargs.update({'parentEvent': self.request.META.get('HTTP_REFERER')})
-		kwargs.update({'all_members': self.request.user})
+		kwargs.update({'volunteers': self.request.user})
+		kwargs.update({'organizers': self.request.user})
 		return kwargs
 
 
@@ -174,9 +175,9 @@ def sendSlotOpeningNotification(request, slot_id):
 		group = slot.parentEvent.parentGroup
 	if request.method == 'POST':
 		# form = SlotOpeningMailListForm(request.POST, all_members=list(chain(group.volunteers, group.organizers)))
-		form = SlotOpeningMailListForm(request.POST, all_members=group.volunteers)
+		form = SlotOpeningMailListForm(request.POST, volunteers=group.volunteers, organizers=group.organizers)
 		if form.is_valid():
-			mail_list = form.cleaned_data.get('mailList')
+			mail_list = form.cleaned_data.get('volunteers') + form.cleaned_data.get('organizers')
 			current_site = get_current_site(request)
 			for recipient in mail_list:
 				message = render_to_string('emails/slot_create_alert.html', {
@@ -191,9 +192,9 @@ def sendSlotOpeningNotification(request, slot_id):
 				email.send()
 			return redirect('/volunteer/slot/' + str(slot_id))
 	else:
-		form = SlotOpeningMailListForm(all_members=group.volunteers)
+		form = SlotOpeningMailListForm(volunteers=group.volunteers, organizers=group.organizers)
 
-	return render(request, 'organizer/selectEmailRecipients.html', {'form': form})
+	return render(request, 'organizer/selectEmailRecipients.html', {'form': form, 'slot_id': slot_id})
 
 
 def addSingleSlot(request, group_id):
