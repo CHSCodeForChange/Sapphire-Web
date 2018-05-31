@@ -1,3 +1,5 @@
+from itertools import chain
+
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.shortcuts import render, redirect
@@ -8,7 +10,7 @@ import string
 from django.template.loader import render_to_string
 
 from .forms import NewEventForm, NewSingleSlotForm, NewSlotForm, UpdateEventForm, EditTimeForm, FieldForm, \
-		UpdateSlotForm
+  UpdateSlotForm, SlotOpeningMailListForm
 from utility.models import Event, Slot, User_Slot
 from feed.models import Feed_Entry
 from groups.models import Group
@@ -164,6 +166,36 @@ def addSlot(request, event_id):
 
 		return render(request, 'organizer/add_slot.html', {'form': form})
 
+
+def sendSlotOpeningNotification(request, slot_id):
+	slot = Slot.objects.get(pk=slot_id)
+	group = slot.parentGroup
+	if group is None:
+		group = slot.parentEvent.parentGroup
+	if request.method == 'POST':
+		# form = SlotOpeningMailListForm(request.POST, all_members=list(chain(group.volunteers, group.organizers)))
+		form = SlotOpeningMailListForm(request.POST, all_members=group.volunteers)
+		if form.is_valid():
+			mail_list = form.cleaned_data.get('mailList')
+			current_site = get_current_site(request)
+			for recipient in mail_list:
+				message = render_to_string('emails/slot_create_alert.html', {
+					'user': recipient,
+					'slot': slot,
+					'group': group,
+					'domain': current_site.domain,
+				})
+				mail_subject = 'Signup for a ' + group.name + ' activity!'
+				to_email = recipient.email
+				email = EmailMessage(mail_subject, message, to=[to_email])
+				email.send()
+			return redirect('/volunteer/slot/' + str(slot_id))
+	else:
+		form = SlotOpeningMailListForm(all_members=group.volunteers)
+
+	return render(request, 'organizer/selectEmailRecipients.html', {'form': form})
+
+
 def addSingleSlot(request, group_id):
 		group = Group.objects.get(id=group_id)
 		if not Group.get_is_organzer(group, request.user):
@@ -201,6 +233,7 @@ def addSingleSlot(request, group_id):
 						alert = Alert(user=request.user, text="Created slot " + slot.title, color=Alert.getBlue())
 						alert.saveIP(request)
 
+						# TODO: the line below should probably be slot not slots
 						return redirect('/volunteer/slots/' + str(slot.id))
 
 		return render(request, 'organizer/add_slot.html', {'form': form})
