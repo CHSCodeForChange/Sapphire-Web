@@ -9,7 +9,7 @@ from groups.models import Group
 
 class SelectEmailRecipientField(forms.ModelMultipleChoiceField):
 	def label_from_instance(self, obj):
-		return "%s, %s (%s)" % (obj.first_name, obj.last_name, obj.email)
+		return "%s %s (%s)" % (obj.first_name, obj.last_name, obj.email)
 
 
 class NewSingleSlotForm(forms.Form):
@@ -484,11 +484,11 @@ class NewSlotForm(forms.Form):
 
 
 class SlotOpeningMailListForm(forms.Form):
-	volunteers = SelectEmailRecipientField(queryset=None, widget=forms.SelectMultiple(
+	volunteers = SelectEmailRecipientField(queryset=None, required=False, widget=forms.SelectMultiple(
 		attrs={'type': 'text',
 			'class': 'form-control'}))
 
-	organizers = SelectEmailRecipientField(queryset=None, widget=forms.SelectMultiple(
+	organizers = SelectEmailRecipientField(queryset=None, required=False, widget=forms.SelectMultiple(
 		attrs={'type': 'text',
 			'class': 'form-control'}))
 

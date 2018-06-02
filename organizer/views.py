@@ -1,7 +1,8 @@
+from email.mime.image import MIMEImage
 from itertools import chain
 
 from django.contrib.sites.shortcuts import get_current_site
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from datetime import datetime, timezone
@@ -177,7 +178,7 @@ def sendSlotOpeningNotification(request, slot_id):
 		# form = SlotOpeningMailListForm(request.POST, all_members=list(chain(group.volunteers, group.organizers)))
 		form = SlotOpeningMailListForm(request.POST, volunteers=group.volunteers, organizers=group.organizers)
 		if form.is_valid():
-			mail_list = form.cleaned_data.get('volunteers') + form.cleaned_data.get('organizers')
+			mail_list =  form.cleaned_data.get('organizers').all() #+ form.cleaned_data.get('volunteers').all()
 			current_site = get_current_site(request)
 			for recipient in mail_list:
 				message = render_to_string('emails/slot_create_alert.html', {
@@ -186,9 +187,15 @@ def sendSlotOpeningNotification(request, slot_id):
 					'group': group,
 					'domain': current_site.domain,
 				})
-				mail_subject = 'Signup for a ' + group.name + ' activity!'
+				mail_subject = 'Sign up for a '+group.name+' Activity!'
 				to_email = recipient.email
-				email = EmailMessage(mail_subject, message, to=[to_email])
+				email = EmailMultiAlternatives(mail_subject, message, to=[to_email])
+				email.content_subtype = 'html'
+				email.mixed_subtype = 'related'
+				fp = open('static/img/logos.ico/WithText.jpg', 'rb')
+				logo = MIMEImage(fp.read())
+				logo.add_header('Content-ID', '<logo>')
+				email.attach(logo)
 				email.send()
 			return redirect('/volunteer/slot/' + str(slot_id))
 	else:
