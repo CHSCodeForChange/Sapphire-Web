@@ -59,11 +59,8 @@
 
           <tr>
             <td><a href="/volunteer/slot/{{slot.id}}">{{slot.title}}</a></td>
-          </tr>
-
-          <tr>
             <td>
-                {{slot.user_slot_set.all|volunteer_count}}/{{slot.user_slot_set.all|length}}
+                {{slot.getNumberUserSlotsFilled}}/{{slot.getNumberUserSlotsTotal}}
             </td>
           </tr>
           {% endfor %}

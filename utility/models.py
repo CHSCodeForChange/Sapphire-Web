@@ -93,6 +93,12 @@ class Slot(models.Model):
         return self.paymentPerHour != 0
 
 
+    def getNumberUserSlotsTotal(self):
+        return len(User_Slot.objects.filter(parentSlot=self))
+
+    def getNumberUserSlotsFilled(self):
+        return len(User_Slot.objects.filter(parentSlot=self).exclude(volunteer=None))
+
     def get_users_groups_slots(user):
         groups = Group.get_is_member_list(user)
         events = None
@@ -164,6 +170,7 @@ class User_Slot(models.Model):
     extraFields = models.CharField(max_length=240, null=True)
 
     value = None  # this is used to export the extra fields to html
+
 
     def updateDeltaTimes(self):
         if (self.signin != None and self.signout != None):
