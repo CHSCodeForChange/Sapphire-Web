@@ -178,7 +178,7 @@ def sendSlotOpeningNotification(request, slot_id):
 		# form = SlotOpeningMailListForm(request.POST, all_members=list(chain(group.volunteers, group.organizers)))
 		form = SlotOpeningMailListForm(request.POST, volunteers=group.volunteers, organizers=group.organizers)
 		if form.is_valid():
-			mail_list =  form.cleaned_data.get('organizers').all() #+ form.cleaned_data.get('volunteers').all()
+			mail_list = form.cleaned_data.get('organizers').all() | form.cleaned_data.get('volunteers').all()
 			current_site = get_current_site(request)
 			for recipient in mail_list:
 				message = render_to_string('emails/slot_create_alert.html', {
@@ -201,7 +201,40 @@ def sendSlotOpeningNotification(request, slot_id):
 	else:
 		form = SlotOpeningMailListForm(volunteers=group.volunteers, organizers=group.organizers)
 
-	return render(request, 'organizer/selectEmailRecipients.html', {'form': form, 'slot_id': slot_id})
+	return render(request, 'organizer/selectEmailRecipients.html', {'form': form})
+
+
+def sendEventOpeningNotification(request, event_id):
+	event = Event.objects.get(pk=event_id)
+	group = event.parentGroup
+	if request.method == 'POST':
+		# form = SlotOpeningMailListForm(request.POST, all_members=list(chain(group.volunteers, group.organizers)))
+		form = SlotOpeningMailListForm(request.POST, volunteers=group.volunteers, organizers=group.organizers)
+		if form.is_valid():
+			mail_list = form.cleaned_data.get('organizers').all() | form.cleaned_data.get('volunteers').all()
+			current_site = get_current_site(request)
+			for recipient in mail_list:
+				message = render_to_string('emails/event_create_alert.html', {
+					'user': recipient,
+					'event': event,
+					'group': group,
+					'domain': current_site.domain,
+				})
+				mail_subject = 'Sign up for a '+group.name+' Activity!'
+				to_email = recipient.email
+				email = EmailMultiAlternatives(mail_subject, message, to=[to_email])
+				email.content_subtype = 'html'
+				email.mixed_subtype = 'related'
+				fp = open('static/img/logos.ico/WithText.jpg', 'rb')
+				logo = MIMEImage(fp.read())
+				logo.add_header('Content-ID', '<logo>')
+				email.attach(logo)
+				email.send()
+			return redirect('/volunteer/event/' + str(event_id))
+	else:
+		form = SlotOpeningMailListForm(volunteers=group.volunteers, organizers=group.organizers)
+
+	return render(request, 'organizer/selectEmailRecipients.html', {'form': form})
 
 
 def addSingleSlot(request, group_id):

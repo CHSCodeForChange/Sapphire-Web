@@ -14,17 +14,17 @@
                             Hey {{ user.first_name }} {{user.last_name}},
                         </p>
                         <p style="font-size:18px;padding-left:100px;padding-right:300px;" align="left">
-	                        Just letting you know that a volunteering slot
+	                        Just letting you know that a volunteering event
 	                        has been created in the {{ group.name }}
 	                        group that you are a part of!<br/><br/>
                             Here's the info:<br/>
-		                    Name: {{ slot.title }}<br/>
-		                    Description: {{ slot.description }}<br/>
-		                    Location: {{ slot.location }}<br/>
-		                    Time: {{ slot.start }} - {{ slot.end }}<br/>
-		                    Number of Slots: {{ slot.maxVolunteers }}<br/>
+		                    Name: {{ event.name }}<br/>
+		                    Description: {{ event.description }}<br/>
+		                    Location: {{ event.location }}<br/>
+		                    Time: {{ event.start }} - {{ event.end }}<br/>
+		                    Number of slots: {{ event.slot_set.count }}<br/>
 	                    </p>
-                        <a style="font-size:18px;text-decoration:none;color:#ffffff;" href="http://{{ domain }}/volunteer/slot/{{ slot.id }}">
+                        <a style="font-size:18px;text-decoration:none;color:#ffffff;" href="http://{{ domain }}/volunteer/event/{{ event.id }}">
                             <button type="button" style="background-color:#5c98f9;width:200px;height:50px;border-radius:5px">
                                 Sign Up!
                             </button>
