@@ -382,14 +382,15 @@ class NewSlotForm(forms.Form):
         attrs={'type': 'text',
                'class': 'form-control'}))
 
-    maxVolunteers = forms.IntegerField(label='# Slots', widget=forms.NumberInput(
+    maxVolunteers = forms.IntegerField(label='# Slots', required=False, widget=forms.NumberInput(
         attrs={'type': 'number',
-               'min': '1',
+               'placeholder': 'Leave blank for unlimited fields',
                'class': 'form-control'}))
 
-    paymentPerHour = forms.DecimalField(label='Payment Per Hour', widget=forms.NumberInput(
+    paymentPerHour = forms.DecimalField(label='Payment Per Hour', required=False, widget=forms.NumberInput(
         attrs={'type': 'number',
                'min': '0',
+               'placeholder': 'Leave blank for unpaid slot',
                'class': 'form-control'}))
 
     user = models.User()
@@ -451,6 +452,16 @@ class NewSlotForm(forms.Form):
         return ans
 
     def save(self, commit=True):
+        if (self.cleaned_data['maxVolunteers'] == None):
+            maxVolunteers = 0
+        else:
+            maxVolunteers = self.cleaned_data['maxVolunteers']
+
+        if (self.cleaned_data['paymentPerHour'] == None):
+            payment = 0
+        else:
+            payment = self.cleaned_data['paymentPerHour']
+
         slot = Slot(
             title=self.cleaned_data['title'],
             description=self.cleaned_data['description'],
@@ -459,9 +470,9 @@ class NewSlotForm(forms.Form):
             end=self.cleaned_data['end'],
             location=self.cleaned_data['location'],
             minVolunteers=1,
-            maxVolunteers=self.cleaned_data['maxVolunteers'],
+            maxVolunteers=maxVolunteers,
             extraFields=self.cleaned_data['extraFields'].replace(" ", ""),
-            paymentPerHour=self.cleaned_data['paymentPerHour']  # self.parentEvent.maxVolunteers,
+            paymentPerHour=payment  # self.parentEvent.maxVolunteers,
             # title=self.cleaned_data['title'],
             # description=self.cleaned_data['description'],
             # location=self.cleaned_data['location'],

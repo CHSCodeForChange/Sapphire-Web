@@ -102,10 +102,12 @@ def volunteer(request, slot_id):
     else:
         group = slot.parentGroup
 
-    if (user_slot == None or slots_filled_by_this_user != None):
+    if (slot.maxVolunteers == 0 and slots_filled_by_this_user == None):
+        user_slot = User_Slot(parentSlot=slot)
+
+    elif (user_slot == None or slots_filled_by_this_user != None):
         alert = Alert(user=request.user, text="Already volunteered", color=Alert.getRed())
         alert.saveIP(request)
-
         return redirect('/volunteer/slot/' + str(slot_id))
 
     user_slot.volunteer = request.user
@@ -187,9 +189,11 @@ def unvolunteer(request, slot_id):
 
         return redirect('/volunteer/slot/' + str(slot_id))
     else:
+
         slots_filled_by_this_user.delete()
-        user_slot = User_Slot(parentSlot=slot, extraFields=slot.get_extra())
-        user_slot.save()
+        if (slot.maxVolunteers != 0):
+            user_slot = User_Slot(parentSlot=slot, extraFields=slot.get_extra())
+            user_slot.save()
 
         alert = Alert(user=request.user, text="unvolunteered for " + slot.title, color=Alert.getRed())
         alert.saveIP(request)

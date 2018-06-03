@@ -62,7 +62,7 @@ class Slot(models.Model):
 
     # The minimun number of volunteers this slot needs to have. Set by Event
     # organizer and factored into slot priority
-    minVolunteers = models.IntegerField()
+    minVolunteers = models.IntegerField(null=True)
     # The maximum number of volunteers this slot can have. Set by Event
     # organizer and stops too many Profiles from signing up
     maxVolunteers = models.IntegerField(null=True)
