@@ -62,6 +62,7 @@ def slot(request, slot_id):
     else:
         percentFilled = 0
     for i in user_slots:
+        print(i.get_extra())
         i.prep_html()
     if (slot.parentEvent != None):
         return render(request, 'volunteer/slot.html',

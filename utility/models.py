@@ -192,8 +192,6 @@ class User_Slot(models.Model):
         events = Event.objects.filter(parentGroup=group)
         slots = Slot.objects.filter(parentGroup=group)
 
-        print(slots)
-
         for event in events:
             if (slots == None):
                 slots = Slot.objects.filter(parentEvent=event)
@@ -213,7 +211,7 @@ class User_Slot(models.Model):
         return user_slots
 
     def get_extra(self):
-        return json.loads(self.extraFields, object_pairs_hook=OrderedDict)
+        return json.loads(self.extraFields.replace('\'', '\"'), object_pairs_hook=OrderedDict)
 
     def save_extra(self, newList):
         self.extraFields = json.dumps(newList)
@@ -225,7 +223,7 @@ class User_Slot(models.Model):
 
     def remove_extra(self, field):
         self.extraFields = self.get_extra()
-        del self.extraFields[feild]
+        del self.extraFields[field]
 
     def prep_html(self):
         self.value = list(self.get_extra().items())
