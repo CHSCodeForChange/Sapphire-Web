@@ -92,6 +92,9 @@ class Slot(models.Model):
     def is_payment_nonzero(self):
         return self.paymentPerHour != 0
 
+    def is_volunteered(self, user):
+        return User_Slot.objects.filter(parentSlot=self, volunteer=user).first() != None
+
 
     def getNumberUserSlotsTotal(self):
         return len(User_Slot.objects.filter(parentSlot=self))
