@@ -19,6 +19,7 @@ urlpatterns = [
     url(r'^addEvent/(?P<group_id>[0-9]+)/$', views.addEvent, name='add_event'),
     url(r'^addUserSlot/(?P<slot_id>[0-9]+)/$', views.addUserSlot, name='add_user_slot'),
     url(r'^addUserManually/(?P<slot_id>[0-9]+)/$', views.addUserManually, name='addUserManually'),
+    url(r'^addUserManually/(?P<slot_id>[0-9]+)/$', views.addUserManually, name='addUserManually'),
     url(r'^addSlot/(?P<event_id>[0-9]+)/$', views.addSlot, name='addSlot'),# DetailView.as_view(model = Event, template_name = "organizer/add_slot.html")), (?P<pk>\d+)/
     url(r'^addSingleSlot/$', views.pick_group, name='addSingleSlot'),# DetailView.as_view(model = Event, template_name = "organizer/add_slot.html")), (?P<pk>\d+)/
     url(r'^addSingleSlot/(?P<group_id>[0-9]+)/$', views.addSingleSlot, name='addSingleSlot'),# DetailView.as_view(model = Event, template_name = "organizer/add_slot.html")), (?P<pk>\d+)/

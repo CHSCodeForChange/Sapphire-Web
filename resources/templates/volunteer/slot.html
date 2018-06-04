@@ -27,14 +27,24 @@
 
     <div class="row">
       {% if is_organizer %}
-        {% if is_volunteered %}
-        <a class="col-sm-8" href="/volunteer/slot/{{slot.id}}/unvolunteer">
-          <button class="btn btn-info btn-block">Unvolunteer</button>
-        </a>
+        {% if offer %}
+          <a class="col-sm-8" href="/volunteer/accept/{{slot.id}}">
+            <button class="btn btn-info btn-block">Accept</button>
+          </a>
+
+          <a class="col-sm-8" href="/volunteer/slot/{{slot.id}}/unvolunteer">
+            <button class="btn btn-info btn-block">Reject</button>
+          </a>
         {% else %}
-        <a class="col-sm-8" href="{% url 'volunteer' slot_id=slot.id %}">
-          <button class="btn btn-info btn-block">Volunteer</button>
-        </a>
+          {% if is_volunteered %}
+          <a class="col-sm-8" href="/volunteer/slot/{{slot.id}}/unvolunteer">
+            <button class="btn btn-info btn-block">Unvolunteer</button>
+          </a>
+          {% else %}
+          <a class="col-sm-8" href="{% url 'volunteer' slot_id=slot.id %}">
+            <button class="btn btn-info btn-block">Volunteer</button>
+          </a>
+          {% endif %}
         {% endif %}
         <a class="col-sm-2" href="/organizer/editSlot/{{slot.id}}">
           <button class="btn btn-primary btn-block">
@@ -93,9 +103,12 @@
             <th>Payment</th>
           {% endif %}
 
+            <th>Accepted</th>
+
           {% for a in extra %}
                 <th>{{a}}</th>
             {% endfor %}
+
           {% if is_organizer %}
             <th>Delete</th>
           {% endif %}
@@ -116,7 +129,7 @@
                   {% for a in extra %}
                           <td>-</td>
                     {% endfor %}
-
+          <td>-</td>
                 {% if is_organizer %}
                   <td><a href="/organizer/deleteUserSlot/{{user_slot.id}}"><button class="btn btn-danger">Delete</button></a></td>
                 {% endif %}
@@ -162,6 +175,8 @@
                   {% for a,b in user_slot.value %}
                         <td><a href="/organizer/editField/{{user_slot.id}}/{{ a }}"><button type="button" name="button" class="btn btn-light">{{b}}</button></a></td>
                     {% endfor %}
+
+                    <td><p>{{user_slot.accepted}}</p></td>
 
                 {% if is_organizer %}
                   <td><a href="/organizer/deleteUserSlot/{{user_slot.id}}"><button class="btn btn-danger">Delete</button></a></td>
