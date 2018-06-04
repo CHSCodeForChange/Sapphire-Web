@@ -114,6 +114,7 @@
           {% endif %}
         </thead>
         <tbody>
+        {% if is_organizer %}
           {% for user_slot in user_slots %}
             <tr>
               {% if user_slot.is_volunteer_null %}
@@ -134,8 +135,7 @@
                   <td><a href="/organizer/deleteUserSlot/{{user_slot.id}}"><button class="btn btn-danger">Delete</button></a></td>
                 {% endif %}
 
-
-              {% else %}
+              {% elif is_organizer %}
                 <td><a href="/accounts/profile/{{user_slot.volunteer.id}}"> {{user_slot.volunteer.username}}</a></td>
 
                 {% if user_slot.is_signin_null %}
@@ -184,6 +184,52 @@
               {% endif %}
             </tr>
           {% endfor %}
+        {% elif is_volunteered %}
+          <tr>
+            <td><a href="/accounts/profile/{{volunteer.id}}"> {{volunteer.username}}</a></td>
+            {% if specific_user_slot.is_signin_null %}
+              {% if is_organizer %}
+                <td><a href="/volunteer/signin/{{specific_user_slot.id}}?next=/volunteer/slot/{{slot.id}}"><button class="btn btn-primary">Sign In</button></a></td>
+              {% else %}
+                <td>-</td>
+              {% endif %}
+            {% else %}
+              {% if is_organizer %}
+                <td><a href="/organizer/editSignIn/{{specific_user_slot.id}}"><button type="button" name="button" class="btn btn-light">{{specific_user_slot.signin}}</button></a></td>
+              {% else %}
+                <td>{{specific_user_slot.signin}}</td>
+              {% endif %}
+            {% endif %}
+
+            {% if specific_user_slot.is_signout_null %}
+              {% if is_organizer %}
+                <td><a href="/volunteer/signout/{{specific_user_slot.id}}?next=/volunteer/slot/{{slot.id}}"><button class="btn btn-primary">Sign Out</button></a></td>
+              {% else %}
+                <td>-</td>
+              {% endif %}
+            {% else %}
+              {% if is_organizer %}
+                <td><a href="/organizer/editSignOut/{{specific_user_slot.id}}"><button type="button" name="button" class="btn btn-light">{{specific_user_slot.signout}}</button></a></td>
+              {% else %}
+                <td>{{specific_user_slot.signout}}</td>
+              {% endif %}
+            {% endif %}
+
+            <td>{{specific_user_slot.difference}}</td>
+
+            {% if slot.is_payment_nonzero %}
+              <td>${{specific_user_slot.payment}}</td>
+            {% endif %}
+
+              {% for a,b in specific_user_slot.value %}
+                    <td><a href="/organizer/editField/{{specific_user_slot.id}}/{{ a }}"><button type="button" name="button" class="btn btn-light">{{b}}</button></a></td>
+                {% endfor %}
+
+            {% if is_organizer %}
+              <td><a href="/organizer/deleteUserSlot/{{specific_user_slot.id}}"><button class="btn btn-danger">Delete</button></a></td>
+            {% endif %}
+          </tr>
+        {% endif %}
         </tbody>
     </table>
   </div>

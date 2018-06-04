@@ -79,9 +79,11 @@ def slot(request, slot_id):
     is_volunteered = not (User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first() == None)
     pendingAccept = False
     if is_volunteered:
-        print("it is thinking", User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first().accepted)
         pendingAccept = User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first().accepted == 'No'
         print(pendingAccept)
+
+    volunteer = request.user
+    specific_user_slot = User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first()
 
     if (len(User_Slot.objects.filter(parentSlot=slot)) != 0):
         percentFilled = int(len(User_Slot.objects.filter(parentSlot=slot).exclude(volunteer=None)) / len(
@@ -89,13 +91,12 @@ def slot(request, slot_id):
     else:
         percentFilled = 0
     for i in user_slots:
-        print('checking this out', i.get_extra(), i.accepted)
         i.prep_html()
     if (slot.parentEvent != None):
         return render(request, 'volunteer/slot.html',
-                      {'slot': slot, 'user_slots': user_slots, 'event': event, 'is_organizer': is_organizer,
-                       'percentFilled': percentFilled, 'is_volunteered': is_volunteered, 'offer': pendingAccept,
-                       'extra': (list(user_slots[0].get_extra().keys()) if (len(user_slots) > 0) else [])})
+                  {'slot': slot, 'user_slots': user_slots, 'event': event, 'is_organizer': is_organizer,
+                   'percentFilled': percentFilled, 'is_volunteered': is_volunteered, 'offer': pendingAccept, 'specific_user_slot' : specific_user_slot,
+                   'extra': (list(user_slots[0].get_extra().keys()) if (len(user_slots) > 0) else [])})
     else:
         return render(request, 'volunteer/singleSlot.html',
                       {'slot': slot, 'user_slots': user_slots, 'is_organizer': is_organizer,
@@ -209,7 +210,6 @@ def volunteerForUser(request, slot_id, user_id):
 
         user = thisUser
 
-        print('sending to', user.email)
         # Sends the user an email based on the email template and the info passed in here
         message = render_to_string('emails/volentold.html', {
             'user': user,
