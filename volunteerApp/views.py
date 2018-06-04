@@ -56,6 +56,9 @@ def slot(request, slot_id):
     user_slots = User_Slot.objects.filter(parentSlot=slot)
     is_volunteered = not (User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first() == None)
 
+    volunteer = request.user
+    specific_user_slot = User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first()
+
     if (len(User_Slot.objects.filter(parentSlot=slot)) != 0):
         percentFilled = int(len(User_Slot.objects.filter(parentSlot=slot).exclude(volunteer=None)) / len(
             User_Slot.objects.filter(parentSlot=slot)) * 100)
@@ -66,8 +69,8 @@ def slot(request, slot_id):
         i.prep_html()
     if (slot.parentEvent != None):
         return render(request, 'volunteer/slot.html',
-                  {'slot': slot, 'user_slots': user_slots, 'event': event, 'is_organizer': is_organizer,
-                   'percentFilled': percentFilled, 'is_volunteered': is_volunteered,
+                  {'slot': slot, 'user_slots': user_slots, 'event': event, 'volunteer': volunteer, 'is_organizer': is_organizer,
+                   'percentFilled': percentFilled, 'is_volunteered': is_volunteered,'specific_user_slot' : specific_user_slot,
                    'extra': (list(user_slots[0].get_extra().keys()) if (len(user_slots) > 0) else [])})
     else:
         return render(request, 'volunteer/singleSlot.html',
