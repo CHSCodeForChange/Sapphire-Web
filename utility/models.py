@@ -89,6 +89,8 @@ class Slot(models.Model):
 
     extraFields = models.CharField(max_length=255, blank=True, null=True)
 
+    private = models.BooleanField(blank=False, null=False, default=False)
+
     def is_payment_nonzero(self):
         return self.paymentPerHour != 0
 
@@ -289,6 +291,8 @@ class Event(models.Model):
     )
     start = models.DateTimeField(null=True)
     end = models.DateTimeField(null=True)
+
+    private = models.BooleanField(blank=False, null=False, default=False)
 
     # The minimun number of volunteers this slot needs to have. Set by Event
     # organizer and factored into slot priority
