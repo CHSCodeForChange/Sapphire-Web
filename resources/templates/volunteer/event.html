@@ -99,9 +99,17 @@
             <td>{{slot.start}}</td>
             <td>{{slot.end}}</td>
             <td>
-                {% for user_slot in slot.user_slot_set.all %}
-                {{user_slot.volunteer.username}}
-                {% endfor %}
+                {% if is_organizer %}
+                  {% for user_slot in slot.user_slot_set.all %}
+                  {{user_slot.volunteer.username}}
+                  {% endfor %}
+                {% else %}
+                  {% for user_slot in slot.user_slot_set.all %}
+                    {% if user_slot.volunteer == volunteer %}
+                      {{volunteer.username}}
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
             </td>
             <td>
                 {{slot.user_slot_set.all|volunteer_count}}/{{slot.user_slot_set.all|length}}
