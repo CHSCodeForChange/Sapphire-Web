@@ -21,12 +21,12 @@ from collections import OrderedDict
 
 # Sending user object to the form, to verify which fields to display/remove (depending on group)
 def get_form_kwargs(self):
-		kwargs = super(add, self).get_form_kwargs()
-		kwargs.update({'user': self.request.user})
-		kwargs.update({'parentEvent': self.request.META.get('HTTP_REFERER')})
-		kwargs.update({'volunteers': self.request.user})
-		kwargs.update({'organizers': self.request.user})
-		return kwargs
+    kwargs = super(add, self).get_form_kwargs()
+    kwargs.update({'user': self.request.user})
+    kwargs.update({'parentEvent': self.request.META.get('HTTP_REFERER')})
+    kwargs.update({'volunteers': self.request.user})
+    kwargs.update({'organizers': self.request.user})
+    return kwargs
 
 
 def console(request, event_id):
@@ -46,13 +46,13 @@ def console(request, event_id):
 
 
 def pick_group(request):
-		my_groups = Group.get_is_organizer_list(request.user)
-		return render(request, 'organizer/pick_group.html', {'groups': my_groups})
+    my_groups = Group.get_is_organizer_list(request.user)
+    return render(request, 'organizer/pick_group.html', {'groups': my_groups})
 
 
 def pick_group_for_slot(request):
-		my_groups = Group.get_is_organizer_list(request.user)
-		return render(request, 'organizer/pick_group.html', {'groups': my_groups})
+    my_groups = Group.get_is_organizer_list(request.user)
+    return render(request, 'organizer/pick_group.html', {'groups': my_groups})
 
 
 def addUserManually(request, slot_id):
@@ -70,69 +70,69 @@ def addUserManually(request, slot_id):
 
 
 def addEvent(request, group_id):
-		group = Group.objects.get(id=group_id)
-		if not Group.get_is_organzer(group, request.user):
-				return HttpResponse(
-						'You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
+    group = Group.objects.get(id=group_id)
+    if not Group.get_is_organzer(group, request.user):
+        return HttpResponse(
+            'You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
 
-		if (request.method == 'POST'):
-				form = NewEventForm(request.POST, user=request.user, parentGroup=group)
-				if form.is_valid():
-						event = form.save(commit=False)
-						event.save()
+    if (request.method == 'POST'):
+        form = NewEventForm(request.POST, user=request.user, parentGroup=group)
+        if form.is_valid():
+            event = form.save(commit=False)
+            event.save()
 
-						feed_entry = Feed_Entry(
-								group=group,
-								user=request.user,
-								datetime=datetime.now(timezone.utc),
-								description="Created Event \"" + event.name + "\"",
-								url="/volunteer/event/" + str(event.id))
-						feed_entry.save()
+            feed_entry = Feed_Entry(
+                group=group,
+                user=request.user,
+                datetime=datetime.now(timezone.utc),
+                description="Created Event \"" + event.name + "\"",
+                url="/volunteer/event/" + str(event.id))
+            feed_entry.save()
 
-						alert = Alert(user=request.user, text="Created event " + event.name, color=Alert.getBlue())
-						alert.saveIP(request)
+            alert = Alert(user=request.user, text="Created event " + event.name, color=Alert.getBlue())
+            alert.saveIP(request)
 
-						return redirect('/volunteer/eventNeeds')
-		else:
-				form = NewEventForm(user=request.user, parentGroup=group)
-		# Filter this by single slot events in the future
-		return render(request, 'organizer/add_event.html', {'form': form})
+            return redirect('/volunteer/eventNeeds')
+    else:
+        form = NewEventForm(user=request.user, parentGroup=group)
+    # Filter this by single slot events in the future
+    return render(request, 'organizer/add_event.html', {'form': form})
 
 
 def editEvent(request, event_id):
-		event = Event.objects.get(id=event_id)
-		group = event.parentGroup
-		if not Group.get_is_organzer(group, request.user):
-				return HttpResponse(
-						'You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
-		if request.method == 'POST':
-				form = UpdateEventForm(request.POST, id=event_id)
-				if form.is_valid():
-						data = form.save(commit=False)
-						event.name = data['title']
-						event.description = data['description']
-						event.location = data['location']
-						event.address = data['address']
-						event.city = data['city']
-						event.state = data['state']
-						event.zip_code = data['zip_code']
-						event.start = data['start']
-						event.end = data['end']
+    event = Event.objects.get(id=event_id)
+    group = event.parentGroup
+    if not Group.get_is_organzer(group, request.user):
+        return HttpResponse(
+            'You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
+    if request.method == 'POST':
+        form = UpdateEventForm(request.POST, id=event_id)
+        if form.is_valid():
+            data = form.save(commit=False)
+            event.name = data['title']
+            event.description = data['description']
+            event.location = data['location']
+            event.address = data['address']
+            event.city = data['city']
+            event.state = data['state']
+            event.zip_code = data['zip_code']
+            event.start = data['start']
+            event.end = data['end']
 
-						event.save()
+            event.save()
 
-						alert = Alert(user=request.user, text="Updated Event " + event.name, color=Alert.getBlue())
-						alert.saveIP(request)
+            alert = Alert(user=request.user, text="Updated Event " + event.name, color=Alert.getBlue())
+            alert.saveIP(request)
 
-						return redirect('eventView', event_id)
+            return redirect('eventView', event_id)
 
     form = UpdateEventForm(id=event_id, initial={'title': event.name,
-                                                 'description': event.description,
-                                                 'location': event.location, 'address': event.address,
-                                                 'city': event.city,
-                                                 'state': event.state, 'zip_code': event.zip_code,
-                                                 'start': event.start.strftime("%Y-%m-%dT%H:%M"),
-                                                 'end': event.end.strftime("%Y-%m-%dT%H:%M")})
+                           'description': event.description,
+                           'location': event.location, 'address': event.address,
+                           'city': event.city,
+                           'state': event.state, 'zip_code': event.zip_code,
+                           'start': event.start.strftime("%Y-%m-%dT%H:%M"),
+                           'end': event.end.strftime("%Y-%m-%dT%H:%M")})
 
     return render(request, 'organizer/edit_event.html', {'form': form})
 
@@ -173,92 +173,80 @@ def addSlot(request, event_id):
                 url="/volunteer/slot/" + str(slot.id))
             feed_entry.save()
 
-						alert = Alert(user=request.user, text="Created slot " + slot.title, color=Alert.getBlue())
-						alert.saveIP(request)
-						current_site = get_current_site(request)
-						mailList = form.cleaned_data.get('mailList')
-						for recipient in mailList:
-							message = render_to_string('emails/slot_create_alert.html', {
-							'user': request.user,
-							'slot': slot,
-							'domain': current_site.domain,
-							})
-							mail_subject = 'Signup for a ' + group.name + ' activity!'
-							to_email = recipient.email
-							email = EmailMessage(mail_subject, message, to=[to_email])
-							email.send()
+            alert = Alert(user=request.user, text="Created slot " + slot.title, color=Alert.getBlue())
+            alert.saveIP(request)
 
-							return redirect('eventView', parentEvent.id)
+        return redirect('eventView', parentEvent.id)
 
-		return render(request, 'organizer/add_slot.html', {'form': form})
+    return render(request, 'organizer/add_slot.html', {'form': form})
 
 
 def sendSlotOpeningNotification(request, slot_id):
-	slot = Slot.objects.get(pk=slot_id)
-	group = slot.parentGroup
-	if group is None:
-		group = slot.parentEvent.parentGroup
-	if request.method == 'POST':
-		# form = SlotOpeningMailListForm(request.POST, all_members=list(chain(group.volunteers, group.organizers)))
-		form = SlotOpeningMailListForm(request.POST, volunteers=group.volunteers, organizers=group.organizers)
-		if form.is_valid():
-			mail_list = form.cleaned_data.get('organizers').all() | form.cleaned_data.get('volunteers').all()
-			current_site = get_current_site(request)
-			for recipient in mail_list:
-				message = render_to_string('emails/slot_create_alert.html', {
-					'user': recipient,
-					'slot': slot,
-					'group': group,
-					'domain': current_site.domain,
-				})
-				mail_subject = 'Sign up for a '+group.name+' Activity!'
-				to_email = recipient.email
-				email = EmailMultiAlternatives(mail_subject, message, to=[to_email])
-				email.content_subtype = 'html'
-				email.mixed_subtype = 'related'
-				fp = open('static/img/logos.ico/WithText.jpg', 'rb')
-				logo = MIMEImage(fp.read())
-				logo.add_header('Content-ID', '<logo>')
-				email.attach(logo)
-				email.send()
-			return redirect('/volunteer/slot/' + str(slot_id))
-	else:
-		form = SlotOpeningMailListForm(volunteers=group.volunteers, organizers=group.organizers)
+  slot = Slot.objects.get(pk=slot_id)
+  group = slot.parentGroup
+  if group is None:
+    group = slot.parentEvent.parentGroup
+  if request.method == 'POST':
+    # form = SlotOpeningMailListForm(request.POST, all_members=list(chain(group.volunteers, group.organizers)))
+    form = SlotOpeningMailListForm(request.POST, volunteers=group.volunteers, organizers=group.organizers)
+    if form.is_valid():
+      mail_list = form.cleaned_data.get('organizers').all() | form.cleaned_data.get('volunteers').all()
+      current_site = get_current_site(request)
+      for recipient in mail_list:
+        message = render_to_string('emails/slot_create_alert.html', {
+          'user': recipient,
+          'slot': slot,
+          'group': group,
+          'domain': current_site.domain,
+        })
+        mail_subject = 'Sign up for a '+group.name+' Activity!'
+        to_email = recipient.email
+        email = EmailMultiAlternatives(mail_subject, message, to=[to_email])
+        email.content_subtype = 'html'
+        email.mixed_subtype = 'related'
+        fp = open('static/img/logos.ico/WithText.jpg', 'rb')
+        logo = MIMEImage(fp.read())
+        logo.add_header('Content-ID', '<logo>')
+        email.attach(logo)
+        email.send()
+      return redirect('/volunteer/slot/' + str(slot_id))
+  else:
+    form = SlotOpeningMailListForm(volunteers=group.volunteers, organizers=group.organizers)
 
-	return render(request, 'organizer/selectEmailRecipients.html', {'form': form})
+  return render(request, 'organizer/selectEmailRecipients.html', {'form': form})
 
 
 def sendEventOpeningNotification(request, event_id):
-	event = Event.objects.get(pk=event_id)
-	group = event.parentGroup
-	if request.method == 'POST':
-		# form = SlotOpeningMailListForm(request.POST, all_members=list(chain(group.volunteers, group.organizers)))
-		form = SlotOpeningMailListForm(request.POST, volunteers=group.volunteers, organizers=group.organizers)
-		if form.is_valid():
-			mail_list = form.cleaned_data.get('organizers').all() | form.cleaned_data.get('volunteers').all()
-			current_site = get_current_site(request)
-			for recipient in mail_list:
-				message = render_to_string('emails/event_create_alert.html', {
-					'user': recipient,
-					'event': event,
-					'group': group,
-					'domain': current_site.domain,
-				})
-				mail_subject = 'Sign up for a '+group.name+' Activity!'
-				to_email = recipient.email
-				email = EmailMultiAlternatives(mail_subject, message, to=[to_email])
-				email.content_subtype = 'html'
-				email.mixed_subtype = 'related'
-				fp = open('static/img/logos.ico/WithText.jpg', 'rb')
-				logo = MIMEImage(fp.read())
-				logo.add_header('Content-ID', '<logo>')
-				email.attach(logo)
-				email.send()
-			return redirect('/volunteer/event/' + str(event_id))
-	else:
-		form = SlotOpeningMailListForm(volunteers=group.volunteers, organizers=group.organizers)
+  event = Event.objects.get(pk=event_id)
+  group = event.parentGroup
+  if request.method == 'POST':
+    # form = SlotOpeningMailListForm(request.POST, all_members=list(chain(group.volunteers, group.organizers)))
+    form = SlotOpeningMailListForm(request.POST, volunteers=group.volunteers, organizers=group.organizers)
+    if form.is_valid():
+      mail_list = form.cleaned_data.get('organizers').all() | form.cleaned_data.get('volunteers').all()
+      current_site = get_current_site(request)
+      for recipient in mail_list:
+        message = render_to_string('emails/event_create_alert.html', {
+          'user': recipient,
+          'event': event,
+          'group': group,
+          'domain': current_site.domain,
+        })
+        mail_subject = 'Sign up for a '+group.name+' Activity!'
+        to_email = recipient.email
+        email = EmailMultiAlternatives(mail_subject, message, to=[to_email])
+        email.content_subtype = 'html'
+        email.mixed_subtype = 'related'
+        fp = open('static/img/logos.ico/WithText.jpg', 'rb')
+        logo = MIMEImage(fp.read())
+        logo.add_header('Content-ID', '<logo>')
+        email.attach(logo)
+        email.send()
+      return redirect('/volunteer/event/' + str(event_id))
+  else:
+    form = SlotOpeningMailListForm(volunteers=group.volunteers, organizers=group.organizers)
 
-	return render(request, 'organizer/selectEmailRecipients.html', {'form': form})
+  return render(request, 'organizer/selectEmailRecipients.html', {'form': form})
 
 
 def addSingleSlot(request, group_id):

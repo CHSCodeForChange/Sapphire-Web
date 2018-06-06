@@ -386,10 +386,10 @@ class NewSlotForm(forms.Form):
 				attrs={'type': 'text',
 							 'class': 'form-control'}))
 
-    maxVolunteers = forms.IntegerField(label='# Slots', required=False, widget=forms.NumberInput(
-        attrs={'type': 'number',
-               'placeholder': 'Leave blank for unlimited fields',
-               'class': 'form-control'}))
+		maxVolunteers = forms.IntegerField(label='# Slots', required=False, widget=forms.NumberInput(
+			attrs={'type': 'number',
+				   'placeholder': 'Leave blank for unlimited fields',
+				   'class': 'form-control'}))
 
 		paymentPerHour = forms.DecimalField(label='Payment Per Hour', required=False, widget=forms.NumberInput(
 				attrs={'type': 'number',
@@ -414,9 +414,7 @@ class NewSlotForm(forms.Form):
 		def __init__(self, *args, **kwargs):
 				self.user = kwargs.pop('user')
 				self.parentEvent = kwargs.pop('parentEvent')
-				self.allMembers = kwargs.pop('all_members', None)
 				super(NewSlotForm, self).__init__(*args, **kwargs)
-				self.fields['mailList'].queryset = self.allMembers
 
 
 		def clean_title(self):
@@ -459,37 +457,37 @@ class NewSlotForm(forms.Form):
 
 				return ans
 
-    def save(self, commit=True):
-        if (self.cleaned_data['maxVolunteers'] == None):
-            maxVolunteers = 0
-        else:
-            maxVolunteers = self.cleaned_data['maxVolunteers']
+		def save(self, commit=True):
+			if (self.cleaned_data['maxVolunteers'] == None):
+				maxVolunteers = 0
+			else:
+				maxVolunteers = self.cleaned_data['maxVolunteers']
 
-        if (self.cleaned_data['paymentPerHour'] == None):
-            payment = 0
-        else:
-            payment = self.cleaned_data['paymentPerHour']
+			if (self.cleaned_data['paymentPerHour'] == None):
+				payment = 0
+			else:
+				payment = self.cleaned_data['paymentPerHour']
 
-        slot = Slot(
-            title=self.cleaned_data['title'],
-            description=self.cleaned_data['description'],
-            parentEvent=self.parentEvent,
-            start=self.cleaned_data['start'],
-            end=self.cleaned_data['end'],
-            location=self.cleaned_data['location'],
-            minVolunteers=1,
-            maxVolunteers=maxVolunteers,
-            extraFields=self.cleaned_data['extraFields'].replace(" ", ""),
-            paymentPerHour=payment  # self.parentEvent.maxVolunteers,
-            # title=self.cleaned_data['title'],
-            # description=self.cleaned_data['description'],
-            # location=self.cleaned_data['location'],
-            # address=self.cleaned_data['address'],
-            # city=self.cleaned_data['city'],
-            # state=self.cleaned_data['state'],
-            # zip_code=self.cleaned_data['zip_code']
-        )
-        return slot
+			slot = Slot(
+				title=self.cleaned_data['title'],
+				description=self.cleaned_data['description'],
+				parentEvent=self.parentEvent,
+				start=self.cleaned_data['start'],
+				end=self.cleaned_data['end'],
+				location=self.cleaned_data['location'],
+				minVolunteers=1,
+				maxVolunteers=maxVolunteers,
+				extraFields=self.cleaned_data['extraFields'].replace(" ", ""),
+				paymentPerHour=payment  # self.parentEvent.maxVolunteers,
+				# title=self.cleaned_data['title'],
+				# description=self.cleaned_data['description'],
+				# location=self.cleaned_data['location'],
+				# address=self.cleaned_data['address'],
+				# city=self.cleaned_data['city'],
+				# state=self.cleaned_data['state'],
+				# zip_code=self.cleaned_data['zip_code']
+			)
+			return slot
 
 
 class SlotOpeningMailListForm(forms.Form):
