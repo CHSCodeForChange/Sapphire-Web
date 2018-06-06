@@ -1,6 +1,10 @@
 {% extends "header.html" %}
+{% load static from staticfiles %}
 
 {% block content %}
-  <h1>Please confirm your email address to complete the registration.</h1>
-  <a href="/login" class="btn btn-primary btn-block">Back to login</a>
+    <h1 style="position:absolute;top:100px;">Please confirm your email address to complete the registration.</h1>
+    <button type="button" style="position:relative;top:400px;background-color:#5c98f9;width:200px;height:50px;border-radius:5px">
+        <a href="/login" style="font-size:18px;text-decoration:none;color:#ffffff;">Back to login</a>
+    </button>
+
 {% endblock %}

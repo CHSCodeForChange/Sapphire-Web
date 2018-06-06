@@ -6,6 +6,8 @@ from django.contrib.auth.models import User, UserManager
 from accounts.models import Profile
 from groups.models import Group
 import ast
+from collections import OrderedDict
+import json
 
 """
 Notes:
@@ -60,7 +62,7 @@ class Slot(models.Model):
 
     # The minimun number of volunteers this slot needs to have. Set by Event
     # organizer and factored into slot priority
-    minVolunteers = models.IntegerField()
+    minVolunteers = models.IntegerField(null=True)
     # The maximum number of volunteers this slot can have. Set by Event
     # organizer and stops too many Profiles from signing up
     maxVolunteers = models.IntegerField(null=True)
@@ -87,8 +89,20 @@ class Slot(models.Model):
 
     extraFields = models.CharField(max_length=255, blank=True, null=True)
 
+    private = models.BooleanField(blank=False, null=False, default=False)
+
     def is_payment_nonzero(self):
         return self.paymentPerHour != 0
+
+    def is_volunteered(self, user):
+        return User_Slot.objects.filter(parentSlot=self, volunteer=user).first() != None
+
+
+    def getNumberUserSlotsTotal(self):
+        return len(User_Slot.objects.filter(parentSlot=self))
+
+    def getNumberUserSlotsFilled(self):
+        return len(User_Slot.objects.filter(parentSlot=self).exclude(volunteer=None))
 
     def get_users_groups_slots(user):
         groups = Group.get_is_member_list(user)
@@ -160,7 +174,10 @@ class User_Slot(models.Model):
 
     extraFields = models.CharField(max_length=240, null=True)
 
+    accepted = models.CharField(max_length=240, default="No")
+
     value = None  # this is used to export the extra fields to html
+
 
     def updateDeltaTimes(self):
         if (self.signin != None and self.signout != None):
@@ -182,8 +199,6 @@ class User_Slot(models.Model):
         events = Event.objects.filter(parentGroup=group)
         slots = Slot.objects.filter(parentGroup=group)
 
-        print(slots)
-
         for event in events:
             if (slots == None):
                 slots = Slot.objects.filter(parentEvent=event)
@@ -203,21 +218,28 @@ class User_Slot(models.Model):
         return user_slots
 
     def get_extra(self):
-        try:
-            return ast.literal_eval(self.extraFields)
-        except:
+        ans = json.loads(self.extraFields.replace('\'', '\"'), object_pairs_hook=OrderedDict)
+        if type(ans) is type([]):
             return {}
+        return ans
+
+    def save_extra(self, newList):
+        self.extraFields = json.dumps(newList)
 
     def set_extra(self, field, newVal):
-        self.extraFields = self.get_extra()
-        self.extraFields[field] = newVal
+        a = self.get_extra()
+        a[field] = newVal
+        self.save_extra(a)
 
     def remove_extra(self, field):
         self.extraFields = self.get_extra()
-        del self.extraFields[feild]
+        del self.extraFields[field]
 
     def prep_html(self):
+        print(self.get_extra(), type(self.get_extra()))
         self.value = list(self.get_extra().items())
+
+
 
 
 class Event(models.Model):
@@ -269,6 +291,8 @@ class Event(models.Model):
     )
     start = models.DateTimeField(null=True)
     end = models.DateTimeField(null=True)
+
+    private = models.BooleanField(blank=False, null=False, default=False)
 
     # The minimun number of volunteers this slot needs to have. Set by Event
     # organizer and factored into slot priority

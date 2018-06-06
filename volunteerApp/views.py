@@ -8,6 +8,19 @@ from groups.models import Group
 from alerts.models import Alert
 from organizer.views import addUserSlot
 from .forms import FilterTimeForm
+from email.mime.image import MIMEImage
+from django.shortcuts import render, redirect
+from .forms import *
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
+from django.contrib.auth.models import User
+from django.core.mail import EmailMultiAlternatives
+
+from feed.models import Feed_Entry
+from groups.models import Group
+from alerts.models import Alert
 
 
 def index(request):
@@ -40,10 +53,21 @@ def eventNeeds(request):
 
 def event(request, event_id):
     event = Event.objects.get(id=event_id)
+
     is_organizer = Group.get_is_organzer(event.parentGroup, request.user)
+    volunteer = request.user
 
     slots = Slot.objects.order_by('start')
-    return render(request, 'volunteer/event.html', {'event': event, 'slots': slots, 'is_organizer': is_organizer})
+    return render(request, 'volunteer/event.html', {'event': event, 'slots': slots, 'is_organizer': is_organizer, 'volunteer': volunteer})
+
+
+def accept(request, slot_id):
+    slot = Slot.objects.get(id=slot_id)
+    us = User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first()
+    if us is not None:
+        us.accepted = "Yes"
+        us.save()
+    return redirect('/volunteer/slot/' + str(slot_id))
 
 
 def slot(request, slot_id):
@@ -55,6 +79,13 @@ def slot(request, slot_id):
         is_organizer = Group.get_is_organzer(slot.parentGroup, request.user)
     user_slots = User_Slot.objects.filter(parentSlot=slot)
     is_volunteered = not (User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first() == None)
+    pendingAccept = False
+    if is_volunteered:
+        pendingAccept = User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first().accepted == 'No'
+        print(pendingAccept)
+
+    volunteer = request.user
+    specific_user_slot = User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first()
 
     if (len(User_Slot.objects.filter(parentSlot=slot)) != 0):
         percentFilled = int(len(User_Slot.objects.filter(parentSlot=slot).exclude(volunteer=None)) / len(
@@ -66,13 +97,13 @@ def slot(request, slot_id):
     if (slot.parentEvent != None):
         return render(request, 'volunteer/slot.html',
                   {'slot': slot, 'user_slots': user_slots, 'event': event, 'is_organizer': is_organizer,
-                   'percentFilled': percentFilled, 'is_volunteered': is_volunteered,
+                   'percentFilled': percentFilled, 'is_volunteered': is_volunteered, 'offer': pendingAccept, 'specific_user_slot' : specific_user_slot,
                    'extra': (list(user_slots[0].get_extra().keys()) if (len(user_slots) > 0) else [])})
     else:
         return render(request, 'volunteer/singleSlot.html',
-                  {'slot': slot, 'user_slots': user_slots, 'is_organizer': is_organizer,
-                   'percentFilled': percentFilled, 'is_volunteered': is_volunteered,
-                   'extra': (list(user_slots[0].get_extra().keys()) if (len(user_slots) > 0) else [])})
+                      {'slot': slot, 'user_slots': user_slots, 'is_organizer': is_organizer,
+                       'percentFilled': percentFilled, 'is_volunteered': is_volunteered, 'offer': pendingAccept,
+                       'extra': (list(user_slots[0].get_extra().keys()) if (len(user_slots) > 0) else [])})
 
 
 def slotNeeds(request):
@@ -101,10 +132,12 @@ def volunteer(request, slot_id):
     else:
         group = slot.parentGroup
 
-    if (user_slot == None or slots_filled_by_this_user != None):
+    if (slot.maxVolunteers == 0 and slots_filled_by_this_user == None):
+        user_slot = User_Slot(parentSlot=slot, accepted="Yes")
+
+    elif (user_slot == None or slots_filled_by_this_user != None):
         alert = Alert(user=request.user, text="Already volunteered", color=Alert.getRed())
         alert.saveIP(request)
-
         return redirect('/volunteer/slot/' + str(slot_id))
 
     user_slot.volunteer = request.user
@@ -158,6 +191,7 @@ def volunteerForUser(request, slot_id, user_id):
             user_slot = User_Slot.objects.filter(parentSlot=slot, volunteer__isnull=True).first()
 
         user_slot.volunteer = thisUser
+        user_slot.accepted = "No"
         user_slot.save()
 
         name = slot.title
@@ -167,12 +201,33 @@ def volunteerForUser(request, slot_id, user_id):
             group=group,
             user=thisUser,
             datetime=datetime.now(timezone.utc),
-            description="Volunteered for \"" + name,
+            description="Accept volunteer for " + name,
             url="/volunteer/slot/" + str(slot.id))
         feed_entry.save()
 
         alert = Alert(user=thisUser, text="Volunteered for " + slot.title, color=Alert.getGreen())
         alert.saveIP(request)
+
+        current_site = get_current_site(request)
+
+        user = thisUser
+
+        # Sends the user an email based on the email template and the info passed in here
+        message = render_to_string('emails/volentold.html', {
+            'user': user,
+            'domain': current_site.domain,
+            'id': slot_id
+        })
+        mail_subject = 'You have been added to a slot'
+        to_email = user.email
+        email = EmailMultiAlternatives(mail_subject, message, to=[to_email])
+        email.content_subtype = 'html'
+        email.mixed_subtype = 'related'
+        fp = open('static/img/logos.ico/WithText.jpg', 'rb')
+        logo = MIMEImage(fp.read())
+        logo.add_header('Content-ID', '<logo>')
+        email.attach(logo)
+        email.send()
 
     return redirect('/volunteer/slot/' + str(slot.id))
 
@@ -187,8 +242,9 @@ def unvolunteer(request, slot_id):
         return redirect('/volunteer/slot/' + str(slot_id))
     else:
         slots_filled_by_this_user.delete()
-        user_slot = User_Slot(parentSlot=slot, extraFields=slot.get_extra())
-        user_slot.save()
+        if (slot.maxVolunteers != 0):
+            user_slot = User_Slot(parentSlot=slot, extraFields=slot.get_extra())
+            user_slot.save()
 
         alert = Alert(user=request.user, text="unvolunteered for " + slot.title, color=Alert.getRed())
         alert.saveIP(request)

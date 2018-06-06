@@ -2,11 +2,11 @@
 
 {% block content %}
 <p></p>
-<h1 class="display-3 text-center"> {{group.name}}</h1>
+<h1 class="display-3 text-center"> {{event.name}}</h1>
 
 <div class="row">
   <div class="col-md-7 text-center">
-    <h1 class="text-center">Slots</h1>
+    <h1 class="text-center">Volunteers</h1>
     <div class="table-responsive">
       <table class="table table-hover">
         <tbody>
@@ -27,7 +27,7 @@
                     <td><a href="/volunteer/event/{{user_slot.parentSlot.parentEvent.id}}">{{user_slot.parentSlot.parentEvent.name}}</a></td>
 
                     {% if user_slot.is_signin_null %}
-                        <td><a href="/volunteer/signin/{{user_slot.id}}?next=/groups/{{group.id}}/console"><button class="btn btn-primary">Sign In</button></a></td>
+                      <td><a href="/volunteer/signin/{{user_slot.id}}?next=/groups/{{group.id}}/console"><button class="btn btn-primary">Sign In</button></a></td>
                     {% else %}
                       <td><a href="/organizer/editSignIn/{{user_slot.id}}"><button type="button" name="button" class="btn btn-light">{{user_slot.signin}}</button></a></td>
                     {% endif %}
@@ -45,21 +45,28 @@
     </div>
   </div>
 
-  <div class="col-md-5">
-    <h1 class="text-center">Feed</h1>
-    {% for entry in feed_entries %}
-    <div class="row">
+  <div class="col-md-5 text-center">
+    <h1>Slots</h1>
 
-      <div class="col-sm-11">
-        <div class="text-left">
-          <h3><a href="/accounts/profile/{{entry.user.id}}">{{entry.user}}</a></h3>
-          <h6>{{entry.datetime}}</h6>
-          <a href="{{entry.url}}">{{entry.description}}</a>
-        </div>
-      </div>
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <th>Name</th>
+          <th>Slots Taken</th>
+        </thead>
+        <tbody>
+          {% for slot in slots %}
+
+          <tr>
+            <td><a href="/volunteer/slot/{{slot.id}}">{{slot.title}}</a></td>
+            <td>
+                {{slot.getNumberUserSlotsFilled}}/{{slot.getNumberUserSlotsTotal}}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-    <p></p>
-    {% endfor %}
   </div>
 </div>
 
