@@ -1,0 +1,37 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link href="https://getbootstrap.com/docs/4.0/examples/sticky-footer/sticky-footer.css" rel="stylesheet">
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+{% autoescape off %}
+
+	<div class="container">
+{#		<body style="font-family:'Proxima Nova Soft','Helvetica Neue',sans-serif;">#}
+        <body>
+			<div align="center" class="display-3">
+                <img src="cid:logo" style="width:240px;height:80px;"/>
+                <div style="background:linear-gradient(to top, #d1d1d1, #ffffff);height:500px;width:800px;">
+                    <div style="position:relative;left:25px;top:25px;">
+                        <p style="font-size:32px;">
+                            Hey {{ user.first_name }} {{user.last_name}},
+                        </p>
+                        <p style="font-size:18px;padding-left:100px;padding-right:300px;" align="left">
+	                        Just letting you know that a volunteering slot
+	                        has been created in the {{ group.name }}
+	                        group that you are a part of!<br/><br/>
+                            Here's the info:<br/>
+		                    Name: {{ slot.title }}<br/>
+		                    Description: {{ slot.description }}<br/>
+		                    Location: {{ slot.location }}<br/>
+		                    Time: {{ slot.start }} - {{ slot.end }}<br/>
+		                    Number of Slots: {{ slot.maxVolunteers }}<br/>
+	                    </p>
+                        <a style="font-size:18px;text-decoration:none;color:#ffffff;" href="http://{{ domain }}/volunteer/slot/{{ slot.id }}">
+                            <button type="button" style="background-color:#5c98f9;width:200px;height:50px;border-radius:5px">
+                                Sign Up!
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+		</body>
+	</div>
+{% endautoescape %}
