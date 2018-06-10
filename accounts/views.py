@@ -114,8 +114,8 @@ def signup(request):
             email.attach(logo)
             email.send()
 
-            alert = Alert(user=request.user, text="Click on the link sent to your email to confirm your account", color=Alert.getYellow())
-            alert.saveIP(request)
+            #alert = Alert(user=request.user, text="Click on the link sent to your email to confirm your account", color=Alert.getYellow())
+            #alert.saveIP(request)
             return redirect('/login')
             #return render(request, 'accounts/please_confirm.html')
     else:

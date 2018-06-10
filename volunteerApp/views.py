@@ -53,10 +53,12 @@ def eventNeeds(request):
 
 def event(request, event_id):
     event = Event.objects.get(id=event_id)
+
     is_organizer = Group.get_is_organzer(event.parentGroup, request.user)
+    volunteer = request.user
 
     slots = Slot.objects.order_by('start')
-    return render(request, 'volunteer/event.html', {'event': event, 'slots': slots, 'is_organizer': is_organizer})
+    return render(request, 'volunteer/event.html', {'event': event, 'slots': slots, 'is_organizer': is_organizer, 'volunteer': volunteer})
 
 
 def accept(request, slot_id):

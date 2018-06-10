@@ -45,6 +45,8 @@ class Group(models.Model):
 
     approvalNeeded = models.BooleanField(null=False)
 
+    private = models.BooleanField(blank=False, null=False, default=False)
+
     #returns a list of groups that a given user is a part of at any level
     def get_is_member_list(user):
         return Group.objects.filter(Q(owner=user) | Q(organizers=user) | Q(volunteers=user))
