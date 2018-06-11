@@ -76,17 +76,19 @@ def addEvent(request, group_id):
             'You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
 
     if (request.method == 'POST'):
-        form = NewEventForm(request.POST, user=request.user, parentGroup=group)
+        form = NewEventForm(request.POST, user=request.user, parentGroup=group, initial={'private': group.private})
         if form.is_valid():
             event = form.save(commit=False)
             event.save()
+
 
             feed_entry = Feed_Entry(
                 group=group,
                 user=request.user,
                 datetime=datetime.now(timezone.utc),
                 description="Created Event \"" + event.name + "\"",
-                url="/volunteer/event/" + str(event.id))
+                url="/volunteer/event/" + str(event.id),
+                private=False)
             feed_entry.save()
 
             alert = Alert(user=request.user, text="Created event " + event.name, color=Alert.getBlue())
@@ -94,7 +96,7 @@ def addEvent(request, group_id):
 
             return redirect('/volunteer/eventNeeds')
     else:
-        form = NewEventForm(user=request.user, parentGroup=group)
+        form = NewEventForm(user=request.user, parentGroup=group, initial={'private': group.private})
     # Filter this by single slot events in the future
     return render(request, 'organizer/add_event.html', {'form': form})
 
@@ -118,6 +120,7 @@ def editEvent(request, event_id):
             event.zip_code = data['zip_code']
             event.start = data['start']
             event.end = data['end']
+            event.private = data['private']
 
             event.save()
 
@@ -132,7 +135,8 @@ def editEvent(request, event_id):
                            'city': event.city,
                            'state': event.state, 'zip_code': event.zip_code,
                            'start': event.start.strftime("%Y-%m-%dT%H:%M"),
-                           'end': event.end.strftime("%Y-%m-%dT%H:%M")})
+                           'end': event.end.strftime("%Y-%m-%dT%H:%M"),
+                           'private':event.private})
 
     return render(request, 'organizer/edit_event.html', {'form': form})
 
@@ -147,10 +151,10 @@ def addSlot(request, event_id):
     parentEvent = Event.objects.get(pk=event_id)
 
     if (request.method == 'GET'):
-        form = NewSlotForm(user=request.user, parentEvent=parentEvent)
+        form = NewSlotForm(user=request.user, parentEvent=parentEvent, initial={'private': parentEvent.private})
     else:
         # This line assumes the contents of the GET side of the if statement have already run (they should have) but its kinda janky
-        form = NewSlotForm(request.POST, user=request.user, parentEvent=parentEvent)
+        form = NewSlotForm(request.POST, user=request.user, parentEvent=parentEvent, initial={'private': parentEvent.private})
         if form.is_valid():
             slot = form.save(commit=False)
             slot.save()
@@ -170,7 +174,8 @@ def addSlot(request, event_id):
                 user=request.user,
                 datetime=datetime.now(timezone.utc),
                 description="Created slot \"" + str(slot.title) + "\" in event \"" + str(slot.parentEvent.name) + "\"",
-                url="/volunteer/slot/" + str(slot.id))
+                url="/volunteer/slot/" + str(slot.id),
+                private=False)
             feed_entry.save()
 
             alert = Alert(user=request.user, text="Created slot " + slot.title, color=Alert.getBlue())
@@ -257,10 +262,10 @@ def addSingleSlot(request, group_id):
         return redirect('/volunteer/slots')
 
     if (request.method == 'GET'):
-        form = NewSlotForm(user=request.user, parentEvent=None)
+        form = NewSlotForm(user=request.user, parentEvent=None, initial={'private':group.private})
     else:
         # This line assumes the contents of the GET side of the if statement have already run (they should have) but its kinda janky
-        form = NewSlotForm(request.POST, user=request.user, parentEvent=None)
+        form = NewSlotForm(request.POST, user=request.user, parentEvent=None, initial={'private':group.private})
         if form.is_valid():
             slot = form.save(commit=False)
             slot.parentGroup = group
@@ -280,7 +285,8 @@ def addSingleSlot(request, group_id):
                 user=request.user,
                 datetime=datetime.now(timezone.utc),
                 description="Created single slot \"" + str(slot.title),
-                url="/volunteer/slot/" + str(slot.id))
+                url="/volunteer/slot/" + str(slot.id),
+                private=False)
             feed_entry.save()
 
             alert = Alert(user=request.user, text="Created slot " + slot.title, color=Alert.getBlue())
@@ -311,6 +317,7 @@ def editSlot(request, slot_id):
             slot.location = data['location']
             slot.paymentPerHour = data['paymentPerHour']
             slot.extraFields = data['extraFields'].replace(' ', '')
+            slot.private = data['private']
 
             slot.save()
 
@@ -336,7 +343,8 @@ def editSlot(request, slot_id):
                 user=request.user,
                 datetime=datetime.now(timezone.utc),
                 description="Updated slot \"" + str(slot.title),
-                url="/volunteer/slot/" + str(slot.id))
+                url="/volunteer/slot/" + str(slot.id),
+                private=False)
             feed_entry.save()
 
             alert = Alert(user=request.user, text="Updated Slot " + slot.title, color=Alert.getBlue())
@@ -350,7 +358,8 @@ def editSlot(request, slot_id):
                                                'start': slot.start.strftime("%Y-%m-%dT%H:%M"),
                                                'end': slot.end.strftime("%Y-%m-%dT%H:%M"),
                                                'paymentPerHour': slot.paymentPerHour,
-                                               'extraFields': slot.extraFields})
+                                               'extraFields': slot.extraFields,
+                                               'private': slot.private})
 
     return render(request, 'organizer/edit_slot.html', {'form': form})
 
@@ -542,7 +551,8 @@ def deleteEvent(request, event_id):
             user=request.user,
             datetime=datetime.now(timezone.utc),
             description="Deleted event \"" + name + "\"",
-            url="/volunteer/eventNeeds"
+            url="/volunteer/eventNeeds",
+            private=False
         )
         feed_entry.save()
 
@@ -574,7 +584,8 @@ def deleteSlot(request, slot_id):
             user=request.user,
             datetime=datetime.now(timezone.utc),
             description="Deleted slot \"" + name + "\" in event \"" + event.name + "\"",
-            url="/volunteer/slots"
+            url="/volunteer/slots",
+            private=False
         )
 
         feed_entry.save()

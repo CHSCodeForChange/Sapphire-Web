@@ -102,7 +102,7 @@
             <td>{{slot.start}}</td>
             <td>{{slot.end}}</td>
             <td>
-                {% if is_organizer %}
+                {% if is_organizer or not event.private %}
                   {% for user_slot in slot.user_slot_set.all %}
                   {{user_slot.volunteer.username}}
                   {% endfor %}

@@ -28,3 +28,5 @@ class Feed_Entry(models.Model):
 
     #the URL that the feed redirects to if you click the description
     url = models.CharField(max_length=120)
+
+    private = models.BooleanField(blank=False, null=False, default=False)

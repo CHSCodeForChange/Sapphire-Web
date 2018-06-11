@@ -10,9 +10,14 @@ def feed(request):
         feed_entries = None
         for group in groups:
             if (feed_entries==None):
+                feed_entries=Feed_Entry.objects.filter(group=group).filter(private=False)
+            elif (feed_entries==None and group.get_is_organzer):
                 feed_entries=Feed_Entry.objects.filter(group=group)
-            else:
+            elif group.get_is_organzer:
                 groups_entrys = Feed_Entry.objects.filter(group=group)
+                feed_entries=feed_entries.union(groups_entrys)
+            else:
+                groups_entrys = Feed_Entry.objects.filter(group=group).filter(private=False)
                 feed_entries=feed_entries.union(groups_entrys)
 
         if (not(feed_entries==None)):

@@ -39,9 +39,9 @@ class NewGroupForm(forms.Form):
                 'class': 'form-control'}))
     approvalNeeded = forms.BooleanField(label='Approval Needed', required=False)
 
+    private = forms.BooleanField(label='Private', required=False)
+
     owner = models.User()
-
-
 
 
     def __init__(self, *args, **kwargs):
@@ -83,8 +83,9 @@ class NewGroupForm(forms.Form):
     def clean_approvalNeeded(self):
         approvalNeeded = self.cleaned_data['approvalNeeded']
         return approvalNeeded
-
-
+    def clean_private(self):
+        private = self.cleaned_data['private']
+        return private
     def save(self, commit=True):
         group = Group(
             name=self.cleaned_data['name'],
@@ -98,7 +99,8 @@ class NewGroupForm(forms.Form):
             city=self.cleaned_data['city'],
             state=self.cleaned_data['state'],
             zip_code=self.cleaned_data['zip_code'],
-            approvalNeeded=self.cleaned_data['approvalNeeded']
+            approvalNeeded=self.cleaned_data['approvalNeeded'],
+            private=self.cleaned_data['private']
             )
         return group
 
@@ -137,6 +139,8 @@ class EditGroupForm(forms.Form):
 
         approvalNeeded = forms.BooleanField(label='Approval Needed', required=False)
 
+        private = forms.BooleanField(label='Private', required=False)
+
         def __init__(self, *args, **kwargs):
             self.group_id = kwargs.pop('id')
             super(EditGroupForm, self).__init__(*args, **kwargs)
@@ -172,11 +176,12 @@ class EditGroupForm(forms.Form):
         def clean_zip_code(self):
             user = self.cleaned_data['zip_code']
             return user
-
         def clean_approvalNeeded(self):
             approvalNeeded = self.cleaned_data['approvalNeeded']
             return approvalNeeded
-
+        def clean_private(self):
+            private = self.cleaned_data['private']
+            return private
         def save(self, commit=True):
             return self.cleaned_data
 
