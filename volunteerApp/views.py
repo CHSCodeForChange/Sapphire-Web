@@ -159,7 +159,8 @@ def volunteer(request, slot_id):
         user=request.user,
         datetime=datetime.now(timezone.utc),
         description="Volunteered for \"" + name,
-        url="/volunteer/slot/" + str(slot.id))
+        url="/volunteer/slot/" + str(slot.id),
+        private=slot.private)
     feed_entry.save()
 
     alert = Alert(user=request.user, text="Volunteered for " + slot.title, color=Alert.getGreen())
@@ -202,7 +203,8 @@ def volunteerForUser(request, slot_id, user_id):
             user=thisUser,
             datetime=datetime.now(timezone.utc),
             description="Accept volunteer for " + name,
-            url="/volunteer/slot/" + str(slot.id))
+            url="/volunteer/slot/" + str(slot.id),
+            private=slot.private)
         feed_entry.save()
 
         alert = Alert(user=thisUser, text="Volunteered for " + slot.title, color=Alert.getGreen())

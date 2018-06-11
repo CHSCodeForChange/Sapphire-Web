@@ -20,29 +20,6 @@ A slot object allows volunteers to sign up for it and has a start time and end
 time. It has a parent Event.
 """
 
-"""class Organization(models.Model):
-    organizers = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True
-    )
-
-    # The list of Volunteers
-    volunteers = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True
-    )
-
-    events = models.ForeignKey(
-        'Event',
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True
-    )"""
-
 
 class Slot(models.Model):
     objects = models.Manager()

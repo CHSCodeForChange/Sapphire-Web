@@ -63,6 +63,8 @@ class NewSingleSlotForm(forms.Form):
 				attrs={'type': 'text',
 							 'class': 'form-control'}))
 
+		private = forms.BooleanField(label='Private', required=False)
+
 		def __init__(self, *args, **kwargs):
 				self.user = kwargs.pop('user')
 				super(NewSingleSlotForm, self).__init__(*args, **kwargs)
@@ -123,6 +125,9 @@ class NewSingleSlotForm(forms.Form):
 						ans[i] = '-'
 
 				return ans
+		def clean_private(self):
+			private = self.cleaned_data['private']
+			return private
 
 		def save(self, commit=True):
 				event = Event(
@@ -141,6 +146,7 @@ class NewSingleSlotForm(forms.Form):
 						volunteers=None,
 						start=self.cleaned_data['start'],
 						end=self.cleaned_data['end'],
+						private=self.cleaned_data['private'],
 						is_single=True,
 						type='singleSlot')
 				return event
@@ -180,17 +186,11 @@ class NewEventForm(forms.Form):
 							 'max': '99999',
 							 'class': 'form-control'}))
 
-		"""maxVolunteers = forms.IntegerField(label='# Slots', widget=forms.NumberInput(
-				attrs={'type': 'number',
-							 'min': '1',
-							 'class': 'form-control'}))"""
+		private = forms.BooleanField(label='Private', required=False)
+
 		user = models.User()
 		parentGroup = models.Group()
 		datetime = datetime.now(timezone.utc)
-
-		"""in_person = forms.BooleanField(label='In person', widget=forms.CheckboxInput(
-				attrs={'type': 'checkbox',
-							 'class': 'form-control'}))"""
 
 		def __init__(self, *args, **kwargs):
 				self.user = kwargs.pop('user')
@@ -212,12 +212,6 @@ class NewEventForm(forms.Form):
 		def clean_parentGroup(self):
 				parentGroup = self.cleaned_data['parentGroup']
 				return parentGroup
-
-		"""def clean_maxVolunteers(self):
-				description = self.cleaned_data['maxVolunteers']
-				return description
-		def clean_in_person(self):
-				in_person = self.cleaned_data['in_person']"""
 
 		def clean_location(self):
 				user = self.cleaned_data['location']
@@ -256,6 +250,10 @@ class NewEventForm(forms.Form):
 
 				return feed_entry
 
+		def clean_private(self):
+			private = self.cleaned_data['private']
+			return private
+
 		def save(self, commit=True):
 				event = Event(
 						organizer=self.user,
@@ -267,13 +265,9 @@ class NewEventForm(forms.Form):
 						city=self.cleaned_data['city'],
 						state=self.cleaned_data['state'],
 						zip_code=self.cleaned_data['zip_code'],
-						# in_person=self.cleaned_data['in_person'],
-						# maxVolunteers=self.cleaned_data['maxVolunteers'],
-						# minVolunteers=1,
-						# volunteers=None,
 						start=self.cleaned_data['start'],
-						end=self.cleaned_data['end'], )
-				# is_single=False,)
+						end=self.cleaned_data['end'],
+						private=self.cleaned_data['private'] )
 				return event
 
 
@@ -310,6 +304,7 @@ class UpdateEventForm(forms.Form):
 				attrs={'type': 'number',
 							 'max': '99999',
 							 'class': 'form-control'}))
+		private = forms.BooleanField(label='Private', required=False)
 
 		def __init__(self, *args, **kwargs):
 				self.event_id = kwargs.pop('id')
@@ -360,6 +355,10 @@ class UpdateEventForm(forms.Form):
 
 				return feed_entry
 
+		def clean_private(self):
+			private = self.cleaned_data['private']
+			return private
+
 		def save(self, commit=True):
 				return self.cleaned_data
 
@@ -398,6 +397,7 @@ class NewSlotForm(forms.Form):
 							 'class': 'form-control'}))
 
 
+
 		user = models.User()
 		parentEvent = Event()
 		datetime = datetime.now(timezone.utc)
@@ -410,6 +410,8 @@ class NewSlotForm(forms.Form):
 		"""in_person = forms.BooleanField(label='In person', widget=forms.CheckboxInput(
 				attrs={'type': 'checkbox',
 							 'class': 'form-control'}))"""
+
+		private = forms.BooleanField(label='Private', required=False)
 
 		def __init__(self, *args, **kwargs):
 				self.user = kwargs.pop('user')
@@ -456,6 +458,9 @@ class NewSlotForm(forms.Form):
 						ans[i] = '-'
 
 				return ans
+		def clean_private(self):
+			private = self.cleaned_data['private']
+			return private
 
 		def save(self, commit=True):
 			if (self.cleaned_data['maxVolunteers'] == None):
@@ -478,14 +483,8 @@ class NewSlotForm(forms.Form):
 				minVolunteers=1,
 				maxVolunteers=maxVolunteers,
 				extraFields=self.cleaned_data['extraFields'].replace(" ", ""),
-				paymentPerHour=payment  # self.parentEvent.maxVolunteers,
-				# title=self.cleaned_data['title'],
-				# description=self.cleaned_data['description'],
-				# location=self.cleaned_data['location'],
-				# address=self.cleaned_data['address'],
-				# city=self.cleaned_data['city'],
-				# state=self.cleaned_data['state'],
-				# zip_code=self.cleaned_data['zip_code']
+				paymentPerHour=payment,
+				private=self.cleaned_data['private']
 			)
 			return slot
 
@@ -560,6 +559,8 @@ class UpdateSlotForm(forms.Form):
 							 'placeholder': '[Not required],[Field 2],[Field 3] ...',
 							 'class': 'form-control'}))
 
+		private = forms.BooleanField(label='Private', required=False)
+
 		user = models.User()
 		parentEvent = Event()
 		datetime = datetime.now(timezone.utc)
@@ -598,6 +599,10 @@ class UpdateSlotForm(forms.Form):
 
 		def clean_extra(self):
 				return self.cleaned_data['extraFields']
+
+		def clean_private(self):
+				private = self.cleaned_data['private']
+				return private
 
 		def save(self, commit=True):
 				return self.cleaned_data
