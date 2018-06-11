@@ -236,6 +236,7 @@ def sendEventOpeningNotification(request, event_id):
           'event': event,
           'group': group,
           'domain': current_site.domain,
+          'slots': Slot.objects.filter(parentEvent=event),
         })
         mail_subject = 'Sign up for a '+group.name+' Activity!'
         to_email = recipient.email
