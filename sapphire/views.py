@@ -1,4 +1,4 @@
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 
 
@@ -14,3 +14,10 @@ def handler500(request):
                                   context_instance=RequestContext(request))
     response.status_code = 500
     return response
+
+
+def home(request):
+    if request.user.is_authenticated():
+        return redirect('/volunteer/slots')
+    else:
+        return redirect('/login')
