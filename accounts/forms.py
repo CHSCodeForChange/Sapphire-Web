@@ -21,7 +21,7 @@ class EditProfileForm(forms.Form):
             'class': 'form-control',
             'rows': 5,
             'style': 'resize:none;',
-        }))
+        }), required=False)
 
     def clean_bio(self):
         bio = self.cleaned_data['bio']
@@ -35,16 +35,16 @@ class EditUserForm(UserChangeForm):
     template_name = '/accounts/editProfile'
     first_name = forms.CharField(label='First Name', max_length=150, widget=forms.TextInput(
         attrs={'type': 'text',
-               'class': 'form-control'}))
+               'class': 'form-control'}), required=True)
     last_name = forms.CharField(label='Last Name', max_length=150, widget=forms.TextInput(
         attrs={'type': 'text',
-               'class': 'form-control'}))
+               'class': 'form-control'}), required=True)
     username = forms.CharField(label='Username', min_length=4, max_length=150, widget=forms.TextInput(
         attrs={'type': 'text',
-               'class': 'form-control'}))
+               'class': 'form-control'}), required=True)
     email = forms.EmailField(label='Email', max_length=200, widget=forms.EmailInput(
         attrs={'type': 'text',
-               'class': 'form-control'}))
+               'class': 'form-control'}), required=True)
     class Meta:
         model = User
         fields = (
