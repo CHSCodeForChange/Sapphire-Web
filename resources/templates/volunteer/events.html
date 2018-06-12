@@ -4,6 +4,25 @@
 {% block content %}
 
 <h1 class="display-3">Events <a class="plus" href="/organizer/addEvent/">+</a></h1>
+
+<form method="post" style="padding-bottom:3%">
+  {% csrf_token %}
+    <div class="row">
+      {% for field in search %}
+        <p align="left">
+          <div class="col-sm-12"> {{ field }} </div>
+          {% if field.help_text %}
+            <small style="display: none">{{ field.help_text }}</small>
+          {% endif %}
+          {% for error in field.errors %}
+            <p style="color: red">{{ error }}</p>
+          {% endfor %}
+        </p>
+      {% endfor %}
+
+    </div>
+</form>
+
 <div class="row">
   <div class="col-md-11">
     <div class="table-responsive">

@@ -37,16 +37,22 @@ def calendar(request):
 
 def eventNeeds(request):
     if request.user.is_authenticated():
-        if (request.method == 'POST'):
-            form = FilterTimeForm(request.POST)
-            if form.is_valid():
-                events = Event.get_users_groups_events(request.user).filter(
-                    start__range=[form.getStart(), form.getEnd()])
-        else:
-            form = FilterTimeForm()
-            events = Event.get_users_groups_events(request.user)
+        events = Event.get_users_groups_events(request.user)
+        form = FilterTimeForm()
+        search = SearchForm()
 
-        return render(request, 'volunteer/events.html', {'events': events, 'form': form})
+        if request.method == 'POST':
+            form = FilterTimeForm(request.POST)
+            search = SearchForm(request.POST)
+            if form.is_valid():
+                events = events.filter(start__range=[form.getStart(), form.getEnd()])
+            if search.is_valid():
+                query = search.save(commit=False)
+                if query != None:
+                    events = events.filter(name__contains=query)
+                    print(events)
+
+        return render(request, 'volunteer/events.html', {'events': events, 'form': form, 'search': search})
     else:
         return redirect('login')
 
@@ -105,21 +111,25 @@ def slot(request, slot_id):
                'single': (slot.parentEvent == None)})
 
 
-
 def slotNeeds(request):
     if request.user.is_authenticated():
-        if (request.method == 'POST'):
-            form = FilterTimeForm(request.POST)
-            if form.is_valid():
-                slots = Slot.get_users_groups_slots(request.user).filter(start__range=[form.getStart(), form.getEnd()])
-        else:
-            form = FilterTimeForm()
-            slots = Slot.get_users_groups_slots(request.user)
+        slots = Slot.get_users_groups_slots(request.user)
+        form = FilterTimeForm()
+        search = SearchForm()
 
-        return render(request, 'volunteer/slots.html', {'slots': slots, 'form': form})
+        if request.method == 'POST':
+            form = FilterTimeForm(request.POST)
+            search = SearchForm(request.POST)
+            if form.is_valid():
+                slots = slots.filter(start__range=[form.getStart(), form.getEnd()])
+            if search.is_valid():
+                query = search.save(commit=False)
+                if query != None:
+                    slots = slots.filter(title__contains=query)
+
+        return render(request, 'volunteer/slots.html', {'slots': slots, 'form': form, 'search': search})
     else:
         return redirect('login')
-
 
 def volunteer(request, slot_id):
     # next = request.GET.get('next')
