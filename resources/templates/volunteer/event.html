@@ -115,7 +115,13 @@
                 {% endif %}
             </td>
             <td>
-                {{slot.user_slot_set.all|volunteer_count}}/{{slot.user_slot_set.all|length}}
+                {% ifnotequal slot.maxVolunteers 0 %}
+                    {{slot.user_slot_set.all|volunteer_count}}/{{slot.user_slot_set.all|length}}
+                {% endifnotequal %}
+
+                {% ifequal slot.maxVolunteers 0 %}
+                  <a title="This slot is unlimited" style="border-bottom: 1px dotted blue;">∞</a>
+                {% endifequal %}
             </td>
             <td>
                 {% if is_organizer %}
