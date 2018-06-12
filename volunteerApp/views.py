@@ -79,6 +79,7 @@ def slot(request, slot_id):
         is_organizer = Group.get_is_organzer(slot.parentEvent.parentGroup, request.user)
     else:
         is_organizer = Group.get_is_organzer(slot.parentGroup, request.user)
+
     user_slots = User_Slot.objects.filter(parentSlot=slot)
     is_volunteered = not (User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first() == None)
     pendingAccept = False
@@ -143,7 +144,7 @@ def volunteer(request, slot_id):
         return redirect('/volunteer/slot/' + str(slot_id))
 
     user_slot.volunteer = request.user
-
+    user_slot.accepted = "Yes"
     if (slot.get_extra() != None):
         ans = {}
 
