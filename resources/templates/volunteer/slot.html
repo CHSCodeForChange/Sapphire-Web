@@ -5,7 +5,11 @@
 {% block content %}
 <p></p>
 <p class="text-right">
-  <a href="/volunteer/event/{{slot.parentEvent.id}}">{{slot.parentEvent.name}}</a> / <a href="/groups/{{slot.parentEvent.parentGroup.id}}">{{slot.parentEvent.parentGroup.name}}</a>
+  {% if single %}
+        <a href="/groups/{{slot.parentGroup.id}}">{{slot.parentGroup.name}}</a>
+  {% else %}
+      <a href="/volunteer/event/{{slot.parentEvent.id}}">{{slot.parentEvent.name}}</a> / <a href="/groups/{{slot.parentEvent.parentGroup.id}}">{{slot.parentEvent.parentGroup.name}}</a>
+  {% endif %}
 </p>
   <div class="jumbotron">
     <h1 class="display-1">{{slot.title}}</h1>
@@ -112,9 +116,11 @@
             <th>Payment</th>
           {% endif %}
 
-          {% for a in extra %}
-                <th>{{a}}</th>
+          {% if is_organizer or not slot.private %}
+            {% for a in extra %}
+              <th>{{a}}</th>
             {% endfor %}
+          {% endif %}
 
           {% if is_organizer %}
             <th>Delete</th>
@@ -189,9 +195,11 @@
                   <td>${{user_slot.payment}}</td>
                 {% endif %}
 
-                {% for a,b in user_slot.value %}
-                      <td><a href="/organizer/editField/{{user_slot.id}}/{{ a }}"><button type="button" name="button" class="btn btn-light">{{b}}</button></a></td>
-                {% endfor %}
+                {% if is_organizer or not slot.private %}
+                  {% for a,b in user_slot.value %}
+                        <td><a href="/organizer/editField/{{user_slot.id}}/{{ a }}"><button type="button" name="button" class="btn btn-light">{{b}}</button></a></td>
+                  {% endfor %}
+                {% endif %}
 
 
                 {% if is_organizer %}

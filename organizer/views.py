@@ -426,10 +426,15 @@ def removeUserSlot(request, user_slot_id):
 
 def editField(request, user_slot_id, field):
     user_slot = User_Slot.objects.get(id=user_slot_id)
-    group = user_slot.parentSlot.parentEvent.parentGroup
+    if user_slot.parentSlot.parentGroup != None:
+        group = user_slot.parentSlot.parentGroup
+    else:
+        group = user_slot.parentSlot.parentEvent.parentGroup
     if not Group.get_is_organzer(group, request.user):
-        return HttpResponse(
-            'You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
+        alert = Alert(user=request.user, text="You must be an organizer to edit extra fields",
+                      color=Alert.getRed())
+        alert.saveIP(request)
+        return redirect('/volunteer/slot/'+str(user_slot.parentSlot.id))
     if (group.get_is_organzer(request.user)):
         if (request.method == 'POST'):
             form = FieldForm(request.POST)

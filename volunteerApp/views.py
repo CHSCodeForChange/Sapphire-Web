@@ -97,16 +97,13 @@ def slot(request, slot_id):
         percentFilled = 0
     for i in user_slots:
         i.prep_html()
-    if (slot.parentEvent != None):
-        return render(request, 'volunteer/slot.html',
-                  {'slot': slot, 'user_slots': user_slots, 'event': event, 'full': User_Slot.objects.filter(parentSlot=slot, volunteer__isnull=True).first(), 'is_organizer': is_organizer,
-                   'percentFilled': percentFilled, 'is_volunteered': is_volunteered, 'offer': pendingAccept, 'private': private, 'specific_user_slot' : specific_user_slot,
-                   'extra': (list(user_slots[0].get_extra().keys()) if (len(user_slots) > 0) else [])})
-    else:
-        return render(request, 'volunteer/singleSlot.html',
-                      {'slot': slot, 'user_slots': user_slots, 'is_organizer': is_organizer, 'full': User_Slot.objects.filter(parentSlot=slot, volunteer__isnull=True).first(), 'private': private, 'specific_user_slot' : specific_user_slot,
-                       'percentFilled': percentFilled, 'is_volunteered': is_volunteered, 'offer': pendingAccept,
-                       'extra': (list(user_slots[0].get_extra().keys()) if (len(user_slots) > 0) else [])})
+
+    return render(request, 'volunteer/slot.html',
+              {'slot': slot, 'user_slots': user_slots, 'event': event, 'full': User_Slot.objects.filter(parentSlot=slot, volunteer__isnull=True).first(), 'is_organizer': is_organizer,
+               'percentFilled': percentFilled, 'is_volunteered': is_volunteered, 'offer': pendingAccept, 'private': private, 'specific_user_slot' : specific_user_slot,
+               'extra': (list(user_slots[0].get_extra().keys()) if (len(user_slots) > 0) else []),
+               'single': (slot.parentEvent == None)})
+
 
 
 def slotNeeds(request):
