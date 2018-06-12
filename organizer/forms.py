@@ -560,6 +560,7 @@ class UpdateSlotForm(forms.Form):
 							 'class': 'form-control'}))
 
 		private = forms.BooleanField(label='Private', required=False)
+		unlimited = forms.BooleanField(label='Unlimited', required=False)
 
 		user = models.User()
 		parentEvent = Event()
@@ -567,6 +568,7 @@ class UpdateSlotForm(forms.Form):
 
 		def __init__(self, *args, **kwargs):
 				self.slot_id = kwargs.pop('id')
+
 				super(UpdateSlotForm, self).__init__(*args, **kwargs)
 
 		def clean_title(self):
@@ -603,6 +605,10 @@ class UpdateSlotForm(forms.Form):
 		def clean_private(self):
 				private = self.cleaned_data['private']
 				return private
+
+		def clean_unlimited(self):
+			unlimited = self.cleaned_data['unlimited']
+			return unlimited
 
 		def save(self, commit=True):
 				return self.cleaned_data

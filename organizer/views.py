@@ -320,6 +320,12 @@ def editSlot(request, slot_id):
             slot.extraFields = data['extraFields'].replace(' ', '')
             slot.private = data['private']
 
+            unlimited = data['unlimited']
+            if (unlimited):
+                slot.maxVolunteers = 0
+            else:
+                slot.maxVolunteers = 1
+
             slot.save()
 
             newFields = slot.get_extra()
@@ -360,7 +366,8 @@ def editSlot(request, slot_id):
                                                'end': slot.end.strftime("%Y-%m-%dT%H:%M"),
                                                'paymentPerHour': slot.paymentPerHour,
                                                'extraFields': slot.extraFields,
-                                               'private': slot.private})
+                                               'private': slot.private,
+                                               'unlimited':(slot.maxVolunteers==0)})
 
     return render(request, 'organizer/edit_slot.html', {'form': form})
 
