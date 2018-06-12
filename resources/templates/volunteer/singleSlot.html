@@ -76,6 +76,10 @@
         <a class="col-sm-12" href="/volunteer/slot/{{slot.id}}/unvolunteer">
           <button class="btn btn-info btn-block">Unvolunteer</button>
         </a>
+        {% elif full == None %}
+        <a class="col-sm-12" href="{% url 'volunteer' slot_id=slot.id %}">
+          <button class="btn btn-info btn-block">Maxed Out</button>
+        </a>
         {% else %}
         <a class="col-sm-12" href="{% url 'volunteer' slot_id=slot.id %}">
           <button class="btn btn-info btn-block">Volunteer</button>

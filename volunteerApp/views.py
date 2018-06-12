@@ -99,12 +99,12 @@ def slot(request, slot_id):
         i.prep_html()
     if (slot.parentEvent != None):
         return render(request, 'volunteer/slot.html',
-                  {'slot': slot, 'user_slots': user_slots, 'event': event, 'is_organizer': is_organizer,
+                  {'slot': slot, 'user_slots': user_slots, 'event': event, 'full': User_Slot.objects.filter(parentSlot=slot, volunteer__isnull=True).first(), 'is_organizer': is_organizer,
                    'percentFilled': percentFilled, 'is_volunteered': is_volunteered, 'offer': pendingAccept, 'private': private, 'specific_user_slot' : specific_user_slot,
                    'extra': (list(user_slots[0].get_extra().keys()) if (len(user_slots) > 0) else [])})
     else:
         return render(request, 'volunteer/singleSlot.html',
-                      {'slot': slot, 'user_slots': user_slots, 'is_organizer': is_organizer, 'private': private, 'specific_user_slot' : specific_user_slot,
+                      {'slot': slot, 'user_slots': user_slots, 'is_organizer': is_organizer, 'full': User_Slot.objects.filter(parentSlot=slot, volunteer__isnull=True).first(), 'private': private, 'specific_user_slot' : specific_user_slot,
                        'percentFilled': percentFilled, 'is_volunteered': is_volunteered, 'offer': pendingAccept,
                        'extra': (list(user_slots[0].get_extra().keys()) if (len(user_slots) > 0) else [])})
 
@@ -138,8 +138,12 @@ def volunteer(request, slot_id):
     if (slot.maxVolunteers == 0 and slots_filled_by_this_user == None):
         user_slot = User_Slot(parentSlot=slot, accepted="Yes")
 
-    elif (user_slot == None or slots_filled_by_this_user != None):
+    elif (slots_filled_by_this_user != None):
         alert = Alert(user=request.user, text="Already volunteered", color=Alert.getRed())
+        alert.saveIP(request)
+        return redirect('/volunteer/slot/' + str(slot_id))
+    elif (user_slot == None):
+        alert = Alert(user=request.user, text="Already at Max Volunteers", color=Alert.getRed())
         alert.saveIP(request)
         return redirect('/volunteer/slot/' + str(slot_id))
 

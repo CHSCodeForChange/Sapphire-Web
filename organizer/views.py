@@ -571,30 +571,55 @@ def deleteEvent(request, event_id):
 
 def deleteSlot(request, slot_id):
     slot = Slot.objects.get(id=slot_id)
-    group = slot.parentEvent.parentGroup
+    if (slot.parentEvent != None):
+        group = slot.parentEvent.parentGroup
+    else:
+        group = slot.parentGroup
+
     if not Group.get_is_organzer(group, request.user):
         return HttpResponse(
             'You don\'t have the right permissions to see this page. You must be an Organizer to access this page.')
     if (group.get_is_organzer(request.user)):
-        name = slot.title
-        event = slot.parentEvent
-        slot.delete()
+        if(slot.parentEvent != None):
+            name = slot.title
+            event = slot.parentEvent
+            slot.delete()
 
-        feed_entry = Feed_Entry(
-            group=event.parentGroup,
-            user=request.user,
-            datetime=datetime.now(timezone.utc),
-            description="Deleted slot \"" + name + "\" in event \"" + event.name + "\"",
-            url="/volunteer/slots",
-            private=False
-        )
+            feed_entry = Feed_Entry(
+                group=event.parentGroup,
+                user=request.user,
+                datetime=datetime.now(timezone.utc),
+                description="Deleted slot \"" + name + "\" in event \"" + event.name + "\"",
+                url="/volunteer/slots",
+                private=False
+            )
 
-        feed_entry.save()
+            feed_entry.save()
 
-        alert = Alert(user=request.user, text="Deleted slot " + name, color=Alert.getRed())
-        alert.saveIP(request)
+            alert = Alert(user=request.user, text="Deleted slot " + name, color=Alert.getRed())
+            alert.saveIP(request)
 
-        return redirect('/volunteer/event/' + str(event.id))
+            return redirect('/volunteer/event/' + str(event.id))
+        else:
+            name = slot.title
+            group = slot.parentGroup
+            slot.delete()
+
+            feed_entry = Feed_Entry(
+                group=slot.parentGroup,
+                user=request.user,
+                datetime=datetime.now(timezone.utc),
+                description="Deleted slot \"" + name + "\" in group \"" + group.name + "\"",
+                url="/volunteer/slots",
+                private=False
+            )
+
+            feed_entry.save()
+
+            alert = Alert(user=request.user, text="Deleted slot " + name, color=Alert.getRed())
+            alert.saveIP(request)
+
+            return redirect('/groups/' + str(group.id))
     else:
         alert = Alert(user=request.user, text="Only organizers can delete slots", color=Alert.getRed())
         alert.saveIP(request)
