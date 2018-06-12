@@ -140,10 +140,10 @@
                   <th>-</th>
                 {% endif %}
 
-                  {% for a in extra %}
-                          <td>-</td>
-                  {% endfor %}
-          <td>-</td>
+                {% for a in extra %}
+                        <td>-</td>
+                {% endfor %}
+
                 {% if is_organizer %}
                   <td><a href="/organizer/deleteUserSlot/{{user_slot.id}}"><button class="btn btn-danger">Delete</button></a></td>
                 {% endif %}
