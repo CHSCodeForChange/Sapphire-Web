@@ -73,6 +73,8 @@ def accept(request, slot_id):
 def slot(request, slot_id):
     slot = Slot.objects.get(id=slot_id)
     event = slot.parentEvent
+    private = slot.private
+
     if (slot.parentEvent != None):
         is_organizer = Group.get_is_organzer(slot.parentEvent.parentGroup, request.user)
     else:
@@ -97,11 +99,11 @@ def slot(request, slot_id):
     if (slot.parentEvent != None):
         return render(request, 'volunteer/slot.html',
                   {'slot': slot, 'user_slots': user_slots, 'event': event, 'is_organizer': is_organizer,
-                   'percentFilled': percentFilled, 'is_volunteered': is_volunteered, 'offer': pendingAccept, 'specific_user_slot' : specific_user_slot,
+                   'percentFilled': percentFilled, 'is_volunteered': is_volunteered, 'offer': pendingAccept, 'private': private, 'specific_user_slot' : specific_user_slot,
                    'extra': (list(user_slots[0].get_extra().keys()) if (len(user_slots) > 0) else [])})
     else:
         return render(request, 'volunteer/singleSlot.html',
-                      {'slot': slot, 'user_slots': user_slots, 'is_organizer': is_organizer,
+                      {'slot': slot, 'user_slots': user_slots, 'is_organizer': is_organizer, 'private': private, 'specific_user_slot' : specific_user_slot,
                        'percentFilled': percentFilled, 'is_volunteered': is_volunteered, 'offer': pendingAccept,
                        'extra': (list(user_slots[0].get_extra().keys()) if (len(user_slots) > 0) else [])})
 
