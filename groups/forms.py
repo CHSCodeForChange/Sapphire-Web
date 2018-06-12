@@ -5,6 +5,23 @@ from datetime import datetime, timezone
 
 from groups.models import Group, Chat_Entry
 
+class SearchGroupsForm(forms.Form):
+    query = forms.CharField(label='', required=False, max_length=120, widget=forms.TextInput(
+        attrs={'type': 'text',
+               'class': 'form-control',
+               'placeholder': 'Search'}))
+
+    def __init__(self, *args, **kwargs):
+        super(SearchGroupsForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        query = self.cleaned_data['query']
+        if query != None:
+            result = Group.objects.filter(name__contains=query)
+        else:
+            result = Group.objects.all()
+        return result
+
 class NewGroupForm(forms.Form):
     name = forms.CharField(label='Title', max_length=120, widget=forms.TextInput(
         attrs={'type': 'text',
