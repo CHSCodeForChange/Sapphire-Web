@@ -28,23 +28,22 @@
     <div class="row">
       {% if is_organizer %}
         {% if offer %}
-          <a class="col-sm-8" href="/volunteer/accept/{{slot.id}}">
+          <a class="col-sm-3" href="/volunteer/accept/{{slot.id}}">
             <button class="btn btn-info btn-block">Accept</button>
           </a>
 
-          <a class="col-sm-8" href="/volunteer/slot/{{slot.id}}/unvolunteer">
+          <a class="col-sm-3" href="/volunteer/slot/{{slot.id}}/unvolunteer">
             <button class="btn btn-info btn-block">Reject</button>
           </a>
-        {% else %}
-          {% if is_volunteered %}
+
+        {% elif is_volunteered %}
           <a class="col-sm-6" href="/volunteer/slot/{{slot.id}}/unvolunteer">
             <button class="btn btn-info btn-block">Unvolunteer</button>
           </a>
-          {% else %}
+        {% else %}
           <a class="col-sm-6" href="{% url 'volunteer' slot_id=slot.id %}">
             <button class="btn btn-info btn-block">Volunteer</button>
           </a>
-          {% endif %}
         {% endif %}
         <a class="col-sm-2" href="/organizer/sendMail/slot/{{slot.id}}">
             <button class="btn btn-block btn-success"><i class="fas fa-envelope"></i></button>
@@ -64,15 +63,21 @@
                 </a>
             </div>
         </div>
-
-
       {% else %}
-        {% if is_volunteered %}
-        <a class="col-sm-11" href="/volunteer/slot/{{slot.id}}/unvolunteer">
+        {% if offer %}
+          <a class="col-sm-6" href="/volunteer/accept/{{slot.id}}">
+            <button class="btn btn-info btn-block">Accept</button>
+          </a>
+
+          <a class="col-sm-6" href="/volunteer/slot/{{slot.id}}/unvolunteer">
+            <button class="btn btn-info btn-block">Reject</button>
+          </a>
+        {% elif is_volunteered %}
+        <a class="col-sm-12" href="/volunteer/slot/{{slot.id}}/unvolunteer">
           <button class="btn btn-info btn-block">Unvolunteer</button>
         </a>
         {% else %}
-        <a class="col-sm-11" href="{% url 'volunteer' slot_id=slot.id %}">
+        <a class="col-sm-12" href="{% url 'volunteer' slot_id=slot.id %}">
           <button class="btn btn-info btn-block">Volunteer</button>
         </a>
         {% endif %}
