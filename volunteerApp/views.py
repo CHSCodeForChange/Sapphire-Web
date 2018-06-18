@@ -37,16 +37,22 @@ def calendar(request):
 
 def eventNeeds(request):
     if request.user.is_authenticated():
-        if (request.method == 'POST'):
-            form = FilterTimeForm(request.POST)
-            if form.is_valid():
-                events = Event.get_users_groups_events(request.user).filter(
-                    start__range=[form.getStart(), form.getEnd()])
-        else:
-            form = FilterTimeForm()
-            events = Event.get_users_groups_events(request.user)
+        events = Event.get_users_groups_events(request.user)
+        form = FilterTimeForm()
+        search = SearchForm()
 
-        return render(request, 'volunteer/events.html', {'events': events, 'form': form})
+        if request.method == 'POST':
+            form = FilterTimeForm(request.POST)
+            search = SearchForm(request.POST)
+            if form.is_valid():
+                events = events.filter(start__range=[form.getStart(), form.getEnd()])
+            if search.is_valid():
+                query = search.save(commit=False)
+                if query != None:
+                    events = events.filter(name__contains=query)
+                    print(events)
+
+        return render(request, 'volunteer/events.html', {'events': events, 'form': form, 'search': search})
     else:
         return redirect('login')
 
@@ -73,10 +79,13 @@ def accept(request, slot_id):
 def slot(request, slot_id):
     slot = Slot.objects.get(id=slot_id)
     event = slot.parentEvent
+    private = slot.private
+
     if (slot.parentEvent != None):
         is_organizer = Group.get_is_organzer(slot.parentEvent.parentGroup, request.user)
     else:
         is_organizer = Group.get_is_organzer(slot.parentGroup, request.user)
+
     user_slots = User_Slot.objects.filter(parentSlot=slot)
     is_volunteered = not (User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first() == None)
     pendingAccept = False
@@ -94,32 +103,33 @@ def slot(request, slot_id):
         percentFilled = 0
     for i in user_slots:
         i.prep_html()
-    if (slot.parentEvent != None):
-        return render(request, 'volunteer/slot.html',
-                  {'slot': slot, 'user_slots': user_slots, 'event': event, 'is_organizer': is_organizer,
-                   'percentFilled': percentFilled, 'is_volunteered': is_volunteered, 'offer': pendingAccept, 'specific_user_slot' : specific_user_slot,
-                   'extra': (list(user_slots[0].get_extra().keys()) if (len(user_slots) > 0) else [])})
-    else:
-        return render(request, 'volunteer/singleSlot.html',
-                      {'slot': slot, 'user_slots': user_slots, 'is_organizer': is_organizer,
-                       'percentFilled': percentFilled, 'is_volunteered': is_volunteered, 'offer': pendingAccept,
-                       'extra': (list(user_slots[0].get_extra().keys()) if (len(user_slots) > 0) else [])})
+
+    return render(request, 'volunteer/slot.html',
+              {'slot': slot, 'user_slots': user_slots, 'event': event, 'full': User_Slot.objects.filter(parentSlot=slot, volunteer__isnull=True).first(), 'is_organizer': is_organizer,
+               'percentFilled': percentFilled, 'is_volunteered': is_volunteered, 'offer': pendingAccept, 'private': private, 'specific_user_slot' : specific_user_slot,
+               'extra': (list(user_slots[0].get_extra().keys()) if (len(user_slots) > 0) else []),
+               'single': (slot.parentEvent == None)})
 
 
 def slotNeeds(request):
     if request.user.is_authenticated():
-        if (request.method == 'POST'):
-            form = FilterTimeForm(request.POST)
-            if form.is_valid():
-                slots = Slot.get_users_groups_slots(request.user).filter(start__range=[form.getStart(), form.getEnd()])
-        else:
-            form = FilterTimeForm()
-            slots = Slot.get_users_groups_slots(request.user)
+        slots = Slot.get_users_groups_slots(request.user)
+        form = FilterTimeForm()
+        search = SearchForm()
 
-        return render(request, 'volunteer/slots.html', {'slots': slots, 'form': form})
+        if request.method == 'POST':
+            form = FilterTimeForm(request.POST)
+            search = SearchForm(request.POST)
+            if form.is_valid():
+                slots = slots.filter(start__range=[form.getStart(), form.getEnd()])
+            if search.is_valid():
+                query = search.save(commit=False)
+                if query != None:
+                    slots = slots.filter(title__contains=query)
+
+        return render(request, 'volunteer/slots.html', {'slots': slots, 'form': form, 'search': search})
     else:
         return redirect('login')
-
 
 def volunteer(request, slot_id):
     # next = request.GET.get('next')
@@ -135,13 +145,17 @@ def volunteer(request, slot_id):
     if (slot.maxVolunteers == 0 and slots_filled_by_this_user == None):
         user_slot = User_Slot(parentSlot=slot, accepted="Yes")
 
-    elif (user_slot == None or slots_filled_by_this_user != None):
+    elif (slots_filled_by_this_user != None):
         alert = Alert(user=request.user, text="Already volunteered", color=Alert.getRed())
+        alert.saveIP(request)
+        return redirect('/volunteer/slot/' + str(slot_id))
+    elif (user_slot == None):
+        alert = Alert(user=request.user, text="Already at Max Volunteers", color=Alert.getRed())
         alert.saveIP(request)
         return redirect('/volunteer/slot/' + str(slot_id))
 
     user_slot.volunteer = request.user
-
+    user_slot.accepted = "Yes"
     if (slot.get_extra() != None):
         ans = {}
 
@@ -159,7 +173,8 @@ def volunteer(request, slot_id):
         user=request.user,
         datetime=datetime.now(timezone.utc),
         description="Volunteered for \"" + name,
-        url="/volunteer/slot/" + str(slot.id))
+        url="/volunteer/slot/" + str(slot.id),
+        private=slot.private)
     feed_entry.save()
 
     alert = Alert(user=request.user, text="Volunteered for " + slot.title, color=Alert.getGreen())
@@ -202,7 +217,8 @@ def volunteerForUser(request, slot_id, user_id):
             user=thisUser,
             datetime=datetime.now(timezone.utc),
             description="Accept volunteer for " + name,
-            url="/volunteer/slot/" + str(slot.id))
+            url="/volunteer/slot/" + str(slot.id),
+            private=slot.private)
         feed_entry.save()
 
         alert = Alert(user=thisUser, text="Volunteered for " + slot.title, color=Alert.getGreen())

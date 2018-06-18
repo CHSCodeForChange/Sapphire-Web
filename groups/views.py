@@ -3,7 +3,7 @@ from django.http import HttpResponse
 
 from groups.models import Group, Chat_Entry
 from utility.models import Event
-from groups.forms import NewGroupForm, NewChatEntryForm, EditGroupForm
+from groups.forms import NewGroupForm, NewChatEntryForm, EditGroupForm, SearchGroupsForm
 from django.contrib.auth.models import User
 from alerts.models import Alert
 from utility.models import *
@@ -14,8 +14,17 @@ from feed.models import Feed_Entry
 # Create your views here.
 def list(request):
     groups = Group.objects.order_by('hours')
+
+    if request.method == 'GET':
+        form = SearchGroupsForm()
+    else:
+        form = SearchGroupsForm(request.POST)
+        if form.is_valid():
+            groups = form.save(commit=False)
+        return render(request, 'groups/groupListView.html', {'groups': groups, 'form': form})
+
     if request.user.is_authenticated():
-        return render(request, 'groups/groupListView.html', {'groups': groups})
+        return render(request, 'groups/groupListView.html', {'groups': groups, 'form': form})
     else:
         return redirect('login')
 
@@ -49,6 +58,7 @@ def update(request, group_id):
             group.state = data['state']
             group.zip_code = data['zip_code']
             group.approvalNeeded = data['approvalNeeded']
+            group.private = data['private']
 
             group.save()
 
@@ -59,7 +69,7 @@ def update(request, group_id):
 
     form = EditGroupForm(id=group_id, initial={'name':group.name, 'tagline':group.tagline, 'description':group.description,
     'email':group.email, 'website':group.website, 'location':group.location, 'address':group.address, 'city':group.city,
-    'state':group.state, 'zip_code':group.zip_code, 'approvalNeeded':'approvalNeeded'})
+    'state':group.state, 'zip_code':group.zip_code, 'approvalNeeded': group.approvalNeeded, 'private': group.private})
 
     return render(request, 'groups/editGroup.html', {'form':form})
 

@@ -1,7 +1,6 @@
 from datetime import datetime, timezone
 from django import forms
-from django.core.exceptions import ValidationError
-from django.contrib.auth import models
+from utility.models import Slot, Event
 
 class FilterTimeForm(forms.Form):
     starttime = forms.DateTimeField(label='Start', input_formats=['%Y-%m-%d'],
@@ -25,3 +24,17 @@ class FilterTimeForm(forms.Form):
 
     def getEnd(self):
         return self.cleaned_data['endtime']
+
+
+class SearchForm(forms.Form):
+    query = forms.CharField(label='', required=False, max_length=120, widget=forms.TextInput(
+        attrs={'type': 'text',
+               'class': 'form-control',
+               'placeholder': 'Search'}))
+
+    def __init__(self, *args, **kwargs):
+        super(SearchForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        query = self.cleaned_data['query']
+        return query

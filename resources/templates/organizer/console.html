@@ -60,7 +60,13 @@
           <tr>
             <td><a href="/volunteer/slot/{{slot.id}}">{{slot.title}}</a></td>
             <td>
-                {{slot.getNumberUserSlotsFilled}}/{{slot.getNumberUserSlotsTotal}}
+                {% ifnotequal slot.maxVolunteers 0 %}
+                  {{slot.getNumberUserSlotsFilled}}/{{slot.getNumberUserSlotsTotal}}
+                {% endifnotequal %}
+
+                {% ifequal slot.maxVolunteers 0 %}
+                  <a title="This slot is unlimited" style="border-bottom: 1px dotted blue;">∞</a>
+                {% endifequal %}
             </td>
           </tr>
           {% endfor %}

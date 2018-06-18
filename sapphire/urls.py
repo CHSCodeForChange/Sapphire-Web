@@ -19,6 +19,7 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
+from . import views
 
 from accounts.forms import LoginForm
 
@@ -31,7 +32,7 @@ urlpatterns = [
     url(r'^sheets/', include('sheets.urls')),
     url(r'^volunteer/', include('volunteerApp.urls')),
     url(r'^organizer/', include('organizer.urls')),
-    url(r'^$', auth_views.login, {'template_name' : 'accounts/login.html'}, name='login'),
+    url(r'^$', views.home, name='home'),
     url(r'^home/', include('volunteerApp.urls')),           #TODO this should be set programatically depending on auth type
     url(r'^login/$', auth_views.login, {'template_name': 'accounts/login.html'}, name='login'), #, 'authentication_form': LoginForm
     url(r'^logout/$', auth_views.logout, {'next_page' : '/accounts/logout_lander'}, name='logout'),    # Will redirect to the next page

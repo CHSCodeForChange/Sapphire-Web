@@ -10,8 +10,6 @@ urlpatterns = [
     url(r'^logout_lander/', views.logoutLander, name='logout_lander'),
     url(r'^profile/$', views.profile, name='profile'),
     url(r'^profile/(?P<user_id>[0-9]+)', views.other_profile, name="other_profile"),
-
-
     url(r'^profile/edit/$', views.edit_profile, name='edit_profile'),
     url(r'^profile/edit/password/$', views.edit_password, name='edit_password'),
     url(r'^signup/$', views.signup, name='signup'),
