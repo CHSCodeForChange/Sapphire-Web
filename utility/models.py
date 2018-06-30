@@ -22,6 +22,8 @@ time. It has a parent Event.
 
 
 class Slot(models.Model):
+    def __str__(self):
+        return 'Slot: ' + self.title
     objects = models.Manager()
     # TODO make sure this can only point to one Event and not more than that
     parentEvent = models.ForeignKey(
@@ -39,10 +41,10 @@ class Slot(models.Model):
 
     # The minimun number of volunteers this slot needs to have. Set by Event
     # organizer and factored into slot priority
-    minVolunteers = models.IntegerField(null=True)
+    minVolunteers = models.IntegerField(blank=True, null=True)
     # The maximum number of volunteers this slot can have. Set by Event
     # organizer and stops too many Profiles from signing up
-    maxVolunteers = models.IntegerField(null=True)
+    maxVolunteers = models.IntegerField(blank=True, null=True)
     # TODO allow a getPriority() function to get the instantanious priority of
     # the Event object
 
@@ -120,6 +122,8 @@ class Slot(models.Model):
 
 
 class User_Slot(models.Model):
+    def __str__(self):
+        return 'User_Slot: ' + self.parentSlot.title
     volunteer = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -133,8 +137,8 @@ class User_Slot(models.Model):
         null=False,
     )
 
-    signin = models.DateTimeField(null=True)
-    signout = models.DateTimeField(null=True)
+    signin = models.DateTimeField(blank=True, null=True)
+    signout = models.DateTimeField(blank=True, null=True)
 
     def is_signin_null(self):
         return self.signin == None
@@ -145,13 +149,13 @@ class User_Slot(models.Model):
     def is_volunteer_null(self):
         return self.volunteer == None
 
-    difference = models.CharField(max_length=100, null=True)
+    difference = models.CharField(blank=True, max_length=100, null=True)
 
-    payment = models.DecimalField(null=False, default=0, max_digits=10, decimal_places=2)
+    payment = models.DecimalField(blank=True, null=False, default=0, max_digits=10, decimal_places=2)
 
-    extraFields = models.CharField(max_length=240, null=True)
+    extraFields = models.CharField(blank=True, max_length=240, null=True)
 
-    accepted = models.CharField(max_length=240, default="No")
+    accepted = models.CharField(blank=True, max_length=240, default="No")
 
     value = None  # this is used to export the extra fields to html
 
@@ -217,9 +221,9 @@ class User_Slot(models.Model):
         self.value = list(self.get_extra().items())
 
 
-
-
 class Event(models.Model):
+    def __str__(self):
+        return 'Event: ' + self.name
     parentGroup = models.ForeignKey(
         Group,
         on_delete=models.CASCADE,
@@ -237,27 +241,19 @@ class Event(models.Model):
     # The string name of the Event
     name = models.CharField(max_length=80)
     # The String descriptionof the event
-    description = models.CharField(max_length=960)
+    description = models.CharField(blank=True, max_length=960)
 
     # The String location Name of the Event
-    location = models.CharField(max_length=240)
+    location = models.CharField(blank=True, max_length=240)
     # The String address of the Event
-    address = models.CharField(max_length=240)
+    address = models.CharField(blank=True, max_length=240)
     # The String city of the Event'
-    city = models.CharField(max_length=240)
+    city = models.CharField(blank=True, max_length=240)
     # The String state of event
-    state = models.CharField(max_length=200)
+    state = models.CharField(blank=True, max_length=200)
     # type = models.CharField(max_length=30)
     # The Integer zip code of the Event
-    zip_code = models.IntegerField(null=True)
-
-    # The list of Volunteers
-    """volunteers = models.ForeignKey(
-        Profile,
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True
-    )"""
+    zip_code = models.IntegerField(blank=True, null=True)
 
     slots = models.ForeignKey(
         Slot,
@@ -266,8 +262,8 @@ class Event(models.Model):
         blank=True,
         related_name="slot_set"
     )
-    start = models.DateTimeField(null=True)
-    end = models.DateTimeField(null=True)
+    start = models.DateTimeField(blank=True, null=True)
+    end = models.DateTimeField(blank=True, null=True)
 
     private = models.BooleanField(blank=False, null=False, default=False)
 
@@ -308,33 +304,3 @@ class Event(models.Model):
         if (events == None):
             return events
         return events.order_by('start')
-
-
-"""
-|============|
-| DEPRECATED |
-|============|
-This class is an object containing all the necessary information on an Event.
-It contains instances of Slots and can be created by a Profile of type ORGANIZER
-
-class Event(models.Model):
-    objects = models.Manager()
-    # The organizer of the Event
-    organizer = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE
-    )
-    # The string name of the Event
-    name = models.CharField(max_length=80)
-    # The String location of the Event
-    location = models.CharField(max_length=240)
-    # A one to many relationship holding the Slots for an Event object
-    slots = models.ForeignKey(
-        'Slot',
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True
-    )
-    # TODO allow a getPriority() function to get the instantanious priority of
-    # the Event object
-"""

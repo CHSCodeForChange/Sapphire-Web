@@ -22,7 +22,7 @@ def feed(request):
 
         if (not(feed_entries==None)):
             feed_entries = feed_entries.order_by('-datetime')
-        return render(request, 'feed/feed.html', {'feed_entries':feed_entries, 'groups':groups})
+        return render(request, 'feed/feed.html', {'feed_entries': feed_entries, 'groups':groups})
     else:
         return redirect('login')
 

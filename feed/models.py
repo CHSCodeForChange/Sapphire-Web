@@ -1,11 +1,13 @@
 from django.db import models
 
-from django.contrib.auth.models import User, UserManager
+from django.contrib.auth.models import User
 from accounts.models import Profile
 from groups.models import Group
 
-# Create your models here.
+
 class Feed_Entry(models.Model):
+    def __str__(self):
+        return 'Feed_Entry: ' + self.description[:500]
     objects = models.Manager()
 
     """The user that did the action the feed entry is talking about
@@ -21,12 +23,12 @@ class Feed_Entry(models.Model):
     )
 
     # The datetime that the user did said action
-    datetime = models.DateTimeField()
+    datetime = models.DateTimeField(blank=True, )
 
     # The String description of the action
-    description = models.CharField(max_length=960)
+    description = models.CharField(blank=True, max_length=960)
 
-    #the URL that the feed redirects to if you click the description
-    url = models.CharField(max_length=120)
+    # the URL that the feed redirects to if you click the description
+    url = models.CharField(blank=True, max_length=120)
 
     private = models.BooleanField(blank=False, null=False, default=False)

@@ -61,7 +61,7 @@
 
 
         <div class="btn-group col-sm-2" >
-            <button class="btn btn-danger btn-block dropdown-toggle" style="padding-bottom: 14px; padding-top: 6px;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Delete<span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+            <button class="btn btn-danger btn-block dropdown-toggle" style="padding-bottom: 14px; padding-top: 6px;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-trash-alt"></i><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
             <div class="dropdown-menu">
                 <p class="dropdown-item" href="">Are you sure?</p>
                 <a class="dropdown-item"
@@ -86,7 +86,7 @@
   </h3>
 
   <div class="table-responsive">
-    <table class="table table-hover" style="margin:20px;">
+    <table class="table table-hover">
         <tr>
           <th>Name</th>
           <th>Start</th>
@@ -126,7 +126,7 @@
             <td>
                 {% if is_organizer %}
                 <div class="btn-group">
-                    <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Delete</button>
+                    <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-trash-alt"></i></button>
                     <div class="dropdown-menu">
                         <p class="dropdown-item" href="">Are you sure?</p>
                         <a class="dropdown-item"

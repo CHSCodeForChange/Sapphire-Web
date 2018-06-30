@@ -45,6 +45,12 @@
             <button type="button" class="col md-6 btn btn-danger btn-block">Leave</button>
           </a>
         </div>
+      {% elif request.user in group.pendingUsers.all %}
+	      <div class="col-md-12">
+		      <a disabled>
+	            <button type="button" class="col md-6 btn btn-secondary btn-block" disabled>Pending</button>
+	          </a>
+	      </div>
       {% else %}
         <div class="col-md-12">
           <a href = "join">
@@ -84,7 +90,7 @@
           <tr>
             <td><a href="/volunteer/event/{{event.id}}">{{event.name}}</a></td>
             <td>{{event.start}}</td>
-            <td>{{event.location}}</td>
+            <td><a href="http://maps.google.com/?q={{ event.location }}" target="_blank">{{event.location}}</a></td>
           </tr>
           {% endfor %}
         </tbody>

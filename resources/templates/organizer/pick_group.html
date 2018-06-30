@@ -1,8 +1,11 @@
 {% extends "header.html" %}
 
 {% block content %}
-
-<h1 class="display-3">Pick A Group</h1>
+{% if groups.count == 0 %}
+<h1 class="display-3 mt-5">You are not an organizer for any groups.</h1>
+<p class="lead mt-4">You must be an organizer in order to create events and slots.</p>
+{% else %}
+<h1 class="display-3 mt-5">Pick A Group</h1>
 <a href="/volunteer/eventNeeds/"><button class="btn btn-primary">View Events</button></a>
 <h1></h1>
 <table class="table table-hover">
@@ -16,12 +19,13 @@
   <tbody>
     {% for group in groups %}
       <tr>
-        <td><a href="{{group.id}}">{{group.name}}</a></th>
-        <td>{{group.location}}</th>
-        <td>{{group.tagline}}</th>
+        <td><a href="{{group.id}}">{{group.name}}</a></td>
+        <td>{{group.location}}</td>
+        <td>{{group.tagline}}</td>
       </tr>
     {% endfor %}
   </tbody>
 </table>
+{% endif %}
 
 {% endblock %}

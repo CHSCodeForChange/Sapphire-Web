@@ -1,7 +1,6 @@
 {% extends "header_not_centered.html" %}
 
 {% block content %}
-<p></p>
 <div class="row">
   <div class="col-md-5">
     <div>
@@ -31,22 +30,28 @@
     </p>
   </div>
 
-  <div class="col-md-2">
+  <div class="col-md-3">
     <h1 class="text-center">Groups</h1>
-    <table class="table table-hover">
-      <thread>
-        <tr>
-          <th>Name</th>
-        </tr>
-      </thread>
-      <tbody>
-        {% for group in groups %}
-        <tr>
-            <td><a href="/groups/{{group.id}}">{{group.name}}</a></th>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    {% if groups.count == 0 %}
+        <p class="lead">You are part of no groups. Find one
+        <a href="/groups/">here.</a>
+        </p>
+    {% else %}
+	    <table class="table table-hover">
+	      <thread>
+	        <tr>
+	          <th>Name</th>
+	        </tr>
+	      </thread>
+	      <tbody>
+	        {% for group in groups %}
+	        <tr>
+	            <td><a href="/groups/{{group.id}}">{{group.name}}</a></th>
+	        </tr>
+	        {% endfor %}
+	      </tbody>
+	    </table>
+    {% endif %}
   </div>
 
   <div class="col-md-4">

@@ -32,6 +32,9 @@ class SearchForm(forms.Form):
                'class': 'form-control',
                'placeholder': 'Search'}))
 
+    def clean_query(self):
+        return self.cleaned_data['query']
+
     def __init__(self, *args, **kwargs):
         super(SearchForm, self).__init__(*args, **kwargs)
 

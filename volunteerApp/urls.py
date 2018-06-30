@@ -7,7 +7,7 @@ from django.views.generic import ListView, DetailView
 
 urlpatterns = [
     url(r'^calendar/', views.calendar, name='calendar'),
-    url(r'^eventNeeds/', views.eventNeeds, name='eventNeeds'),
+    url(r'^events/', views.eventNeeds, name='eventNeeds'),
     url(r'^event/(?P<event_id>[0-9]+)$', views.event, name='eventView'),
     url(r'^slot/(?P<slot_id>[0-9]+)$', views.slot, name='slotView'),
     url(r'^slots/', views.slotNeeds, name='slotNeeds'),

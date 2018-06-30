@@ -39,7 +39,7 @@
             <tr>
               <td><a href="/volunteer/event/{{event.id}}">{{event.name}}</a></td>
               <td><a href="/groups/{{event.parentGroup.id}}">{{event.parentGroup.name}}</a></td>
-              <td>{{event.location}}</td>
+              <td><a href="http://maps.google.com/?q={{ event.location }}" target="_blank">{{event.location}}</a></td>
               <td>{{event.start}}</td>
               <td>{{event.end}}</td>
             </tr>

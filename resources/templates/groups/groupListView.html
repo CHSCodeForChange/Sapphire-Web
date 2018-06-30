@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<h1 class="display-3">Groups <a href="add">+</a></h1>
+<h1 class="display-3">Groups <a class="plus" href="add">+</a></h1>
 
 <form method="post" style="padding-bottom:3%">
   {% csrf_token %}
@@ -34,7 +34,7 @@
       {% for group in groups %}
         <tr>
           <td><a href="/groups/{{group.id}}">{{group.name}}</a></td>
-          <td>{{group.location}}</td>
+          <td><a href="http://maps.google.com/?q={{ group.location }}" target="_blank">{{group.location}}</a></td>
           <td>{{group.tagline}}</td>
         </tr>
       {% endfor %}
