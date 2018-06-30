@@ -1,22 +1,38 @@
 {% autoescape off %}
     {% load static from staticfiles %}
     <div class="container">
-        <body style="font-family: 'Proxima Nova Soft', 'Helvetica Neue', sans-serif;">
+        <body style="font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",
+	                Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";">
+        <div align="center" style="background-color:#343a40;height:70px;">
+	        <table>
+	            <td><img src="cid:logo" height="50px" style="margin-top:7px;"/></td>
+		        <td style="color:#fff;display:inline-block;
+                      font-size:1.25rem;position:relative;bottom:17px;
+					  background-color:transparent;">
+			            <p>Sapphire</p>
+		        </td>
+            </table>
+        </div>
             <div align="center">
-                <img src="cid:logo" style="width:240px;height:80px;"/>
-                <div style="background:linear-gradient(to top, #d1d1d1, #ffffff);height:500px;width:800px;">
-                    <div style="position:relative;left:25px;top:25px;">
-                        <p style="font-size:32px;">
-                            Hi {{ user.first_name }} {{user.last_name}}!
-                        </p>
-                        <p style="font-size:18px;">
-                            Welcome to Sapphire,<br/>
-                            Time to confirm your account
-                        </p>
-                        <button type="button" style="background-color:#5c98f9;width:200px;height:50px;border-radius:5px">
-                            <a href="http://{{ domain }}{% url 'accounts:activate' uidb64=uid token=token %}" style="font-size:18px;text-decoration:none;color:#ffffff;">Get Started!</a>
-                        </button>
-                    </div>
+                <div style="position:relative;left:25px;top:25px;">
+                    <p style="font-size:32px;">
+                        Hi {{ user.first_name }} {{user.last_name}}!
+                    </p>
+                    <p style="font-size:18px;">
+                        Welcome to Sapphire,<br/>
+                        Time to confirm your account
+                    </p>
+	                <a href="http://{{ domain }}{% url 'accounts:activate' uidb64=uid token=token %}"
+	                   style="font-size:18px;text-decoration:none;color:#fff;">
+		                <button type="submit" style="background-color:#007bff;border-color:#007bff;color:#fff;
+		                                            width:200px;height:50px;border: 1px solid transparent;
+                                                    padding: .375rem .75rem;font-size: 1rem;line-height: 1.5;border-radius: .25rem;
+                                                    transition: color .15s ease-in-out,background-color .15s ease-in-out,
+                                                    border-color .15s ease-in-out,box-shadow .15s ease-in-out;cursor:pointer;
+													margin-top:50px;"
+		                onmouseover="this.style.backgroundColor='#0069d9';this.style.borderColor='#0062cc';"
+						onmouseout="this.style.backgroundColor='#007bff';this.style.borderColor='#007bff';">Get Started!</button>
+	                </a>
                 </div>
             </div>
         </body>
