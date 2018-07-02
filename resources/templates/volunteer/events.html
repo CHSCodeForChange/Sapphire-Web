@@ -1,80 +1,95 @@
 {% extends "header.html" %}
 {% load permission_tags %}
+{% load tz %}
 
 {% block content %}
 
-<h1 class="display-3">Events <a class="plus" href="/organizer/addEvent/">+</a></h1>
+	<h1 class="display-3">Events <a class="plus" href="/organizer/addEvent/">+</a></h1>
 
-<form method="post" style="padding-bottom:3%">
-  {% csrf_token %}
-    <div class="row">
-      {% for field in search %}
-        <p align="left">
-          <div class="col-sm-12"> {{ field }} </div>
-          {% if field.help_text %}
-            <small style="display: none">{{ field.help_text }}</small>
-          {% endif %}
-          {% for error in field.errors %}
-            <p style="color: red">{{ error }}</p>
-          {% endfor %}
-        </p>
-      {% endfor %}
+	<form method="post" style="padding-bottom:3%">
+		{% csrf_token %}
+		<div class="row">
+			{% for field in search %}
+				<p align="left">
+				<div class="col-sm-12"> {{ field }} </div>
+				{% if field.help_text %}
+					<small style="display: none">{{ field.help_text }}</small>
+				{% endif %}
+				{% for error in field.errors %}
+					<p style="color: red">{{ error }}</p>
+				{% endfor %}
+				</p>
+			{% endfor %}
 
-    </div>
-</form>
+		</div>
+	</form>
 
-<div class="row">
-  <div class="col-md-11">
-    <div class="table-responsive">
-      <table class="table table-hover">
-        <tr>
-          <th>Name</th>
-          <th>Group</th>
-          <th>Location</th>
-          <th>Start</th>
-          <th>End</th>
-        </tr>
-        <tbody>
-          {% for event in events %}
-            <tr>
-              <td><a href="/volunteer/event/{{event.id}}">{{event.name}}</a></td>
-              <td><a href="/groups/{{event.parentGroup.id}}">{{event.parentGroup.name}}</a></td>
-              <td><a href="http://maps.google.com/?q={{ event.location }}" target="_blank">{{event.location}}</a></td>
-              <td>{{event.start}}</td>
-              <td>{{event.end}}</td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <div class="col-md-1">
-    <div class="dropdown">
-      <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Filter
-      </button>
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <form method="post">
-          {% csrf_token %}
-            {% for field in form %}
-                <div class="text-center">
-                  <div class="dropdown-form">
-                      <div class="lead">
-                          {{field.label}}
-                      </div>
-                      {{field}}
+	<div class="row">
+		<div class="col-md-11">
+			<div class="table-responsive">
+				<table class="table table-hover">
+					<tr>
+						<th>Name</th>
+						<th>Group</th>
+						<th>Location</th>
+						<th>Time</th>
+					</tr>
+					<tbody>
+					{% for event in events %}
+						<tr>
+							<td><a href="/volunteer/event/{{ event.id }}">{{ event.name }}</a></td>
+							<td><a href="/groups/{{ event.parentGroup.id }}">{{ event.parentGroup.name }}</a></td>
+							<td><a href="http://maps.google.com/?q={{ event.location }}"
+							       target="_blank">{{ event.location }}</a></td>
+							<td>
+								<a href="http://www.google.com/calendar/event?
+										action=TEMPLATE
+										&text={{ event.name }}
+										&dates={{ event.start|utc|date:"Ymd\\THi00\\Z" }}/{{ event.end|utc|date:"Ymd\\THi00\\Z" }}
+										&details={{ event.description }}
+										&location={{ event.location }}
+										&trp=true
+										&sprop=website:{{ request.build_absolute_uri }}"
+										target="_blank" rel="nofollow">
+									{{ event.start }} - {{ event.end }}
+								</a>
+							</td>
+						</tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="col-md-1">
+			<div class="dropdown">
+				<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
+				        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Filter
+				</button>
+				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+					<form method="post">
+						{% csrf_token %}
+						{% for field in form %}
+							<div class="text-center">
+								<div class="dropdown-form">
+									<div class="lead">
+										{{ field.label }}
+									</div>
+									{{ field }}
 
-                  </div>
-                </div>
-                <h1></h1>
-            {% endfor %}
+								</div>
+							</div>
+							<h1></h1>
+						{% endfor %}
 
-          <div class="text-center"><button class="btn btn-primary" type="submit">Filter</button></div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
+						<div class="text-center">
+							<button class="btn btn-primary" type="submit">Filter</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 
 
 

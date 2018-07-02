@@ -1,6 +1,7 @@
 {% extends "header.html" %}
 {% load permission_tags %}
 {% load standard_tags %}
+{% load tz %}
 
 {% block content %}
 	<p></p>
@@ -14,9 +15,20 @@
 	</p>
 	<div class="jumbotron">
 		<h1 class="display-1">{{ slot.title }}</h1>
-		<h4 class="lead">{{ slot.start }} -
-			{{ slot.end }}{% if slot.is_payment_nonzero %}, Payment Per Hour: ${{ slot.paymentPerHour }}{% endif %}
-		</h4>
+		<p class="lead">
+			<a class="lead" href="http://www.google.com/calendar/event?
+					action=TEMPLATE
+					&text={{ slot.title }}
+					&dates={{ slot.start|utc|date:"Ymd\\THi00\\Z" }}/{{ slot.end|utc|date:"Ymd\\THi00\\Z" }}
+					&details={{ slot.description }}
+					&location={{ slot.location }}
+					&trp=true
+					&sprop=website:{{ request.build_absolute_uri }}"
+					target="_blank" rel="nofollow">
+				{{ slot.start }} - {{ slot.end }}
+			</a>
+			{% if slot.is_payment_nonzero %}, Payment Per Hour: ${{ slot.paymentPerHour }}{% endif %}
+		</p>
 
 		<h5 class="mb-0">{{ slot.location }}</h5>
 		<h1></h1>

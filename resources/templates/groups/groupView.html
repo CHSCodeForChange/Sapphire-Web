@@ -1,4 +1,5 @@
 {% extends "header_not_centered.html" %}
+{% load tz %}
 
 {% block content %}
 	<p></p>
@@ -89,7 +90,19 @@
 					{% for event in events %}
 						<tr>
 							<td><a href="/volunteer/event/{{ event.id }}">{{ event.name }}</a></td>
-							<td>{{ event.start }}</td>
+							<td>
+								<a href="http://www.google.com/calendar/event?
+									action=TEMPLATE
+									&text={{ event.name }}
+									&dates={{ event.start|utc|date:"Ymd\\THi00\\Z" }}/{{ event.end|utc|date:"Ymd\\THi00\\Z" }}
+									&details={{ event.description }}
+									&location={{ event.location }}
+									&trp=true
+									&sprop=website:{{ request.build_absolute_uri }}"
+									target="_blank" rel="nofollow">
+								{{ event.start }}
+							</a>
+							</td>
 							<td><a href="http://maps.google.com/?q={{ event.location }}"
 							       target="_blank">{{ event.location }}</a></td>
 						</tr>
