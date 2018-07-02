@@ -213,7 +213,7 @@ def sendSlotOpeningNotification(request, slot_id):
 				email = EmailMultiAlternatives(mail_subject, message, to=[to_email])
 				email.content_subtype = 'html'
 				email.mixed_subtype = 'related'
-				fp = open('static/img/logos.ico/WithText.jpg', 'rb')
+				fp = open('static/img/logos.ico/ms-icon-70x70.png', 'rb')
 				logo = MIMEImage(fp.read())
 				logo.add_header('Content-ID', '<logo>')
 				email.attach(logo)
@@ -249,7 +249,7 @@ def sendEventOpeningNotification(request, event_id):
 				email = EmailMultiAlternatives(mail_subject, message, to=[to_email])
 				email.content_subtype = 'html'
 				email.mixed_subtype = 'related'
-				fp = open('static/img/logos.ico/WithText.jpg', 'rb')
+				fp = open('static/img/logos.ico/ms-icon-70x70.png', 'rb')
 				logo = MIMEImage(fp.read())
 				logo.add_header('Content-ID', '<logo>')
 				email.attach(logo)
