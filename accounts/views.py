@@ -2,6 +2,8 @@ from email.mime.image import MIMEImage
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
+
+from utility.models import Slot, Event
 from .forms import *
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
@@ -108,14 +110,14 @@ def signup(request):
             email = EmailMultiAlternatives(mail_subject, message, to=[to_email])
             email.content_subtype = 'html'
             email.mixed_subtype = 'related'
-            fp = open('static/img/logos.ico/WithText.jpg', 'rb')
+            fp = open('static/img/logos.ico/ms-icon-70x70.png', 'rb')
             logo = MIMEImage(fp.read())
             logo.add_header('Content-ID', '<logo>')
             email.attach(logo)
             email.send()
 
-            #alert = Alert(user=request.user, text="Click on the link sent to your email to confirm your account", color=Alert.getYellow())
-            #alert.saveIP(request)
+            alert = Alert(user=user, text="Click on the link sent to your email to confirm your account", color=Alert.getYellow())
+            alert.saveIP(request)
             return redirect('/login')
             #return render(request, 'accounts/please_confirm.html')
     else:
@@ -148,7 +150,7 @@ def signup_foruser(request, group_id, user_slot_id):
             email = EmailMessage(mail_subject, message, to=[to_email])
             email.send()
 
-            alert = Alert(user=request.user, text="Click on the link sent to your email to confirm your account", color=Alert.getYellow())
+            alert = Alert(user=user, text="Click on the link sent to your email to confirm your account", color=Alert.getYellow())
             alert.saveIP(request)
             return redirect('/login')
             #return render(request, 'accounts/please_confirm.html')

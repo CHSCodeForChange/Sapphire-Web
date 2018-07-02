@@ -2,52 +2,60 @@
 {% autoescape off %}
 
 	<div class="container">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"
-      xmlns="http://www.w3.org/1999/html">
-        <link href="https://getbootstrap.com/docs/4.0/examples/sticky-footer/sticky-footer.css" rel="stylesheet">
-        <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-{#		<body style="font-family:'Proxima Nova Soft','Helvetica Neue',sans-serif;">#}
-        <body>
-			<div align="center" class="display-3">
-                <img src="cid:logo" style="width:360px;height:120px;"/>
-                <div style="background:linear-gradient(to top, #d1d1d1, #ffffff);display: block;width: 800px;padding-bottom:5%;">
+        <body style="font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",
+	                Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";">
+        <div align="center" style="background-color:#343a40;height:70px;">
+	        <table>
+	            <td><img src="cid:logo" height="50px" style="margin-top:7px;"/></td>
+		        <td style="color:#fff;display:inline-block;
+                      font-size:1.25rem;position:relative;bottom:17px;
+					  background-color:transparent;">
+			            <p>Sapphire</p>
+		        </td>
+            </table>
+        </div>
+			<div align="center">
+                <div style="display:block;width:800px;padding-bottom:5%;">
                     <div style="position:relative;left:25px;top:25px;">
                         <p style="font-size:32px;">
                             {{ user.first_name }} {{user.last_name}},
                         </p>
-                        <p style="font-size:24px;padding-left:100px;padding-right:100px;" align="left">
+                        <p style="font-size:18px;padding-left:100px;padding-right:100px;" align="center">
                             The organizer of the group {{ group.name }} wanted to alert you that the following new slot is available:
 	                    </p>
-
                         <table cellpadding="10%" style="margin-left:10%;margin-right:10%;margin-top:5%;margin-bottom:5%;font-size:16px;">
                           <tr>
-                            <th>Name</th>
+                            <th style="vertical-align:top;text-align:right;">Name</th>
                             <td>{{slot.title}}</td>
                           </tr>
                           <tr>
-                            <th>Description</th>
+                            <th style="vertical-align:top;text-align:right;">Description</th>
                             <td>{{slot.description}}</td>
                           </tr>
                           <tr>
-                            <th>Location</th>
+                            <th style="vertical-align:top;text-align:right;">Location</th>
                             <td>{{slot.location}}</td>
                           </tr>
                           <tr>
-                            <th>Start Time</th>
+                            <th style="vertical-align:top;text-align:right;">Start Time</th>
                             <td>{{slot.start}}</td>
                           </tr>
                           <tr>
-                           <th>End Time</th>
+                           <th style="vertical-align:top;text-align:right;">End Time</th>
                            <td>{{slot.end}}</td>
                           </tr>
                         </table>
                         <br/>
                         <br/>
-                        <a style="font-size:18px;text-decoration:none;color:#ffffff;" href="http://{{ domain }}/volunteer/slot/{{ slot.id }}">
-                            <button type="button" style="background-color:#5c98f9;width:200px;height:50px;border-radius:5px;color:white;">
-                                View Slot
-                            </button>
+                        <a style="font-size:18px;text-decoration:none;color:#fff;" href="http://{{ domain }}/volunteer/slot/{{ slot.id }}">
+                            <button type="submit" style="background-color:#007bff;border-color:#007bff;color:#fff;
+		                                            width:200px;height:50px;border: 1px solid transparent;
+                                                    padding: .375rem .75rem;font-size: 1rem;line-height: 1.5;border-radius: .25rem;
+                                                    transition: color .15s ease-in-out,background-color .15s ease-in-out,
+                                                    border-color .15s ease-in-out,box-shadow .15s ease-in-out;cursor:pointer;
+													margin-top:50px;"
+		                onmouseover="this.style.backgroundColor='#0069d9';this.style.borderColor='#0062cc';"
+						onmouseout="this.style.backgroundColor='#007bff';this.style.borderColor='#007bff';">View Slot</button>
                         </a>
                     </div>
                 </div>
