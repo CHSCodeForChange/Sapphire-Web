@@ -5,28 +5,14 @@
 {% block content %}
 
 	<h1 class="display-3">Events <a class="plus" href="/organizer/addEvent/">+</a></h1>
-
-	<form method="post" style="padding-bottom:3%">
-		{% csrf_token %}
-		<div class="row">
-			{% for field in search %}
-				<p align="left">
-				<div class="col-sm-12"> {{ field }} </div>
-				{% if field.help_text %}
-					<small style="display: none">{{ field.help_text }}</small>
-				{% endif %}
-				{% for error in field.errors %}
-					<p style="color: red">{{ error }}</p>
-				{% endfor %}
-				</p>
-			{% endfor %}
-
-		</div>
-	</form>
-
+	{% include 'volunteer/filter_fragment.html' %}
+	{% include 'volunteer/filter_display_fragment.html' %}
 	<div class="row">
-		<div class="col-md-11">
-			<div class="table-responsive">
+		<div class="col-md-12">
+			{% if events.count == 0 %}
+				<h3 class="display-3">No Events found with these filters.</h3>
+			{% else %}
+			<div class="table-responsive mt-2">
 				<table class="table table-hover">
 					<tr>
 						<th>Name</th>
@@ -56,37 +42,9 @@
 							</td>
 						</tr>
 					{% endfor %}
+					{% endif %}
 					</tbody>
 				</table>
-			</div>
-		</div>
-		<div class="col-md-1">
-			<div class="dropdown">
-				<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
-				        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					Filter
-				</button>
-				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-					<form method="post">
-						{% csrf_token %}
-						{% for field in form %}
-							<div class="text-center">
-								<div class="dropdown-form">
-									<div class="lead">
-										{{ field.label }}
-									</div>
-									{{ field }}
-
-								</div>
-							</div>
-							<h1></h1>
-						{% endfor %}
-
-						<div class="text-center">
-							<button class="btn btn-primary" type="submit">Filter</button>
-						</div>
-					</form>
-				</div>
 			</div>
 		</div>
 	</div>

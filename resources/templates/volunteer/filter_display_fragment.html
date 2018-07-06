@@ -1,0 +1,43 @@
+<div class="mt-2 text-left">
+	{% if groupfilter or distancefilter or daterangefilter %}
+		{% load name_from_id %}
+		<p class="small">
+			<i class="fas fa-filter mr-2"></i>
+			{% if groupfilter %}
+				<button class="btn btn-sm mb-1">
+					Groups: {{ groupfilter|group_name_from_id }}
+					<a href="?groupfilter=&distancefilter={{ distancefilter }}&daterangefilter={{ daterangefilter }}">
+						<i class="fas fa-times-circle" style="color: red;"></i>
+					</a>
+				</button>
+			{% endif %}
+			{% if distancefilter %}
+				<button class="btn btn-sm mb-1">
+					Distance: {{ distancefilter }} miles
+					<a href="?groupfilter={{ groupfilter }}&distancefilter=&daterangefilter={{ daterangefilter }}">
+						<i class="fas fa-times-circle" style="color: red;"></i>
+					</a>
+				</button>
+			{% endif %}
+			{% if daterangefilter %}
+				<button class="btn btn-sm mb-1">
+					Date range: {{ daterangefilter|format_daterange }}
+					<a href="?groupfilter={{ groupfilter }}&distancefilter={{ distancefilter }}&daterangefilter=">
+						<i class="fas fa-times-circle" style="color: red;"></i>
+					</a>
+				</button>
+			{% endif %}
+
+			<a class="btn btn-danger btn-sm mb-1" href="?groupfilter=&distancefilter=&daterangefilter=">
+				Clear all
+			</a>
+		</p>
+	{% else %}
+		<p class="small">
+			<i class="fas fa-filter mr-2"></i>
+			<button class="btn btn-sm" aria-pressed="true" data-toggle="collapse" href="#filterPanel" role="button" id="filterPanelToggle">
+				No filters
+			</button>
+		</p>
+	{% endif %}
+</div>

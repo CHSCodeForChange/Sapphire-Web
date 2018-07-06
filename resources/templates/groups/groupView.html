@@ -79,6 +79,11 @@
 
 		<div class="col-md-4">
 			<h1 class="text-center">Events</h1>
+			{% if events.count == 0 %}
+		        <p class="lead">This group has no events. Add one
+		        <a href="/organizer/addEvent/{{ group.id }}/">here.</a>
+		        </p>
+		    {% else %}
 			<div class="table-responsive">
 				<table class="table table-hover">
 					<tr>
@@ -110,6 +115,7 @@
 					</tbody>
 				</table>
 			</div>
+		{% endif %}
 		</div>
 
 		<div class="col-md-3">

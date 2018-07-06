@@ -1,0 +1,129 @@
+<div class="input-group">
+	<input type="text" class="form-control search-filter" value="{{ search }}" id="search" placeholder="Search" aria-label="Search" aria-describedby="filterPanelToggle">
+	<div class="input-group-append">
+		<a class="btn btn-primary input-group-text" aria-pressed="true" data-toggle="collapse" href="#filterPanel" role="button" id="filterPanelToggle" title="Filter">
+			<i class="fas fa-filter"></i> Filters
+		</a>
+	</div>
+</div>
+
+<div id="filterPanel" class="collapse">
+	<div class="jumbotron py-3" style="border-top-left-radius: 0; border-top-right-radius: 0;">
+		<h1 class="display-4">Filters</h1>
+		<p class="small">Select the features you want to see.</p>
+		<p class="lead mt-2 text-left">Groups:
+			{% for group in groups %}
+				<button class="btn btn-sm filter-group-toggle" id="group-{{ group.id }}">
+					{{ group.name }}
+				</button>
+			{% endfor %}
+		</p>
+		<hr/>
+		<div class="row mb-2">
+			<div class="col-md-2 lead text-right">Distance:</div>
+			<div class="col-md-10 btn-group" role="group">
+				<button class="btn btn-primary btn-block dropdown-toggle filter-distance-label" type="button" id="dropdownMenuButton"
+				        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Any
+				</button>
+				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+					<button class="dropdown-item filter-distance-select" id="location-any">Any</button>
+					<button class="dropdown-item filter-distance-select" id="location-120">120 miles</button>
+					<button class="dropdown-item filter-distance-select" id="location-60">60 miles</button>
+					<button class="dropdown-item filter-distance-select" id="location-30">30 miles</button>
+					<button class="dropdown-item filter-distance-select" id="location-10">10 miles</button>
+					<button class="dropdown-item filter-distance-select" id="location-1">1 mile</button>
+				</div>
+			</div>
+		</div>
+		<div class="row mb-2">
+			<div class="col-md-2 text-right">
+				<label class="lead" for="timestamp_start">From:</label>
+			</div>
+			<div class="col-md-4">
+				<input type="date" name="timestamp_start" class="form-control" id="timestamp_start">
+			</div>
+			<div class="col-md-2 text-right">
+				<label class="lead" for="timestamp_end">To:</label>
+			</div>
+			<div class="col-md-4">
+				<input type="date" name="timestamp_end" class="form-control" id="timestamp_end">
+			</div>
+		</div>
+		<hr/>
+		<div class="mt-4 row">
+			<div class="col-md-6">
+				<button class="btn btn-success btn-block apply-filter">
+					Apply Filter
+				</button>
+			</div>
+			<div class="col-md-6">
+				<button class="btn btn-danger btn-block" data-toggle="collapse" href="#filterPanel" role="button">
+					Close Filters
+				</button>
+			</div>
+
+
+		</div>
+	</div>
+</div>
+
+<script>
+	var group_filter_string = "";
+	var distance_filter_string = "";
+	var daterange_filter_string = "";
+	var search_string = "";
+	$('.filter-group-toggle').click(
+	    function(e){
+			group_filter_string = toggle_filter(e, group_filter_string);
+	    }
+	);
+	$('.filter-distance-select').click(
+	    function(e){
+			distance_filter_string = e.target.id.split("-")[1];
+			$('.filter-distance-label').html(distance_filter_string);
+	    }
+	);
+	function toggle_filter(e, string){
+			if ($(e.target).hasClass("btn-secondary")){
+			    $(e.target).removeClass("btn-secondary");
+			}else{
+			    $(e.target).addClass("btn-secondary");
+			}
+	    var new_id = e.target.id.split("-")[1];
+        var old_ids = string.split("_");
+        for (var i in old_ids){
+			if (new_id === old_ids[i]){
+			    string = string.replace("_" + old_ids[i], "");
+                console.log(string);
+			    return string;
+			}
+        }
+        {# Breaks the remover above #}
+        {#if(string !== ""){#}
+        {#    string += "_";}#}
+        string += "_" + new_id;
+	    console.log(string);
+	    return string;
+	}
+	$('.apply-filter').click(function (e){submit(e)});
+	$('.search-filter').keydown(
+		function (e){
+	        if (e.keyCode === 13){
+	            submit(e);
+	        }
+	    }
+	);
+	function submit(e){
+	    {# Collect daterange #}
+			daterange_filter_string = $('#timestamp_start').val() + '_' + $('#timestamp_end').val();
+			if (daterange_filter_string === "_"){daterange_filter_string = "";}
+            {# Collect search query #}
+			search_string = $('#search').val();
+            {# Redirect to page #}
+			window.location.href = "?q=" + search_string + "&groupfilter="
+			    + group_filter_string + "&distancefilter=" + distance_filter_string
+				+ "&daterangefilter=" + daterange_filter_string;
+	}
+
+</script>
