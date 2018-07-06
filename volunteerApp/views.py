@@ -141,23 +141,47 @@ def slot(request, slot_id):
 	               'single': (slot.parentEvent == None)})
 
 
-def slotNeeds(request):
+def slots(request):
 	if request.user.is_authenticated():
-		slots = Slot.get_users_groups_slots(request.user)
-		form = FilterTimeForm()
-		search = SearchForm()
-
-		if request.method == 'POST':
-			form = FilterTimeForm(request.POST)
-			search = SearchForm(request.POST)
-			if form.is_valid():
-				slots = slots.filter(start__range=[form.getStart(), form.getEnd()])
-			if search.is_valid():
-				query = search.save(commit=False)
-				if query != None:
-					slots = slots.filter(title__contains=query)
-
-		return render(request, 'volunteer/slots.html', {'slots': slots, 'form': form, 'search': search})
+		groups = Group.objects.filter(
+			Q(owner=request.user) | Q(organizers=request.user) | Q(volunteers=request.user)).distinct()
+		# Filters
+		search = request.GET.get('q', '')
+		groupfilter = request.GET.get('groupfilter', '')
+		distancefilter = request.GET.get('distancefilter', '')
+		daterangefilter = request.GET.get('daterangefilter', '')
+		if distancefilter is not '':
+			try:
+				distance = int(distancefilter)
+				# Do distance calculations here
+			except ValueError:
+				return redirect(
+					'/volunteer/slots?groupfilter=' + groupfilter + '&distancefilter=&daterangefilter=' + daterangefilter)
+		# Filter events by interpreted GET attributes
+		slots = Slot.objects.filter(parentGroup__in=groups)
+		# Filter by group
+		group_query = Q()
+		for group in str.split(groupfilter, "_"):
+			if not group == "":
+				group_query |= Q(parentGroup=group)
+		slots = slots.filter(group_query)
+		# Filter by daterange
+		if daterangefilter is not '':
+			dates = str.split(daterangefilter, "_")
+			if len(dates) == 2:
+				try:
+					start_date = datetime.strptime(dates[0], "%Y-%m-%d")
+					end_date = datetime.strptime(dates[1], "%Y-%m-%d")
+					slots = slots.filter(Q(start__gte=start_date) & Q(end__lte=end_date))
+				except ValueError:
+					pass
+		# Filter by search query
+		if search is not '':
+			slots = slots.filter(Q(title__contains=search) | Q(location__contains=search) | Q(
+				parentGroup__name__contains=search)).distinct()
+		return render(request, 'volunteer/slots.html',
+								{'slots': slots, 'groups': groups, 'search': search, 'groupfilter': groupfilter,
+								'distancefilter': distancefilter, 'daterangefilter': daterangefilter})
 	else:
 		return redirect('login')
 
