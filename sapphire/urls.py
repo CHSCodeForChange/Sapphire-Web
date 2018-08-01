@@ -30,10 +30,10 @@ urlpatterns = [
     url(r'^info/', include('info.urls')),
     url(r'^groups/', include('groups.urls')),
     url(r'^sheets/', include('sheets.urls')),
-    url(r'^volunteer/', include('volunteerApp.urls')),
+    url(r'^volunteer/', include('volunteer.urls')),
     url(r'^organizer/', include('organizer.urls')),
     url(r'^$', views.home, name='home'),
-    url(r'^home/', include('volunteerApp.urls')),           #TODO this should be set programatically depending on auth type
+    url(r'^home/', include('volunteer.urls')),           #TODO this should be set programatically depending on auth type
     url(r'^login/$', auth_views.login, {'template_name': 'accounts/login.html'}, name='login'), #, 'authentication_form': LoginForm
     url(r'^logout/$', auth_views.logout, {'next_page' : '/accounts/logout_lander'}, name='logout'),    # Will redirect to the next page
     url(r'^accounts/', include('accounts.urls', namespace='accounts')),

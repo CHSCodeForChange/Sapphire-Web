@@ -24,8 +24,7 @@ from alerts.models import Alert
 
 
 def index(request):
-	# Run processes to build dataset after login
-	return redirect('eventNeeds')  # Redirects to /home/feed/
+	return redirect('events')
 
 
 def calendar(request):

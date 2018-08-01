@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'sheets',
     'info',
     'groups',
-    'volunteerApp',
+    'volunteer',
     'organizer',
     'utility',
 ]
