@@ -130,6 +130,10 @@ def slot(request, slot_id):
 	for i in user_slots:
 		i.prep_html()
 
+	if pendingAccept:
+		alert = Alert(user=request.user, text="You have been requested to volunteer for this slot", color=Alert.getBlue())
+		alert.saveIP(request)
+
 	return render(request, 'volunteer/slot.html',
 	              {'slot': slot, 'user_slots': user_slots, 'event': event,
 	               'full': User_Slot.objects.filter(parentSlot=slot, volunteer__isnull=True).first(),

@@ -13,6 +13,11 @@
 			<a href="/groups/{{ slot.parentEvent.parentGroup.id }}">{{ slot.parentEvent.parentGroup.name }}</a>
 		{% endif %}
 	</p>
+	{% if offer %}
+	<div class="alert alert-info">
+  	You have been requested to volunteer for this slot
+	</div>
+	{% endif %}
 	<div class="jumbotron">
 		<h1 class="display-1">{{ slot.title }}</h1>
 		<p class="lead">
@@ -313,7 +318,7 @@
             {% endif %}
             </tbody>
     </table>
-	
+
 	{% if is_organizer %}
 		<th>
 			<a href="/sheets/fromslot/{{ slot.id }}">
