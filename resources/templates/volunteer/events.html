@@ -4,51 +4,49 @@
 
 {% block content %}
 
-	<h1 class="display-3">Events <a class="plus" href="/organizer/addEvent/">+</a></h1>
+	<h1 class="display-1 text-center">Events <a class="plus" href="/organizer/addEvent/">+</a></h1>
 	{% include 'volunteer/filter_fragment.html' %}
 	{% include 'volunteer/filter_display_fragment.html' %}
-	<div class="row">
-		<div class="col-md-12">
-			{% if events.count == 0 %}
-				<h3 class="display-3">No Events found with these filters.</h3>
-			{% else %}
-			<div class="table-responsive mt-2">
-				<table class="table table-hover">
-					<tr>
-						<th>Name</th>
-						<th>Group</th>
-						<th>Location</th>
-						<th>Time</th>
-					</tr>
-					<tbody>
-					{% for event in events %}
-						<tr>
-							<td><a href="/volunteer/event/{{ event.id }}">{{ event.name }}</a></td>
-							<td><a href="/groups/{{ event.parentGroup.id }}">{{ event.parentGroup.name }}</a></td>
-							<td><a href="http://maps.google.com/?q={{ event.location }}"
-							       target="_blank">{{ event.location }}</a></td>
-							<td>
-								<a href="http://www.google.com/calendar/event?
-										action=TEMPLATE
-										&text={{ event.name }}
-										&dates={{ event.start|utc|date:"Ymd\\THi00\\Z" }}/{{ event.end|utc|date:"Ymd\\THi00\\Z" }}
-										&details={{ event.description }}
-										&location={{ event.location }}
-										&trp=true
-										&sprop=website:{{ request.build_absolute_uri }}"
-										target="_blank" rel="nofollow">
-									{{ event.start }} - {{ event.end }}
-								</a>
-							</td>
-						</tr>
-					{% endfor %}
-					{% endif %}
-					</tbody>
-				</table>
-			</div>
-		</div>
-	</div>
 
+    {% if events.count == 0 %}
+        <h3 class="display-3">No Events found with these filters.</h3>
+    {% else %}
+
+        <table id="datatable" class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Event</th>
+                    <th>Group</th>
+                    <th>Location</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in events %}
+                    <tr>
+                        <td><a href="/volunteer/event/{{ event.id }}">{{ event.name }}</a></td>
+                        <td><a href="/groups/{{ event.parentGroup.id }}">{{ event.parentGroup.name }}</a></td>
+                         <td><a href="http://maps.google.com/?q={{ event.location }}"
+                                   target="_blank">{{ event.location }}</a></td>
+                        <td>
+                                <a href="http://www.google.com/calendar/event?
+                                        action=TEMPLATE
+                                        &text={{ event.name }}
+                                        &dates={{ event.start|utc|date:"Ymd\\THi00\\Z" }}/{{ event.end|utc|date:"Ymd\\THi00\\Z" }}
+                                        &details={{ event.description }}
+                                        &location={{ event.location }}
+                                        &trp=true
+                                        &sprop=website:{{ request.build_absolute_uri }}"
+                                        target="_blank" rel="nofollow">
+                                    {{ event.start }} - {{ event.end }}
+                                </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+		
 
 
 

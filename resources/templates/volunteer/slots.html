@@ -5,53 +5,49 @@
 	<h1 class="display-3">Slots <a class="plus" href="/organizer/addSingleSlot/">+</a></h1>
 	{% include 'volunteer/filter_fragment.html' %}
 	{% include 'volunteer/filter_display_fragment.html' %}
-	<div class="row">
-		<div class="col-md-12">
-			{% if slots.count == 0 %}
-				<h3 class="display-3">No Slots found with these filters.</h3>
-			{% else %}
-			<div class="table-responsive">
-				<table class="table table-hover">
-					<thread>
-						<tr>
-							<th>Name</th>
-							<th>Event</th>
-							<th>Time</th>
-						</tr>
-					</thread>
-					<tbody>
-					{% for slot in slots %}
-						<tr>
-							<td><a href="/volunteer/slot/{{ slot.id }}">{{ slot.title }}</a></td>
-							<td>
-								{% if not slot.parentEvent %}
-									N/A
-								{% else %}
-									<a href="/volunteer/event/{{ slot.parentEvent.id }}">
-										{{ slot.parentEvent.name }}
-									</a>
-								{% endif %}
-							</td>
-							<td>
-                                <a href="http://www.google.com/calendar/event?
-										action=TEMPLATE
-										&text={{ slot.title }}
-										&dates={{ slot.start|utc|date:"Ymd\\THi00\\Z" }}/{{ slot.end|utc|date:"Ymd\\THi00\\Z" }}
-										&details={{ slot.description }}
-										&location={{ slot.location }}
-										&trp=true
-										&sprop=website:{{ request.build_absolute_uri }}"
-										target="_blank" rel="nofollow">
-									{{ slot.start }} - {{ slot.end }}
-								</a>
-							</td>
-						</tr>
-					{% endfor %}
-					</tbody>
-				</table>
-			</div>
-			{% endif %}
-		</div>
-	</div>
+	
+    {% if slots.count == 0 %}
+        <h3 class="display-3">No Slots found with these filters.</h3>
+    {% else %}
+        <table id="datatable" class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Event</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for slot in slots %}
+                <tr>
+                    <td><a href="/volunteer/slot/{{ slot.id }}">{{ slot.title }}</a></td>
+                    <td>
+                        {% if not slot.parentEvent %}
+                            N/A
+                        {% else %}
+                            <a href="/volunteer/event/{{ slot.parentEvent.id }}">
+                                {{ slot.parentEvent.name }}
+                            </a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="http://www.google.com/calendar/event?
+                                action=TEMPLATE
+                                &text={{ slot.title }}
+                                &dates={{ slot.start|utc|date:"Ymd\\THi00\\Z" }}/{{ slot.end|utc|date:"Ymd\\THi00\\Z" }}
+                                &details={{ slot.description }}
+                                &location={{ slot.location }}
+                                &trp=true
+                                &sprop=website:{{ request.build_absolute_uri }}"
+                                target="_blank" rel="nofollow">
+                            {{ slot.start }} - {{ slot.end }}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+		
 
 {% endblock %}

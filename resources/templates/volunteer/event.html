@@ -97,57 +97,61 @@
 		{% endif %}
 	</h3>
 
-	<div class="table-responsive">
-		<table class="table table-hover">
-			<tr>
-				<th>Name</th>
-				<th>Start</th>
-				<th>End</th>
-				<th>Volunteers</th>
-				<th>Slots Taken</th>
-				<th></th>
-			</tr>
-			<tbody>
-			{% for slot in event.slot_set.all|dictsort:"start" %}
-				<tr>
-					<td><a href="/volunteer/slot/{{ slot.id }}">{{ slot.title }}</a></td>
-					<td>{{ slot.start }}</td>
-					<td>{{ slot.end }}</td>
-					<td>
-						<a href="#" data-toggle="popover" data-trigger="hover" title="Volunteers" id="volunteer-popover-{{ slot.id }}">
-							<i class="fas fa-user-circle"></i>
-						</a>
-					</td>
-					<td>
-						{% ifnotequal slot.maxVolunteers 0 %}
-							{{ slot.user_slot_set.all|volunteer_count }}/{{ slot.user_slot_set.all|length }}
-						{% endifnotequal %}
+    <table id="datatable" class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Volunteers</th>
+                    <th>Slots Taken</th>
+                    {% if is_organizer %}
+                        <th>Delete</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for slot in event.slot_set.all|dictsort:"start" %}
+            <tr>
+                <td><a href="/volunteer/slot/{{ slot.id }}">{{ slot.title }}</a></td>
+                <td>{{ slot.start }}</td>
+                <td>{{ slot.end }}</td>
+                <td>
+                    <a href="#" data-toggle="popover" data-trigger="hover" title="Volunteers" id="volunteer-popover-{{ slot.id }}">
+                        <i class="fas fa-user-circle"></i>
+                    </a>
+                </td>
+                <td>
+                    {% ifnotequal slot.maxVolunteers 0 %}
+                        {{ slot.user_slot_set.all|volunteer_count }}/{{ slot.user_slot_set.all|length }}
+                    {% endifnotequal %}
 
-						{% ifequal slot.maxVolunteers 0 %}
-							<a title="This slot is unlimited" style="border-bottom: 1px dotted blue;">∞</a>
-						{% endifequal %}
-					</td>
-					<td>
-						{% if is_organizer %}
-							<div class="btn-group">
-								<button class="btn btn-danger dropdown-toggle" data-toggle="dropdown"
-								        aria-haspopup="true" aria-expanded="false"><i class="fas fa-trash-alt"></i>
-								</button>
-								<div class="dropdown-menu">
-									<p class="dropdown-item" href="">Are you sure?</p>
-									<a class="dropdown-item"
-									   href="{% url 'deleteSlot' slot_id=slot.id %}?next={{ request.path|urlencode }}">
-										<button class="btn btn-danger">Yes</button>
-									</a>
-								</div>
-							</div>
-						{% endif %}
-					</td>
-				</tr>
-			{% endfor %}
-			</tbody>
-		</table>
-	</div>
+                    {% ifequal slot.maxVolunteers 0 %}
+                        <a title="This slot is unlimited" style="border-bottom: 1px dotted blue;">∞</a>
+                    {% endifequal %}
+                </td>
+                <td>
+                    {% if is_organizer %}
+                        <div class="btn-group">
+                            <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false"><i class="fas fa-trash-alt"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                                <p class="dropdown-item" href="">Are you sure?</p>
+                                <a class="dropdown-item"
+                                   href="{% url 'deleteSlot' slot_id=slot.id %}?next={{ request.path|urlencode }}">
+                                    <button class="btn btn-danger">Yes</button>
+                                </a>
+                            </div>
+                        </div>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+            </tbody>
+        </table>
+
+    
 	{% if is_organizer %}
 		<th>
 			<a href="/sheets/fromevent/{{ event.id }}">
