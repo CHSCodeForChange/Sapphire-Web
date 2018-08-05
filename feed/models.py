@@ -14,6 +14,7 @@ class Feed_Entry(models.Model):
         also if you click on the user it will redirect the page to the user's profile"""
     user = models.ForeignKey(
         User,
+        related_name='notifs',
         on_delete=models.CASCADE,
     )
 
