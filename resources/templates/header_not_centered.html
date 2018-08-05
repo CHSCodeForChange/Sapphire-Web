@@ -1,116 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="">
-	<meta name="author" content="">
 
-	<title>Sapphire</title>
-
-	<link rel="shortcut icon" href="/static/img/logos.ico/favicon-32x32.png" type="image/x-icon">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-	      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-	<link href="https://getbootstrap.com/docs/4.0/examples/sticky-footer/sticky-footer.css" rel="stylesheet">
-	<link href="/static/css/header.css" rel="stylesheet" type="text/css">
-	<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/all.js"
-	        integrity="sha384-xymdQtn1n3lH2wcu0qhcdaOpQwyoarkgLVxC/wZ5q7h9gHtxICrpcaSUfygqZGOe"
-	        crossorigin="anonymous"></script>
-	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-	        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-	        crossorigin="anonymous"></script>
-    
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css"> 
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-
-</head>
+{% include 'snippets/imports.html' %}
 
 <body>
 
-<nav class="navbar static-top navbar-expand-sm navbar-dark bg-dark">
-	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav-content"
-	        aria-controls="nav-content" aria-expanded="false" aria-label="Toggle navigation">
-		<span class="navbar-toggler-icon"></span>
-	</button>
+	{% include 'snippets/navbar.html' %}
 
-	<!-- Brand -->
-	<a class="navbar-brand" href="#">
-		<img src="\static\img\logos.ico\ms-icon-70x70.png" width="20%">
-		Sapphire
-	</a>
 
-	<!-- Links -->
-	<div class="navbar-left collapse navbar-collapse" id="nav-content">
-		<ul class="navbar-nav">
-{#			<li class="nav-item">#}
-{#				<a class="nav-link" href="/feed">Feed</a>#}
-{#			</li>#}
-			<li class="nav-item">
-				<a class="nav-link" href="/volunteer/events">Events</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="/volunteer/slots">Slots</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="/groups">Groups</a>
-			</li>
-{#			<li class="nav-item">#}
-{#				<a class="nav-link" href="/accounts/profile">Profile</a>#}
-{#			</li>#}
-		</ul>
-	</div>
-
-	{% if user.is_authenticated %}
-
-		<div class="navbar-right">
-			<ul class="navbar-nav">
-				<li class="nav-item py-2">
-					<a class="nav-link" href="/accounts/profile">
-						{% if user.get_full_name == "" %}
-							{{ user.username }}
-						{% else %}
-							{{ user.get_full_name }}
-						{% endif %}
-					</a>
-				</li>
-				<li class="nav-item">
-					<a href="/logout" class="nav-link">
-						<button class="btn btn-danger">Logout</button>
-					</a>
-				</li>
-			</ul>
+	<div class="container-fluid">
+		<div class="text">
+			{% block content %} {% endblock %}
 		</div>
-
-	{% endif %}
-</nav>
-
-<div class="container-fluid">
-	<div class="text">
-		{% block content %} {% endblock %}
 	</div>
-</div>
 
-<footer class="footer">
-	<div class="container-fluid text-center">
-        <span class="text-muted">
-          Copyright (c) 2017
-          <a href="https://codeforchange.herokuapp.com/"> CHS Code For Change </a>
-        </span>
-	</div>
-</footer>
-{% include 'alert.html' %}
+	{% include 'snippets/footer.html' %}
+	{% include 'snippets/alert.html' %}
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
-<script src="/static/js/header.js"></script>
-
-<!-- Go to www.addthis.com/dashboard to customize your tools -->
-<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5b0c3b84edfd9a6e"></script>
+	{% include 'snippets/scripts.html' %}
 
 </body>
 
