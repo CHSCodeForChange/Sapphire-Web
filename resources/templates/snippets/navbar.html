@@ -50,7 +50,7 @@
 							<i class="fas fa-bell"></i>
 						</a>
 						<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-							{% for notif in user.notifs.all|slice:"5" %}
+							{% for notif in user.notifs.all|dictsortreversed:"datetime"|slice:"5" %}
 								{% include 'snippets/feed_item.html' %}
 							{% endfor %}
 							<a class="dropdown-item text-center" href="/feed"> View More</a> 

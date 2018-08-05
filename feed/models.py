@@ -33,3 +33,7 @@ class Feed_Entry(models.Model):
     url = models.CharField(blank=True, max_length=120)
 
     private = models.BooleanField(blank=False, null=False, default=False)
+
+
+    def get_navbar_notifs(notifs):
+        return notifs.order_by('-datetime')[:5]
