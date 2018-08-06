@@ -19,13 +19,13 @@
 				&location={{ event.location }}
 				&trp=true
 				&sprop=website:{{ request.build_absolute_uri }}"
-				target="_blank" rel="nofollow">
+				target="_blank" rel="nofollow" data-toggle="tooltip" data-placement="bottom" title="Open in Google Calendar">
 			{{ event.start }} - {{ event.end }}
 		</a>
 
 		<div id="accordion" role="tablist">
 			<div class="card">
-				<div class="card-header" role="tab" id="headingOne">
+				<div class="card-header" role="tab" id="headingOne" data-toggle="tooltip" data-placement="bottom" title="Open map view">
 					<h5 class="mb-0">
 						<a data-toggle="collapse" href="#collapseOne" role="button" aria-expanded="true"
 						   aria-controls="collapseOne">
@@ -53,23 +53,23 @@
 
 		{% if is_organizer %}
 			<div class="row">
-				<a class="col-sm-6 nodec" href="/organizer/updateEvent/{{ event.id }}">
+				<a class="col-sm-6 nodec" href="/organizer/updateEvent/{{ event.id }}" data-toggle="tooltip" data-placement="bottom" title="Edit fields in this event">
 					<button class="btn btn-primary btn-block">
 						<i class="fas fa-edit"></i> Edit
 					</button>
 				</a>
-				<a class="col-sm-2 nodec" href="/organizer/sendMail/event/{{ event.id }}">
+				<a class="col-sm-2 nodec" href="/organizer/sendMail/event/{{ event.id }}" data-toggle="tooltip" data-placement="bottom" title="Email users about this event"> 
 					<button class="btn btn-block btn-success"><i class="fas fa-envelope"></i></button>
 				</a>
 
-				<a class="col-sm-2 nodec" href="/organizer/event/{{ event.id }}/console">
+				<a class="col-sm-2 nodec" href="/organizer/event/{{ event.id }}/console" data-toggle="tooltip" data-placement="bottom" title="Open organizer console for this event">
 					<button class="btn btn-primary btn-block">
 						<i class="fas fa-terminal"></i> Console
 					</button>
 				</a>
 
 
-				<div class="btn-group col-sm-2 nodec">
+				<div class="btn-group col-sm-2 nodec" data-toggle="tooltip" data-placement="bottom" title="Delete this event">
 					<button class="btn btn-danger btn-block dropdown-toggle"
 					        style="padding-bottom: 14px; padding-top: 6px;" data-toggle="dropdown" aria-haspopup="true"
 					        aria-expanded="false">
