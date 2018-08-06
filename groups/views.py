@@ -20,10 +20,10 @@ def list(request):
 		form = SearchGroupsForm(request.POST)
 		if form.is_valid():
 			groups = form.save(commit=False)
-		return render(request, 'groups/groupListView.html', {'groups': groups, 'form': form})
+		return render(request, 'groups/groups.html', {'groups': groups, 'form': form})
 
 	if request.user.is_authenticated():
-		return render(request, 'groups/groupListView.html', {'groups': groups, 'form': form})
+		return render(request, 'groups/groups.html', {'groups': groups, 'form': form})
 	else:
 		return redirect('login')
 
@@ -76,14 +76,14 @@ def update(request, group_id):
 	                              'state': group.state, 'zip_code': group.zip_code,
 	                              'approvalNeeded': group.approvalNeeded, 'private': group.private})
 
-	return render(request, 'groups/editGroup.html', {'form': form})
+	return render(request, 'groups/edit_group.html', {'form': form})
 
 
 def group(request, group_id):
 	group = Group.objects.get(id=group_id)
 	events = Event.objects.filter(parentGroup=group)
 	is_owner = group.owner == request.user
-	return render(request, 'groups/groupView.html', {'group': group, 'events': events,
+	return render(request, 'groups/group.html', {'group': group, 'events': events,
 	                                                 'is_member': group.get_is_member(request.user),
 	                                                 'is_owner': is_owner,
 	                                                 'is_organizer': group.get_is_organzer(request.user)})
@@ -275,7 +275,7 @@ def add(request):
 
 				return redirect("/groups/" + str(group.id))
 
-		return render(request, 'groups/addGroup.html', {'form': form})
+		return render(request, 'groups/add_group.html', {'form': form})
 
 	else:
 		return redirect('login')

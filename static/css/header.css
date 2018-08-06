@@ -134,3 +134,7 @@ div.dropdown-form{
 	-moz-box-shadow: none;
 	box-shadow: none;
 }
+
+.nodec {
+    text-decoration: none !important;
+}

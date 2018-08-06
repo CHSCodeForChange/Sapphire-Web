@@ -53,32 +53,33 @@
 
 		{% if is_organizer %}
 			<div class="row">
-				<a class="col-sm-6" href="/organizer/updateEvent/{{ event.id }}">
+				<a class="col-sm-6 nodec" href="/organizer/updateEvent/{{ event.id }}">
 					<button class="btn btn-primary btn-block">
 						<i class="fas fa-edit"></i> Edit
 					</button>
 				</a>
-				<a class="col-sm-2" href="/organizer/sendMail/event/{{ event.id }}">
+				<a class="col-sm-2 nodec" href="/organizer/sendMail/event/{{ event.id }}">
 					<button class="btn btn-block btn-success"><i class="fas fa-envelope"></i></button>
 				</a>
 
-				<a class="col-sm-2" href="/organizer/event/{{ event.id }}/console">
+				<a class="col-sm-2 nodec" href="/organizer/event/{{ event.id }}/console">
 					<button class="btn btn-primary btn-block">
 						<i class="fas fa-terminal"></i> Console
 					</button>
 				</a>
 
 
-				<div class="btn-group col-sm-2">
+				<div class="btn-group col-sm-2 nodec">
 					<button class="btn btn-danger btn-block dropdown-toggle"
 					        style="padding-bottom: 14px; padding-top: 6px;" data-toggle="dropdown" aria-haspopup="true"
-					        aria-expanded="false"><i class="fas fa-trash-alt"></i><span
-							class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-					<div class="dropdown-menu">
-						<p class="dropdown-item" href="">Are you sure?</p>
-						<a class="dropdown-item"
+					        aria-expanded="false">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+					<div class="dropdown-menu px-2">
+						<h1 class="dropdown-header">Are you sure?</h1>
+						<a class="nodec"
 						   href="{% url 'deleteEvent' event_id=event.id %}?next={{ '/home/feed/'|urlencode }}">
-							<button class="btn btn-danger">Yes</button>
+							<button class="btn btn-danger btn-block">Yes</button>
 						</a>
 					</div>
 				</div>
@@ -130,22 +131,23 @@
                         <a title="This slot is unlimited" style="border-bottom: 1px dotted blue;">∞</a>
                     {% endifequal %}
                 </td>
-                <td>
-                    {% if is_organizer %}
+                {% if is_organizer %}
+                    <td>
                         <div class="btn-group">
                             <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false"><i class="fas fa-trash-alt"></i>
                             </button>
-                            <div class="dropdown-menu">
-                                <p class="dropdown-item" href="">Are you sure?</p>
-                                <a class="dropdown-item"
+                            <div class="dropdown-menu px-2">
+                                <h1 class="dropdown-header">Are you sure?</h1>
+                                <a class="nodec"
                                    href="{% url 'deleteSlot' slot_id=slot.id %}?next={{ request.path|urlencode }}">
-                                    <button class="btn btn-danger">Yes</button>
+                                    <button class="btn btn-danger btn-block">Yes</button>
                                 </a>
                             </div>
                         </div>
-                    {% endif %}
-                </td>
+                    </td>
+                {% endif %}
+
             </tr>
         {% endfor %}
             </tbody>
