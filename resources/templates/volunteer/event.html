@@ -53,28 +53,31 @@
 
 		{% if is_organizer %}
 			<div class="row">
-				<a class="col-sm-6 nodec" href="/organizer/updateEvent/{{ event.id }}" data-toggle="tooltip" data-placement="bottom" title="Edit fields in this event">
+				<a class="col-sm-6 nodec" href="/organizer/updateEvent/{{ event.id }}" data-toggle="tooltip" data-placement="bottom" title="Edit event fields">
 					<button class="btn btn-primary btn-block">
 						<i class="fas fa-edit"></i> Edit
 					</button>
 				</a>
-				<a class="col-sm-2 nodec" href="/organizer/sendMail/event/{{ event.id }}" data-toggle="tooltip" data-placement="bottom" title="Email users about this event"> 
+				<a class="col-sm-2 nodec" href="/organizer/sendMail/event/{{ event.id }}" data-toggle="tooltip" data-placement="bottom" title="Email users about event"> 
 					<button class="btn btn-block btn-success"><i class="fas fa-envelope"></i></button>
 				</a>
 
-				<a class="col-sm-2 nodec" href="/organizer/event/{{ event.id }}/console" data-toggle="tooltip" data-placement="bottom" title="Open organizer console for this event">
+				<a class="col-sm-2 nodec" href="/organizer/event/{{ event.id }}/console" data-toggle="tooltip" data-placement="bottom" title="Open event organizer console">
 					<button class="btn btn-primary btn-block">
 						<i class="fas fa-terminal"></i> Console
 					</button>
 				</a>
 
 
-				<div class="btn-group col-sm-2 nodec" data-toggle="tooltip" data-placement="bottom" title="Delete this event">
+				<div class="btn-group col-sm-2 nodec">
 					<button class="btn btn-danger btn-block dropdown-toggle"
-					        style="padding-bottom: 14px; padding-top: 6px;" data-toggle="dropdown" aria-haspopup="true"
-					        aria-expanded="false">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
+						style="padding-bottom: 14px; padding-top: 6px;" data-toggle="dropdown" aria-haspopup="true"
+						aria-expanded="false">
+						<span  data-toggle="tooltip" data-placement="bottom" title="Delete event"> 
+							<i class="fas fa-trash-alt"></i> 
+							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+						</span>
+					</button>
 					<div class="dropdown-menu px-2">
 						<h1 class="dropdown-header">Are you sure?</h1>
 						<a class="nodec"
@@ -92,7 +95,7 @@
 
 	<h3>Volunteer Slots
 		{% if is_organizer %}
-			<a class="plus" href="{% url 'addSlot' event_id=event.id %}">
+			<a class="plus" href="{% url 'addSlot' event_id=event.id %}" data-toggle="tooltip" data-placement="bottom" title="Add slot to this event">
 				+
 			</a>
 		{% endif %}
@@ -135,7 +138,10 @@
                     <td>
                         <div class="btn-group">
                             <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false"><i class="fas fa-trash-alt"></i>
+									aria-haspopup="true" aria-expanded="false">
+								<span  data-toggle="tooltip" data-placement="bottom" title="Remove slot"> 
+									<i class="fas fa-trash-alt"></i>
+								</span>
                             </button>
                             <div class="dropdown-menu px-2">
                                 <h1 class="dropdown-header">Are you sure?</h1>
@@ -156,7 +162,7 @@
     
 	{% if is_organizer %}
 		<th>
-			<a href="/sheets/fromevent/{{ event.id }}">
+			<a href="/sheets/fromevent/{{ event.id }}" data-toggle="tooltip" data-placement="top" title="Download event data">
 				<button class="btn btn-success">Generate Spreadsheet</button>
 			</a>
 		</th>

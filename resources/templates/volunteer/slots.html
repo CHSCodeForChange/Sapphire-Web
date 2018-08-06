@@ -2,7 +2,9 @@
 {% load tz %}
 
 {% block content %}
-	<h1 class="display-1">Slots <a class="plus" href="/organizer/addSingleSlot/">+</a></h1>
+	<h1 class="display-1">Slots 
+        <a class="plus" href="/organizer/addSingleSlot/" data-toggle="tooltip" data-placement="bottom" title="Add slot">+</a>
+    </h1>
 	{% include 'volunteer/filter_fragment.html' %}
 	{% include 'volunteer/filter_display_fragment.html' %}
 	
@@ -20,10 +22,10 @@
             <tbody>
             {% for slot in slots %}
                 <tr>
-                    <td><a href="/volunteer/slot/{{ slot.id }}">{{ slot.title }}</a></td>
+                    <td><a href="/volunteer/slot/{{ slot.id }}" >{{ slot.title }}</a></td>
                     <td>
                         {% if not slot.parentEvent %}
-                            N/A
+                            <span data-toggle="tooltip" data-placement="bottom" title="No parent event">None</span>
                         {% else %}
                             <a href="/volunteer/event/{{ slot.parentEvent.id }}">
                                 {{ slot.parentEvent.name }}
@@ -39,7 +41,8 @@
                                 &location={{ slot.location }}
                                 &trp=true
                                 &sprop=website:{{ request.build_absolute_uri }}"
-                                target="_blank" rel="nofollow">
+                                target="_blank" rel="nofollow"
+                                data-toggle="tooltip" data-placement="bottom" title="Open in Google Calendar">
                             {{ slot.start }} - {{ slot.end }}
                         </a>
                     </td>
