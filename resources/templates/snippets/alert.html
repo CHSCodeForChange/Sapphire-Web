@@ -1,11 +1,11 @@
 <div class="notif">
-  <div class="container-fluid">
+  <div class="container-fluid" style="position:fixed; top:60px">
     <div class="text-center">
       <div class="row">
         <div class="col-md-2"></div>
-        <div class="col-md-8">
+        <div class="col-md-8" style = "padding-right: 150px; padding-left: 150px">
           <div id="message">
-            <div style="padding: 20px;">
+            <div style="padding: 20px">
               {% for alert in alerts %}
                 <div class="alert {{alert.color}} alert-dismissable fade show" role="alert">
                   {{alert.text}}

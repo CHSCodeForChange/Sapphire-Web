@@ -13,41 +13,47 @@
 			<a href="/groups/{{ slot.parentEvent.parentGroup.id }}">{{ slot.parentEvent.parentGroup.name }}</a>
 		{% endif %}
 	</p>
-	{% if offer %}
-	<div class="alert alert-info">
-  	You have been requested to volunteer for this slot
-	</div>
-	{% endif %}
 	<div class="jumbotron">
 		<h1 class="display-1">{{ slot.title }}</h1>
-		<p class="lead">
-			<a class="lead" href="http://www.google.com/calendar/event?
-					action=TEMPLATE
-					&text={{ slot.title }}
-					&dates={{ slot.start|utc|date:"Ymd\\THi00\\Z" }}/{{ slot.end|utc|date:"Ymd\\THi00\\Z" }}
-					&details={{ slot.description }}
-					&location={{ slot.location }}
-					&trp=true
-					&sprop=website:{{ request.build_absolute_uri }}"
-					target="_blank" rel="nofollow">
-				{{ slot.start }} - {{ slot.end }}
-			</a>
-			{% if slot.is_payment_nonzero %}, Payment Per Hour: ${{ slot.paymentPerHour }}{% endif %}
-		</p>
+		<a class="lead" href="http://www.google.com/calendar/event?
+				action=TEMPLATE
+				&text={{ slot.title }}
+				&dates={{ slot.start|utc|date:"Ymd\\THi00\\Z" }}/{{ slot.end|utc|date:"Ymd\\THi00\\Z" }}
+				&details={{ slot.description }}
+				&location={{ slot.location }}
+				&trp=true
+				&sprop=website:{{ request.build_absolute_uri }}"
+				target="_blank" rel="nofollow" data-toggle="tooltip" data-placement="bottom" title="Open in Google Calendar">
+			{{ slot.start }} - {{ slot.end }}
+		</a>
 
-		<h5 class="mb-0">{{ slot.location }}</h5>
-		<h1></h1>
+		<div id="accordion" role="tablist">
+			<div class="card">
+				<div class="card-header" role="tab" id="headingOne" data-toggle="tooltip" data-placement="bottom" title="Open map view">
+					<h5 class="mb-0">
+						<a data-toggle="collapse" href="#collapseOne" role="button" aria-expanded="true"
+						   aria-controls="collapseOne">
+							{{ slot.location }}: {% if single %} {{ slot.parentGroup.address }} {{ slot.parentGroup.city }}, {{ slot.parentGroup.state }} {{ slot.parentGroup.zip_code }} {% else %} {{ slot.parentEvent.address }} {{ slot.parentEvent.city }}, {{ slot.parentEvent.state }} {{ slot.parentEvent.zip_code }} {% endif %}
+						</a>
+					</h5>
+				</div>
 
-		<div class="progress">
-			<div class="progress-bar" role="progressbar" style="width: {{ percentFilled }}%;"
-			     aria-valuenow="{{ percentFilled }}" aria-valuemin="0" aria-valuemax="100">{{ percentFilled }}%
+				<div id="collapseOne" class="collapse toggle" role="tabpanel" aria-labelledby="headingOne"
+				     data-parent="#accordion">
+
+					<div class="embed-responsive embed-responsive-16by9">
+						<iframe class="embed-responsive-item"
+						        src="https://www.google.com/maps/embed/v1/search?q={% if single %} {{ slot.parentGroup.address }} {{ slot.parentGroup.city }}, {{ slot.parentGroup.state }} {{ slot.parentGroup.zip_code }} {% else %} {{ slot.parentEvent.address }} {{ slot.parentEvent.city }}, {{ slot.parentEvent.state }} {{ slot.parentEvent.zip_code }} {% endif %}&key=AIzaSyB-YQD-s4ery8KQRnzX7FhZsBC4SeFRcjA"
+						        allowfullscreen></iframe>
+					</div>
+
+					<p class="text-danger">Map will only function correctly if a valid address has been entered</p>
+				</div>
 			</div>
+
+			<h1></h1>
+			<p class="text-left">{{ slot.description }}</p>
 		</div>
-
-
-		<h1></h1>
-		<p class="text-left">{{ slot.description }}</p>
-		<h1></h1>
 
 
 		<div class="row">
@@ -82,8 +88,8 @@
                     <button class="btn btn-danger btn-block dropdown-toggle"
                         style="padding-bottom: 14px; padding-top: 6px;" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false">
-                        <span  data-toggle="tooltip" data-placement="bottom" title="Delete slot"> 
-                            <i class="fas fa-trash-alt"></i> 
+                        <span  data-toggle="tooltip" data-placement="bottom" title="Delete slot">
+                            <i class="fas fa-trash-alt"></i>
                             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                         </span>
                     </button>
@@ -264,7 +270,7 @@
                                     <div class="btn-group">
                                         <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown"
                                                 aria-haspopup="true" aria-expanded="false">
-                                                <span data-toggle="tooltip" data-placement="bottom" title="Remove slot"> 
+                                                <span data-toggle="tooltip" data-placement="bottom" title="Remove slot">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </span>
                                         </button>
