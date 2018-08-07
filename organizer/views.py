@@ -261,6 +261,14 @@ def sendEventOpeningNotification(request, event_id):
 
     return render(request, 'organizer/selectEmailRecipients.html', {'form': form})
 
+def viewEventOpenningEmailPreview(request, event_id):
+    event = Event.objects.get(id=event_id)
+    group = event.parentGroup
+    slots = event.slot_set.all()
+    domain = get_current_site(request).domain
+
+    return render(request, 'emails/event_create_alert.html', {'preview': True, 'event': event, 'group': group, 'slots': slots, 'domain': domain})
+
 
 def addSingleSlot(request, group_id):
     group = Group.objects.get(id=group_id)

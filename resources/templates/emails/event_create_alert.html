@@ -1,6 +1,12 @@
 
 {% autoescape off %}
 
+    {% if preview %}
+        {% include 'snippets/imports.html' %}
+    {% endif %}
+
+    {% inlinecss "static/css/email.css" %}
+
 	<div class="container">
         <body style="font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",
 	                Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";">

@@ -33,5 +33,6 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),      #NOTE This must be last otherwise it will always take precedent
 
     url(r'^sendMail/slot/(?P<slot_id>[0-9]+)/$', views.sendSlotOpeningNotification, name='sendSlotOpeningNotification'),
-    url(r'^sendMail/event/(?P<event_id>[0-9]+)/$', views.sendEventOpeningNotification, name='sendEventOpeningNotification')
+    url(r'^sendMail/event/(?P<event_id>[0-9]+)/$', views.sendEventOpeningNotification, name='sendEventOpeningNotification'),
+    url(r'^sendMail/event/(?P<event_id>[0-9]+)/preview$', views.viewEventOpenningEmailPreview, name='viewEventOpeningEmailPreview'),
 ]
