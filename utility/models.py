@@ -162,7 +162,7 @@ class User_Slot(models.Model):
 
     def updateDeltaTimes(self):
         if (self.signin != None and self.signout != None):
-            deltaTime = self.signout - self.signin
+            deltaTime = self.signout.replace(tzinfo=None) - self.signin.replace(tzinfo=None)
 
             seconds = deltaTime.seconds
             minutes = seconds / 60 - (seconds / 60) % 1

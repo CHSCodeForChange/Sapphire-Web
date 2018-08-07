@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from datetime import datetime, timezone, timedelta
 
 from utility.models import *
 from feed.models import Feed_Entry
@@ -21,6 +20,8 @@ from django.core.mail import EmailMultiAlternatives
 from feed.models import Feed_Entry
 from groups.models import Group
 from alerts.models import Alert
+
+from .helpers import get_dt
 
 
 def index(request):
@@ -229,7 +230,7 @@ def volunteer(request, slot_id):
 	feed_entry = Feed_Entry(
 		group=group,
 		user=request.user,
-		datetime=datetime.now(timezone.utc),
+		datetime=get_dt(),
 		description="Volunteered for \"" + name,
 		url="/volunteer/slot/" + str(slot.id),
 		private=slot.private)
@@ -273,7 +274,7 @@ def volunteerForUser(request, slot_id, user_id):
 		feed_entry = Feed_Entry(
 			group=group,
 			user=thisUser,
-			datetime=datetime.now(timezone.utc),
+			datetime=get_dt(),
 			description="Accept volunteer for " + name,
 			url="/volunteer/slot/" + str(slot.id),
 			private=slot.private)
@@ -337,7 +338,7 @@ def signin(request, user_slot_id):
 		group = user_slot.parentSlot.parentGroup
 
 	if (user_slot.volunteer != None and group.get_is_organzer(request.user)):
-		user_slot.signin = datetime.now(timezone.utc)
+		user_slot.signin = get_dt()
 		user_slot.save()
 
 		alert = Alert(user=request.user, text="Signed in " + user_slot.volunteer.username, color=Alert.getYellow())
@@ -355,7 +356,7 @@ def signout(request, user_slot_id):
 		group = user_slot.parentSlot.parentGroup
 
 	if (user_slot.volunteer != None and group.get_is_organzer(request.user)):
-		user_slot.signout = datetime.now(timezone.utc)
+		user_slot.signout = get_dt()
 		user_slot.save()
 		user_slot.updateDeltaTimes()
 

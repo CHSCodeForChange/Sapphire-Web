@@ -5,6 +5,8 @@ from datetime import datetime, timezone
 
 from groups.models import Group, Chat_Entry
 
+from .helpers import get_dt
+
 class SearchGroupsForm(forms.Form):
     query = forms.CharField(label='', required=False, max_length=120, widget=forms.TextInput(
         attrs={'type': 'text',
@@ -211,7 +213,7 @@ class NewChatEntryForm(forms.Form):
                'style': 'resize:none;'}))
 
     user = models.User()
-    datetime = datetime.now(timezone.utc)
+    datetime = get_dt()
     parentGroup = models.Group()
 
 

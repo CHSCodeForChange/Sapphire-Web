@@ -1,4 +1,3 @@
-from datetime import datetime, timezone
 from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth import models
@@ -6,6 +5,8 @@ from django.contrib.auth import models
 from utility.models import Event, Slot
 from feed.models import Feed_Entry
 from groups.models import Group
+
+from .helpers import get_dt
 
 class SelectEmailRecipientField(forms.ModelMultipleChoiceField):
 	def label_from_instance(self, obj):
@@ -57,7 +58,7 @@ class NewSingleSlotForm(forms.Form):
 		TESTdateField = {'DateField': forms.DateInput(attrs={'id': 'datetimepicker12'})}
 
 		user = models.User()
-		datetime = datetime.now(timezone.utc)
+		datetime = get_dt()
 
 		extraFields = forms.CharField(label='Extra Fields (Seperate w/ Commas)', max_length=240, widget=forms.TextInput(
 				attrs={'type': 'text',
@@ -190,7 +191,7 @@ class NewEventForm(forms.Form):
 
 		user = models.User()
 		parentGroup = models.Group()
-		datetime = datetime.now(timezone.utc)
+		datetime = get_dt()
 
 		def __init__(self, *args, **kwargs):
 				self.user = kwargs.pop('user')
@@ -400,7 +401,7 @@ class NewSlotForm(forms.Form):
 
 		user = models.User()
 		parentEvent = Event()
-		datetime = datetime.now(timezone.utc)
+		datetime = get_dt()
 
 		extraFields = forms.CharField(label='Extra Fields', required=False, max_length=240, widget=forms.TextInput(
 				attrs={'type': 'text',
@@ -564,7 +565,7 @@ class UpdateSlotForm(forms.Form):
 
 		user = models.User()
 		parentEvent = Event()
-		datetime = datetime.now(timezone.utc)
+		datetime = get_dt()
 
 		def __init__(self, *args, **kwargs):
 				self.slot_id = kwargs.pop('id')
@@ -619,10 +620,12 @@ class EditTimeForm(forms.Form):
 															 widget=forms.DateTimeInput(
 																	 attrs={'type': 'datetime-local',
 																					'class': 'form-control',
-																					'value': datetime.now().strftime("%Y-%m-%dT%H:%M")}))
+																					'value': get_dt().strftime("%Y-%m-%dT%H:%M")}))
 
 		def __init__(self, *args, **kwargs):
 				super(EditTimeForm, self).__init__(*args, **kwargs)
 
 		def save(self):
 				return self.cleaned_data['time']
+
+

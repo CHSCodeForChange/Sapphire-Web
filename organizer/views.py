@@ -6,7 +6,6 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from datetime import datetime, timezone
 import string
 
 from django.template.loader import render_to_string
@@ -18,6 +17,8 @@ from feed.models import Feed_Entry
 from groups.models import Group
 from alerts.models import Alert
 from collections import OrderedDict
+
+from .helpers import get_dt
 
 
 # Sending user object to the form, to verify which fields to display/remove (depending on group)
@@ -88,7 +89,7 @@ def addEvent(request, group_id):
             feed_entry = Feed_Entry(
                 group=group,
                 user=request.user,
-                datetime=datetime.now(timezone.utc),
+                datetime=get_dt(),
                 description="Created Event \"" + event.name + "\"",
                 url="/volunteer/event/" + str(event.id),
                 private=False)
@@ -174,7 +175,7 @@ def addSlot(request, event_id):
             feed_entry = Feed_Entry(
                 group=group,
                 user=request.user,
-                datetime=datetime.now(timezone.utc),
+                datetime=get_dt(),
                 description="Created slot \"" + str(slot.title) + "\" in event \"" + str(slot.parentEvent.name) + "\"",
                 url="/volunteer/slot/" + str(slot.id),
                 private=False)
@@ -289,7 +290,7 @@ def addSingleSlot(request, group_id):
             feed_entry = Feed_Entry(
                 group=group,
                 user=request.user,
-                datetime=datetime.now(timezone.utc),
+                datetime=get_dt(),
                 description="Created single slot \"" + str(slot.title),
                 url="/volunteer/slot/" + str(slot.id),
                 private=False)
@@ -352,7 +353,7 @@ def editSlot(request, slot_id):
             feed_entry = Feed_Entry(
                 group=group,
                 user=request.user,
-                datetime=datetime.now(timezone.utc),
+                datetime=get_dt(),
                 description="Updated slot \"" + str(slot.title),
                 url="/volunteer/slot/" + str(slot.id),
                 private=False)
@@ -560,7 +561,7 @@ def deleteEvent(request, event_id):
         feed_entry = Feed_Entry(
             group=group,
             user=request.user,
-            datetime=datetime.now(timezone.utc),
+            datetime=get_dt(),
             description="Deleted event \"" + name + "\"",
             url="/volunteer/events",
             private=False
@@ -597,7 +598,7 @@ def deleteSlot(request, slot_id):
             feed_entry = Feed_Entry(
                 group=event.parentGroup,
                 user=request.user,
-                datetime=datetime.now(timezone.utc),
+                datetime=get_dt(),
                 description="Deleted slot \"" + name + "\" in event \"" + event.name + "\"",
                 url="/volunteer/slots",
                 private=False
@@ -617,7 +618,7 @@ def deleteSlot(request, slot_id):
             feed_entry = Feed_Entry(
                 group=slot.parentGroup,
                 user=request.user,
-                datetime=datetime.now(timezone.utc),
+                datetime=get_dt(),
                 description="Deleted slot \"" + name + "\" in group \"" + group.name + "\"",
                 url="/volunteer/slots",
                 private=False

@@ -2,18 +2,20 @@ from datetime import datetime, timezone
 from django import forms
 from utility.models import Slot, Event
 
+from .helpers import get_dt
+
 class FilterTimeForm(forms.Form):
     starttime = forms.DateTimeField(label='Start', input_formats=['%Y-%m-%d'],
     widget=forms.DateTimeInput(
         attrs={'type': 'date',
                'class': 'form-control',
-               'value': datetime.now().strftime("%Y-%m-%d")}))
+               'value': get_dt().strftime("%Y-%m-%d")}))
 
     endtime = forms.DateTimeField(label='End', input_formats=['%Y-%m-%d'],
     widget=forms.DateTimeInput(
         attrs={'type': 'date',
                'class': 'form-control',
-               'value': datetime.now().strftime("%Y-%m-%d")}))
+               'value': get_dt().strftime("%Y-%m-%d")}))
 
     def __init__(self, *args, **kwargs):
         super(FilterTimeForm, self).__init__(*args, **kwargs)
