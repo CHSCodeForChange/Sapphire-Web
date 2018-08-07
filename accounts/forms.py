@@ -114,10 +114,12 @@ class SignupForm(forms.Form):
 
     # Must be unique
     def clean_username(self):
-        username = self.cleaned_data['username'].lower()
-        r = User.objects.filter(username=username)
+        lower_username = self.cleaned_data['username'].lower()
+        r = User.objects.filter(username=lower_username)
         if r.count():
             raise ValidationError("Username already exists")
+        if lower_username != self.cleaned_data['username']:
+            raise ValidationError("Username must be lowercase")
         return username
 
     # Must be unique
