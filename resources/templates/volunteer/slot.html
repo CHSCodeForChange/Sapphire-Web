@@ -13,11 +13,6 @@
 			<a href="/groups/{{ slot.parentEvent.parentGroup.id }}">{{ slot.parentEvent.parentGroup.name }}</a>
 		{% endif %}
 	</p>
-	{% if offer %}
-	<div class="alert alert-info">
-  	You have been requested to volunteer for this slot
-	</div>
-	{% endif %}
 	<div class="jumbotron">
 		<h1 class="display-1">{{ slot.title }}</h1>
 		<p class="lead">
@@ -82,8 +77,8 @@
                     <button class="btn btn-danger btn-block dropdown-toggle"
                         style="padding-bottom: 14px; padding-top: 6px;" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false">
-                        <span  data-toggle="tooltip" data-placement="bottom" title="Delete slot"> 
-                            <i class="fas fa-trash-alt"></i> 
+                        <span  data-toggle="tooltip" data-placement="bottom" title="Delete slot">
+                            <i class="fas fa-trash-alt"></i>
                             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                         </span>
                     </button>
@@ -264,7 +259,7 @@
                                     <div class="btn-group">
                                         <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown"
                                                 aria-haspopup="true" aria-expanded="false">
-                                                <span data-toggle="tooltip" data-placement="bottom" title="Remove slot"> 
+                                                <span data-toggle="tooltip" data-placement="bottom" title="Remove slot">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </span>
                                         </button>
