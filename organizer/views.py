@@ -153,11 +153,14 @@ def addSlot(request, event_id):
     parentEvent = Event.objects.get(pk=event_id)
 
     if (request.method == 'GET'):
-        form = NewSlotForm(user=request.user, parentEvent=parentEvent, initial={'private': parentEvent.private})
+        form = NewSlotForm(user=request.user, parentEvent=parentEvent, initial={'private': parentEvent.private,
+                                                                                'start': parentEvent.start.strftime("%Y-%m-%dT%H:%M"),
+                                                                                'end': parentEvent.end.strftime("%Y-%m-%dT%H:%M")})
     else:
         # This line assumes the contents of the GET side of the if statement have already run (they should have) but its kinda janky
         form = NewSlotForm(request.POST, user=request.user, parentEvent=parentEvent,
-                           initial={'private': parentEvent.private})
+                           initial={'private': parentEvent.private, 'start': parentEvent.start.strftime("%Y-%m-%dT%H:%M"),
+                           'end': parentEvent.end.strftime("%Y-%m-%dT%H:%M")})
         if form.is_valid():
             slot = form.save(commit=False)
             slot.save()
