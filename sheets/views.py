@@ -18,7 +18,8 @@ import datetime as dt
 
 def fromslot(request, slot_id):
 	slot = Slot.objects.get(id=slot_id)
-	if request.user not in slot.parentGroup.organizers.all() and request.user != slot.parentGroup.owner:
+	group = slot.get_group()
+	if group.organizers.all() and request.user not in slot.parentGroup.organizers.all() and request.user != slot.parentGroup.owner:
 		return render(request, 'not_authorized.html')
 
 	response = HttpResponse(content_type='text/csv')
@@ -66,7 +67,8 @@ def fromslot(request, slot_id):
 def fromevent(request, event_id):
 	event = Event.objects.get(id=event_id)
 	slots = Slot.objects.filter(parentEvent=event)
-	if request.user not in event.parentGroup.organizers.all() and request.user != event.parentGroup.owner:
+
+	if event.parentGroup.organizers.all() and request.user not in event.parentGroup.organizers.all() and request.user != event.parentGroup.owner:
 		return render(request, 'not_authorized.html')
 
 	response = HttpResponse(content_type='text/csv')

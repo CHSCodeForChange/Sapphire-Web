@@ -33,7 +33,7 @@ def get_form_kwargs(self):
 
 def console(request, event_id):
     event = Event.objects.get(id=event_id)
-    if request.user not in event.parentGroup.organizers.all() and request.user != event.parentGroup.owner:
+    if event.parentGroup.organizers.all() and request.user not in event.parentGroup.organizers.all() and request.user != event.parentGroup.owner:
         return render(request, 'not_authorized.html')
     slots = Slot.objects.filter(parentEvent=event)
     print(slots)
@@ -192,11 +192,10 @@ def addSlot(request, event_id):
 
 def sendSlotOpeningNotification(request, slot_id):
     slot = Slot.objects.get(pk=slot_id)
-    if request.user not in slot.parentGroup.organizers.all() and request.user != slot.parentGroup.owner:
+    group = slot.get_group()
+    if group.organizers.all() and request.user not in slot.parentGroup.organizers.all() and request.user != slot.parentGroup.owner:
         return render(request, 'not_authorized.html')
-    group = slot.parentGroup
-    if group is None:
-        group = slot.parentEvent.parentGroup
+
     if request.method == 'POST':
         # form = SlotOpeningMailListForm(request.POST, all_members=list(chain(group.volunteers, group.organizers)))
         form = SlotOpeningMailListForm(request.POST, volunteers=group.volunteers, organizers=group.organizers)
@@ -229,9 +228,11 @@ def sendSlotOpeningNotification(request, slot_id):
 
 def sendEventOpeningNotification(request, event_id):
     event = Event.objects.get(pk=event_id)
-    if request.user not in event.parentGroup.organizers.all() and request.user != event.parentGroup.owner:
-        return render(request, 'not_authorized.html')
     group = event.parentGroup
+
+    if group.organizers.all() and request.user not in group.organizers.all() and request.user != event.parentGroup.owner:
+        return render(request, 'not_authorized.html')
+
     if request.method == 'POST':
         # form = SlotOpeningMailListForm(request.POST, all_members=list(chain(group.volunteers, group.organizers)))
         form = SlotOpeningMailListForm(request.POST, volunteers=group.volunteers, organizers=group.organizers)
