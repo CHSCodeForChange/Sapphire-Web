@@ -246,11 +246,7 @@ def volunteerForUser(request, slot_id, user_id):
 	thisUser = User.objects.get(id=user_id)
 	# next = request.GET.get('next')
 	slot = Slot.objects.get(id=slot_id)
-
-	if (slot.parentEvent != None):
-		group = slot.parentEvent.parentGroup
-	else:
-		group = slot.parentGroup
+	group = slot.get_group()
 
 	if group.get_is_organzer(request.user):
 		user_slot = User_Slot.objects.filter(parentSlot=slot, volunteer__isnull=True).first()
@@ -285,16 +281,16 @@ def volunteerForUser(request, slot_id, user_id):
 
 		current_site = get_current_site(request)
 
-		user = thisUser
-
 		# Sends the user an email based on the email template and the info passed in here
 		message = render_to_string('emails/volentold.html', {
-			'user': user,
+			'user': thisUser,
 			'domain': current_site.domain,
-			'id': slot_id
+			'slot': slot,
+			'group':group,
 		})
+
 		mail_subject = 'You have been added to a slot'
-		to_email = user.email
+		to_email = thisUser.email
 		email = EmailMultiAlternatives(mail_subject, message, to=[to_email])
 		email.content_subtype = 'html'
 		email.mixed_subtype = 'related'

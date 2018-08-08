@@ -60,15 +60,13 @@ def pick_group_for_slot(request):
 
 
 def addUserManually(request, slot_id):
-    slot = Slot.objects.get(id=slot_id)
-    if request.user not in slot.parentGroup.organizers.all() and request.user != slot.parentGroup.owner:
+    slot = Slot.objects.get(id=slot_id) 
+    group = slot.get_group()
+
+    if group.organizers.all() and request.user not in group.organizers.all() and request.user != slot.parentGroup.owner:
         return render(request, 'not_authorized.html')
 
-    if slot.parentEvent is not None:
-        group = slot.parentEvent.parentGroup
-    else:
-        group = slot.parentGroup
-
+   
     if group.get_is_organzer(request.user):
         return render(request, 'organizer/pick_volunteer.html', {'slot': slot, 'group': group})
 
@@ -264,15 +262,6 @@ def sendEventOpeningNotification(request, event_id):
 
     return render(request, 'organizer/selectEmailRecipients.html', {'form': form})
 
-def viewEventOpenningEmailPreview(request, event_id):
-    event = Event.objects.get(id=event_id)
-    group = event.parentGroup
-    slots = event.slot_set.all()
-    domain = get_current_site(request).domain
-
-    return render(request, 'emails/event_create_alert.html', {'preview': True, 'event': event, 'group': group, 'slots': slots, 'domain': domain})
-
-
 def addSingleSlot(request, group_id):
     group = Group.objects.get(id=group_id)
     if not Group.get_is_organzer(group, request.user):
@@ -420,20 +409,18 @@ def removeUserSlot(request, user_slot_id):
         group = slot.parentEvent.parentGroup
     if not Group.get_is_organzer(group, request.user):
         return render(request, 'not_authorized.html')
-    if group.get_is_organzer(request.user) and len(User_Slot.objects.all()) > 1:
+
+
+    if not group.get_is_organzer(request.user):
+        group.get_is_organzer(request.user)
+        alert = Alert(user=request.user, text="Only organizers can delete volunteer opennings",
+                        color=Alert.getRed())
+        alert.saveIP(request)    
+    else: 
         user_slot.delete()
 
         alert = Alert(user=request.user, text="Deleted a volunteer openning", color=Alert.getRed())
         alert.saveIP(request)
-    else:
-        if not group.get_is_organzer(request.user):
-            alert = Alert(user=request.user, text="Only organizers can delete volunteer opennings",
-                          color=Alert.getRed())
-            alert.saveIP(request)
-        else:
-            alert = Alert(user=request.user, text="A slot must have at lease 1 volunteer openning!",
-                          color=Alert.getRed())
-            alert.saveIP(request)
 
     return redirect('/volunteer/slot/' + str(user_slot.parentSlot.id))
 

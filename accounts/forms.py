@@ -120,7 +120,7 @@ class SignupForm(forms.Form):
             raise ValidationError("Username already exists")
         if lower_username != self.cleaned_data['username']:
             raise ValidationError("Username must be lowercase")
-        return username
+        return lower_username
 
     # Must be unique
     def clean_email(self):

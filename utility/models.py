@@ -121,6 +121,15 @@ class Slot(models.Model):
             return self.extraFields.split(',')
 
 
+    def get_group(self):
+        if self.parentEvent is not None:
+            group = self.parentEvent.parentGroup
+        else:
+            group = self.parentGroup
+
+        return group
+
+
 class User_Slot(models.Model):
     def __str__(self):
         return 'User_Slot: ' + self.parentSlot.title

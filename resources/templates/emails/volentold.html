@@ -14,16 +14,16 @@
             </table>
         </div>
             <div align="center">
-                <div style="height:500px;width:800px;">
+                <div style="height:300px;width:800px;">
                     <div style="position:relative;left:25px;top:25px;">
                         <p style="font-size:32px;">
-                            Hi {{ user.first_name }} {{user.last_name}}!
+                            {{ user.first_name }} {{user.last_name}},
                         </p>
                         <p style="font-size:18px;text-align:center;">
-                            You were volutold for an event,<br/>
-                            Accept or Reject their command
+                            The organizers of the group <a href="http://{{ domain }}/login?next=../groups/{{group.id}}">{{group.name}}</a> volunteered you for the slot <a href="http://{{ domain }}/login?next=../volunteer/slot/{{slot.id}}">{{slot.title}}</a>,<br/>
+                            Would you like to accept or reject?
                         </p>
-	                    <a href="http://{{ domain }}/login?next=../volunteer/accept/{{id}}/" style="font-size:18px;text-decoration:none;color:#fff;">
+	                    <a href="http://{{ domain }}/login?next=../volunteer/accept/{{slot.id}}/" style="font-size:18px;text-decoration:none;color:#fff;">
                             <button type="submit" style="background-color:#007bff;border-color:#007bff;color:#fff;
 		                                            width:200px;height:50px;border: 1px solid transparent;
                                                     padding: .375rem .75rem;font-size: 1rem;line-height: 1.5;border-radius: .25rem;
@@ -33,7 +33,7 @@
 		                            onmouseover="this.style.backgroundColor='#0069d9';this.style.borderColor='#0062cc';"
 		                            onmouseout="this.style.backgroundColor='#007bff';this.style.borderColor='#007bff';">Accept</button>
 						</a>
-	                    <a href="http://{{ domain }}/login?next=../slot/{{id}}/unvolunteer/" style="font-size:18px;text-decoration:none;color:#ffffff;">
+	                    <a href="http://{{ domain }}/login?next=../volunteer/slot/{{slot.id}}/unvolunteer/" style="font-size:18px;text-decoration:none;color:#ffffff;">
                             <button type="submit" style="background-color:#007bff;border-color:#007bff;color:#fff;
 		                                            width:200px;height:50px;border: 1px solid transparent;
                                                     padding: .375rem .75rem;font-size: 1rem;line-height: 1.5;border-radius: .25rem;

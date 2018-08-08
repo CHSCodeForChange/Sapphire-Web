@@ -5,7 +5,6 @@
         {% include 'snippets/imports.html' %}
     {% endif %}
 
-    {% inlinecss "static/css/email.css" %}
 
 	<div class="container">
         <body style="font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",
@@ -23,13 +22,13 @@
 			<div align="center">
                 <div style="display:block;width:800px;padding-bottom:5%;">
                     <div style="position:relative;left:25px;top:25px;">
-                        <p style="font-size:32px;">
+                        <p style="font-size:36px;">
                             {{ user.first_name }} {{user.last_name}},
                         </p>
-                        <p style="font-size:18px;padding-left:100px;padding-right:100px;" align="center">
+                        <p style="font-size:20px;padding-left:100px;padding-right:100px;" align="center">
                             The organizer of the group {{ group.name }} wanted to alert you that the following new event is available:
 	                    </p>
-                        <table cellpadding="10%" style="margin-left:10%;margin-right:10%;margin-top:5%;margin-bottom:5%;font-size:16px;">
+                        <table cellpadding="10%" style="margin-left:10%;margin-right:10%;margin-top:5%;margin-bottom:0%;font-size:16px;">
                           <tr>
                             <th style="vertical-align:top;text-align:right;">Name</th>
                             <td>{{event.name}}</td>
