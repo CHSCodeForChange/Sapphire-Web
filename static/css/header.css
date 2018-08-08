@@ -49,6 +49,10 @@ div.dropdown-form {
 	color: #51b5c2;
 }
 
+.nodec {
+	text-decoration: none !important;
+}
+
 .notif {
 	z-index: 100;
 }

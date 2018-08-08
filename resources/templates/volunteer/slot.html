@@ -59,23 +59,28 @@
 		<div class="row">
 			{% if is_organizer %}
 				{% if offer %}
-					<a class="col-sm-3 nodec" href="/volunteer/accept/{{ slot.id }}" data-toggle="tooltip" data-placement="bottom" title="Accept volunteer request">
+					<a class="col-sm-2 nodec" href="/volunteer/accept/{{ slot.id }}" data-toggle="tooltip" data-placement="bottom" title="Accept volunteer request">
 						<button class="btn btn-info btn-block">Accept</button>
 					</a>
 
-					<a class="col-sm-3 nodec" href="/volunteer/slot/{{ slot.id }}/unvolunteer" data-toggle="tooltip" data-placement="bottom" title="Reject volunteer request">
+					<a class="col-sm-2 nodec" href="/volunteer/slot/{{ slot.id }}/unvolunteer" data-toggle="tooltip" data-placement="bottom" title="Reject volunteer request">
 						<button class="btn btn-info btn-block">Reject</button>
 					</a>
 
 				{% elif is_volunteered %}
-					<a class="col-sm-6 nodec" href="/volunteer/slot/{{ slot.id }}/unvolunteer" data-toggle="tooltip" data-placement="bottom">
+					<a class="col-sm-4 nodec" href="/volunteer/slot/{{ slot.id }}/unvolunteer" data-toggle="tooltip" data-placement="bottom">
 						<button class="btn btn-info btn-block">Unvolunteer</button>
 					</a>
 				{% else %}
-					<a class="col-sm-6 nodec" href="{% url 'volunteer' slot_id=slot.id %}" data-toggle="tooltip" data-placement="bottom" title="Sign up">
+					<a class="col-sm-4 nodec" href="{% url 'volunteer' slot_id=slot.id %}" data-toggle="tooltip" data-placement="bottom" title="Sign up">
 						<button class="btn btn-info btn-block">Volunteer</button>
 					</a>
 				{% endif %}
+				<a class="col-sm-2 nodec" href="/sheets/fromslot/{{ slot.id }}" data-toggle="tooltip" data-placement="top" title="Download slot data">
+					<button class="btn btn-block btn-success">
+						<i class="fas fa-table"></i> Generate Spreadsheet
+					</button>
+				</a>
 				<a class="col-sm-2 nodec" href="/organizer/sendMail/slot/{{ slot.id }}" data-toggle="tooltip" data-placement="bottom" title="Email users about slot">
 					<button class="btn btn-block btn-success"><i class="fas fa-envelope"></i></button>
 				</a>
@@ -485,16 +490,6 @@
         {% endfor %}
     </tfoot>
     </table>
-
-	{% if is_organizer %}
-		<th>
-			<a href="/sheets/fromslot/{{ slot.id }}" data-toggle="tooltip" data-placement="top" title="Download slot data">
-				<button class="btn btn-success">
-					<span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> Generate Spreadsheet
-				</button>
-			</a>
-		</th>
-	{% endif %}
 
 
 

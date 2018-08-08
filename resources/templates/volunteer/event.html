@@ -53,9 +53,14 @@
 
 		{% if is_organizer %}
 			<div class="row">
-				<a class="col-sm-6 nodec" href="/organizer/updateEvent/{{ event.id }}" data-toggle="tooltip" data-placement="bottom" title="Edit event fields">
+				<a class="col-sm-4 nodec" href="/organizer/updateEvent/{{ event.id }}" data-toggle="tooltip" data-placement="bottom" title="Edit event fields">
 					<button class="btn btn-primary btn-block">
 						<i class="fas fa-edit"></i> Edit
+					</button>
+				</a>
+				<a class="col-sm-2 nodec" href="/sheets/fromslot/{{ slot.id }}" data-toggle="tooltip" data-placement="top" title="Download slot data">
+					<button class="btn btn-block btn-success">
+						<i class="fas fa-table"></i> Generate Spreadsheet
 					</button>
 				</a>
 				<a class="col-sm-2 nodec" href="/organizer/sendMail/event/{{ event.id }}" data-toggle="tooltip" data-placement="bottom" title="Email users about event"> 
@@ -159,14 +164,6 @@
             </tbody>
         </table>
 
-    
-	{% if is_organizer %}
-		<th>
-			<a href="/sheets/fromevent/{{ event.id }}" data-toggle="tooltip" data-placement="top" title="Download event data">
-				<button class="btn btn-success">Generate Spreadsheet</button>
-			</a>
-		</th>
-	{% endif %}
 	{% if is_organizer or not event.private %}
 		{% for slot in event.slot_set.all|dictsort:"start" %}
 				<div id="volunteer-popover-{{ slot.id }}-content" class="d-none">
