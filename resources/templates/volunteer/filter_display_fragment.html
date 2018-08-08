@@ -1,12 +1,12 @@
 <div class="mt-2 text-left">
-	{% if groupfilter or distancefilter or daterangefilter %}
+	{% if groupfilter or daterangefilter or voluntoldfilter %}
 		{% load name_from_id %}
 		<p class="small">
 			<i class="fas fa-filter mr-2"></i>
 			{% if groupfilter %}
 				<button class="btn btn-sm mb-1">
 					Groups: {{ groupfilter|group_name_from_id }}
-					<a href="?groupfilter=&distancefilter={{ distancefilter }}&daterangefilter={{ daterangefilter }}">
+					<a href="?groupfilter=&distancefilter={{ distancefilter }}&daterangefilter={{ daterangefilter }}&voluntold={{ voluntold }}">
 						<i class="fas fa-times-circle" style="color: red;"></i>
 					</a>
 				</button>
@@ -14,7 +14,7 @@
 			{% if distancefilter %}
 				<button class="btn btn-sm mb-1">
 					Distance: {{ distancefilter }} miles
-					<a href="?groupfilter={{ groupfilter }}&distancefilter=&daterangefilter={{ daterangefilter }}">
+					<a href="?groupfilter={{ groupfilter }}&distancefilter=&daterangefilter={{ daterangefilter }}&voluntold={{ voluntold }}">
 						<i class="fas fa-times-circle" style="color: red;"></i>
 					</a>
 				</button>
@@ -22,13 +22,21 @@
 			{% if daterangefilter %}
 				<button class="btn btn-sm mb-1">
 					Date range: {{ daterangefilter|format_daterange }}
-					<a href="?groupfilter={{ groupfilter }}&distancefilter={{ distancefilter }}&daterangefilter=">
+					<a href="?groupfilter={{ groupfilter }}&distancefilter={{ distancefilter }}&daterangefilter=&voluntold={{ voluntold }}">
+						<i class="fas fa-times-circle" style="color: red;"></i>
+					</a>
+				</button>
+			{% endif %}
+			{% if voluntoldfilter == "true" %}
+				<button class="btn btn-sm mb-1">
+					Voluntold only
+					<a href="?groupfilter={{ groupfilter }}&distancefilter={{ distancefilter }}&daterangefilter={{ datefilter }}&voluntold=">
 						<i class="fas fa-times-circle" style="color: red;"></i>
 					</a>
 				</button>
 			{% endif %}
 
-			<a class="btn btn-danger btn-sm mb-1" href="?groupfilter=&distancefilter=&daterangefilter=">
+			<a class="btn btn-danger btn-sm mb-1" href="?groupfilter=&distancefilter=&daterangefilter=&voluntold=">
 				Clear all
 			</a>
 		</p>

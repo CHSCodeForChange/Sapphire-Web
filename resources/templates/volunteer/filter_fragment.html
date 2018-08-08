@@ -51,6 +51,15 @@
 				<input type="date" name="timestamp_end" class="form-control" id="timestamp_end">
 			</div>
 		</div>
+        <div class="row mb-2">
+            <div class="col-md-6 text-right">
+                <label class="lead" for="voluntold">Show only voluntold: </label>
+            </div>
+            <div class="col-md-6">
+                <input type="checkbox" name="voluntold" class="form-control" id="voluntold">
+            </div>
+
+        </div>
 		<hr/>
 		<div class="mt-4 row">
 			<div class="col-md-6">
@@ -74,6 +83,7 @@
 	var distance_filter_string = "";
 	var daterange_filter_string = "";
 	var search_string = "";
+	var voluntold_string = "";
 	$('.filter-group-toggle').click(
 	    function(e){
 			group_filter_string = toggle_filter(e, group_filter_string);
@@ -121,10 +131,12 @@
 			if (daterange_filter_string === "_"){daterange_filter_string = "";}
             {# Collect search query #}
 			search_string = $('#search').val();
+			{# Collect voluntold boolean #}
+            voluntold_string = $('#voluntold').is(":checked").toString();
             {# Redirect to page #}
 			window.location.href = "?q=" + search_string + "&groupfilter="
 			    + group_filter_string + "&distancefilter=" + distance_filter_string
-				+ "&daterangefilter=" + daterange_filter_string;
+				+ "&daterangefilter=" + daterange_filter_string + "&voluntold=" + voluntold_string;
 	}
 
 </script>
