@@ -128,6 +128,9 @@ def slot(request, slot_id):
 	volunteer = request.user
 	specific_user_slot = User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first()
 
+	hasV = User_Slot.objects.filter(parentSlot=slot, volunteer__isnull=False)
+	noV = User_Slot.objects.filter(parentSlot=slot, volunteer__isnull=True)
+
 	if (len(User_Slot.objects.filter(parentSlot=slot)) != 0):
 		percentFilled = int(len(User_Slot.objects.filter(parentSlot=slot).exclude(volunteer=None)) / len(
 			User_Slot.objects.filter(parentSlot=slot)) * 100)
@@ -137,17 +140,17 @@ def slot(request, slot_id):
 		i.prep_html()
 
 	if pendingAccept:
-		alert = Alert(user=request.user, text="You have been requested to volunteer for this slot", color=Alert.getBlue())
+		alert = Alert(user=request.user, text="You have been requested to volunteer for this slot",
+					color=Alert.getBlue())
 		alert.saveIP(request)
-
 	return render(request, 'volunteer/slot.html',
-	              {'slot': slot, 'user_slots': user_slots, 'event': event,
-	               'full': User_Slot.objects.filter(parentSlot=slot, volunteer__isnull=True).first(),
-	               'is_organizer': is_organizer,
-	               'percentFilled': percentFilled, 'is_volunteered': is_volunteered, 'offer': pendingAccept,
-	               'private': private, 'specific_user_slot': specific_user_slot,
-	               'extra': (list(user_slots[0].get_extra().keys()) if (len(user_slots) > 0) else []),
-	               'single': (slot.parentEvent == None)})
+					{'slot': slot, 'user_slots': hasV, 'event': event, 'empty_slot': noV,
+					'full': User_Slot.objects.filter(parentSlot=slot, volunteer__isnull=True).first(),
+					'is_organizer': is_organizer,
+					'percentFilled': percentFilled, 'is_volunteered': is_volunteered, 'offer': pendingAccept,
+					'private': private, 'specific_user_slot': specific_user_slot,
+					'extra': (list(user_slots[0].get_extra().keys()) if (len(user_slots) > 0) else []),
+					'single': (slot.parentEvent == None)})
 
 
 def slots(request):
@@ -159,7 +162,6 @@ def slots(request):
 		groupfilter = request.GET.get('groupfilter', '')
 		distancefilter = request.GET.get('distancefilter', '')
 		daterangefilter = request.GET.get('daterangefilter', '')
-		voluntoldfilter = request.GET.get('voluntold', '')
 		if distancefilter is not '':
 			try:
 				distance = int(distancefilter)
@@ -185,16 +187,13 @@ def slots(request):
 					slots = slots.filter(Q(start__gte=start_date) & Q(end__lte=end_date))
 				except ValueError:
 					pass
-		# Filter by voluntold
-		if voluntoldfilter == 'true':
-			slots = slots.filter(user_slot__volunteer=request.user, user_slot__accepted="No")
 		# Filter by search query
 		if search is not '':
 			slots = slots.filter(Q(title__contains=search) | Q(location__contains=search) | Q(
 				parentGroup__name__contains=search)).distinct()
 		return render(request, 'volunteer/slots.html',
 								{'slots': slots, 'groups': groups, 'search': search, 'groupfilter': groupfilter,
-								'distancefilter': distancefilter, 'daterangefilter': daterangefilter, 'voluntoldfilter': voluntoldfilter})
+								'distancefilter': distancefilter, 'daterangefilter': daterangefilter})
 	else:
 		return redirect('login')
 
