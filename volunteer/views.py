@@ -139,6 +139,7 @@ def slot(request, slot_id):
                       color=Alert.getBlue())
         alert.saveIP(request)
 
+    print(is_organizer)
     return render(request, 'volunteer/slot.html',
                   {'slot': slot, 'user_slots': hasV, 'event': event, 'empty_slot': noV,
                    'full': User_Slot.objects.filter(parentSlot=slot, volunteer__isnull=True).first(),
