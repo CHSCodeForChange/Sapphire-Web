@@ -34,7 +34,8 @@ def get_form_kwargs(self):
 def console(request, event_id):
     event = Event.objects.get(id=event_id)
     if event.parentGroup.organizers.all() and request.user not in event.parentGroup.organizers.all() and request.user != event.parentGroup.owner:
-        return render(request, 'not_authorized.html')
+        Alert.not_permitted(request)
+        return redirect('/volunteer/event/' + str(event.id))
     slots = Slot.objects.filter(parentEvent=event)
     print(slots)
     user_slots = None
@@ -64,7 +65,8 @@ def addUserManually(request, slot_id):
     group = slot.get_group()
 
     if group.organizers.all() and request.user not in group.organizers.all() and request.user != slot.parentGroup.owner:
-        return render(request, 'not_authorized.html')
+        Alert.not_permitted(request)
+        return redirect('/volunteer/slot/' + str(slot.id))
 
    
     if group.get_is_organzer(request.user):
@@ -76,7 +78,8 @@ def addUserManually(request, slot_id):
 def addEvent(request, group_id):
     group = Group.objects.get(id=group_id)
     if not Group.get_is_organzer(group, request.user):
-        return render(request, 'not_authorized.html')
+        Alert.not_permitted(request)
+        return redirect('/volunteer/events')
 
     if request.method == 'POST':
         form = NewEventForm(request.POST, user=request.user, parentGroup=group, initial={'private': group.private})
@@ -107,7 +110,9 @@ def editEvent(request, event_id):
     event = Event.objects.get(id=event_id)
     group = event.parentGroup
     if not Group.get_is_organzer(group, request.user):
-        return render(request, 'not_authorized.html')
+        Alert.not_permitted(request)
+        return redirect('/volunteer/event/'+str(event.id))
+
     if request.method == 'POST':
         form = UpdateEventForm(request.POST, id=event_id)
         if form.is_valid():
@@ -146,7 +151,8 @@ def addSlot(request, event_id):
     parentEvent = Event.objects.get(pk=event_id)
     group = parentEvent.parentGroup
     if not Group.get_is_organzer(group, request.user):
-        return render(request, 'not_authorized.html')
+        Alert.not_permitted(request)
+        return redirect('/volunteer/event/'+str(event.id))
 
     parentEvent = Event.objects.get(pk=event_id)
 
@@ -193,8 +199,9 @@ def addSlot(request, event_id):
 def sendSlotOpeningNotification(request, slot_id):
     slot = Slot.objects.get(pk=slot_id)
     group = slot.get_group()
-    if group.organizers.all() and request.user not in slot.parentGroup.organizers.all() and request.user != slot.parentGroup.owner:
-        return render(request, 'not_authorized.html')
+    if group.organizers.all() or (request.user not in slot.parentGroup.organizers.all() and request.user != slot.parentGroup.owner):
+        Alert.not_permitted(request)
+        return redirect('/volunteer/slot/'+str(slot.id))
 
     if request.method == 'POST':
         # form = SlotOpeningMailListForm(request.POST, all_members=list(chain(group.volunteers, group.organizers)))
@@ -231,7 +238,8 @@ def sendEventOpeningNotification(request, event_id):
     group = event.parentGroup
 
     if group.organizers.all() and request.user not in group.organizers.all() and request.user != event.parentGroup.owner:
-        return render(request, 'not_authorized.html')
+        Alert.not_permitted(request)
+        return redirect('/volunteer/event/'+str(event.id))
 
     if request.method == 'POST':
         # form = SlotOpeningMailListForm(request.POST, all_members=list(chain(group.volunteers, group.organizers)))
@@ -312,7 +320,9 @@ def editSlot(request, slot_id):
     if (group == None):
         group = slot.parentEvent.parentGroup
     if not Group.get_is_organzer(group, request.user):
-        return render(request, 'not_authorized.html')
+        Alert.not_permitted(request)
+        return redirect('/volunteer/slot/' + str(slot.id))
+
     if request.method == 'POST':
         form = UpdateSlotForm(request.POST, id=slot_id)
         if form.is_valid():
@@ -384,7 +394,9 @@ def addUserSlot(request, slot_id):
     if group is None:
         group = slot.parentEvent.parentGroup
     if not Group.get_is_organzer(group, request.user):
-        return render(request, 'not_authorized.html')
+        Alert.not_permitted(request)
+        return redirect('/volunteer/slot/' + str(slot.id))
+
     if group.get_is_organzer(request.user):
         ans = OrderedDict()
         for i in slot.get_extra():
@@ -409,8 +421,8 @@ def removeUserSlot(request, user_slot_id):
     if group is None:
         group = slot.parentEvent.parentGroup
     if not Group.get_is_organzer(group, request.user):
-        return render(request, 'not_authorized.html')
-
+        Alert.not_permitted(request)
+        return redirect('/volunteer/slot/'+str(slot.id))
 
     if not group.get_is_organzer(request.user):
         group.get_is_organzer(request.user)
@@ -464,7 +476,9 @@ def editSignIn(request, user_slot_id):
         group = user_slot.parentSlot.parentGroup
 
     if not Group.get_is_organzer(group, request.user):
-        return render(request, 'not_authorized.html')
+        Alert.not_permitted(request)
+        return redirect('/volunteer/slot/'+str(user_slot.parentSlot.id))
+
     if group.get_is_organzer(request.user):
         if request.method == 'POST':
             form = EditTimeForm(request.POST)
@@ -492,7 +506,9 @@ def editSignOut(request, user_slot_id):
         group = user_slot.parentSlot.parentGroup
 
     if not Group.get_is_organzer(group, request.user):
-        return render(request, 'not_authorized.html')
+        Alert.not_permitted(request)
+        return ('/volunteer/slot/'+str(user_slot.parentSlot.id))
+
     if group.get_is_organzer(request.user):
         if request.method == 'POST':
             form = EditTimeForm(request.POST)
@@ -518,7 +534,9 @@ def edit(request):
         if g.name == 'Organizer':
             is_organizer = True
     if not is_organizer:
-        return render(request, 'not_authorized.html')
+        Alert.not_permitted(request)
+        return redirect('/')
+
     # Gets the page type
     type = request.GET.get('type', 'html')
     # If the page type is normal, send them to the single slot page for now
@@ -548,14 +566,16 @@ def index(request):
 
 
 def deleteEvent(request, event_id):
-    object = Event.objects.get(id=event_id)
-    group = object.parentGroup
+    event = Event.event.get(id=event_id)
+    group = event.parentGroup
     if not Group.get_is_organzer(group, request.user):
-        return render(request, 'not_authorized.html')
-    if group.get_is_organzer(request.user):
-        name = object.name
+        Alert.not_permitted(request)
+        return redirect('/volunteer/event/' + str(event.id))
 
-        object.delete()
+    if group.get_is_organzer(request.user):
+        name = event.name
+
+        event.delete()
 
         feed_entry = Feed_Entry(
             group=group,
@@ -587,7 +607,9 @@ def deleteSlot(request, slot_id):
         group = slot.parentGroup
 
     if not Group.get_is_organzer(group, request.user):
-        return render(request, 'not_authorized.html')
+        Alert.not_permitted(request)
+        return redirect('/volunteer/slot/'+str(slot.id))
+        
     if group.get_is_organzer(request.user):
         if slot.parentEvent is not None:
             name = slot.title
@@ -634,3 +656,4 @@ def deleteSlot(request, slot_id):
         alert.saveIP(request)
 
         return redirect("/volunteer/slot/" + str(slot.id))
+

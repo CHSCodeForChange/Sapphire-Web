@@ -56,3 +56,8 @@ class Alert(models.Model):
 
         self.ip = ipaddress
         self.save()
+
+
+    def not_permitted(request):
+        alert = Alert(user=request.user, text="You are not permitted to view this page", color=Alert.getRed())
+        alert.save()
