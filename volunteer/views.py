@@ -109,52 +109,6 @@ def accept(request, slot_id):
 
 
 def slot(request, slot_id):
-<<<<<<< HEAD
-    slot = Slot.objects.get(id=slot_id)
-    event = slot.parentEvent
-    private = slot.private
-
-    if (slot.parentEvent != None):
-        is_organizer = Group.get_is_organzer(slot.parentEvent.parentGroup, request.user)
-    else:
-        is_organizer = Group.get_is_organzer(slot.parentGroup, request.user)
-
-    user_slots = User_Slot.objects.filter(parentSlot=slot)
-    is_volunteered = not (User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first() == None)
-    pendingAccept = False
-    if is_volunteered:
-        pendingAccept = User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first().accepted == 'No'
-        print(pendingAccept)
-
-    volunteer = request.user
-    specific_user_slot = User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first()
-
-    hasV = User_Slot.objects.filter(parentSlot=slot, volunteer__isnull=False)
-    noV = User_Slot.objects.filter(parentSlot=slot, volunteer__isnull=True)
-
-    if (len(User_Slot.objects.filter(parentSlot=slot)) != 0):
-        percentFilled = int(len(User_Slot.objects.filter(parentSlot=slot).exclude(volunteer=None)) / len(
-            User_Slot.objects.filter(parentSlot=slot)) * 100)
-    else:
-        percentFilled = 0
-    for i in user_slots:
-        i.prep_html()
-
-    if pendingAccept:
-        alert = Alert(user=request.user, text="You have been requested to volunteer for this slot",
-                      color=Alert.getBlue())
-        alert.saveIP(request)
-
-    print(is_organizer)
-    return render(request, 'volunteer/slot.html',
-                  {'slot': slot, 'user_slots': hasV, 'event': event, 'empty_slot': noV,
-                   'full': User_Slot.objects.filter(parentSlot=slot, volunteer__isnull=True).first(),
-                   'is_organizer': is_organizer,
-                   'percentFilled': percentFilled, 'is_volunteered': is_volunteered, 'offer': pendingAccept,
-                   'private': private, 'specific_user_slot': specific_user_slot,
-                   'extra': (list(user_slots[0].get_extra().keys()) if (len(user_slots) > 0) else []),
-                   'single': (slot.parentEvent == None)})
-=======
 	slot = Slot.objects.get(id=slot_id)
 	event = slot.parentEvent
 	private = slot.private
@@ -189,15 +143,15 @@ def slot(request, slot_id):
 		alert = Alert(user=request.user, text="You have been requested to volunteer for this slot",
 					color=Alert.getBlue())
 		alert.saveIP(request)
-	return render(request, 'volunteer/slot.html',
-					{'slot': slot, 'user_slots': hasV, 'event': event, 'empty_slot': noV,
-					'full': User_Slot.objects.filter(parentSlot=slot, volunteer__isnull=True).first(),
-					'is_organizer': is_organizer,
-					'percentFilled': percentFilled, 'is_volunteered': is_volunteered, 'offer': pendingAccept,
-					'private': private, 'specific_user_slot': specific_user_slot,
-					'extra': (list(user_slots[0].get_extra().keys()) if (len(user_slots) > 0) else []),
-					'single': (slot.parentEvent == None)})
->>>>>>> origin/master
+
+    return render(request, 'volunteer/slot.html',
+                  {'slot': slot, 'user_slots': hasV, 'event': event, 'empty_slot': noV,
+                   'full': User_Slot.objects.filter(parentSlot=slot, volunteer__isnull=True).first(),
+                   'is_organizer': is_organizer,
+                   'percentFilled': percentFilled, 'is_volunteered': is_volunteered, 'offer': pendingAccept,
+                   'private': private, 'specific_user_slot': specific_user_slot,
+                   'extra': (list(user_slots[0].get_extra().keys()) if (len(user_slots) > 0) else []),
+                   'single': (slot.parentEvent == None)})
 
 
 def slots(request):
