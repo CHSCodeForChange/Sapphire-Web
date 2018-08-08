@@ -33,7 +33,7 @@ def get_form_kwargs(self):
 
 def console(request, event_id):
     event = Event.objects.get(id=event_id)
-    if event.parentGroup.organizers.all() and request.user not in event.parentGroup.organizers.all() and request.user != event.parentGroup.owner:
+    if not event.parentGroup.get_is_organzer(request.user):
         Alert.not_permitted(request)
         return redirect('/volunteer/event/' + str(event.id))
     slots = Slot.objects.filter(parentEvent=event)
@@ -64,7 +64,7 @@ def addUserManually(request, slot_id):
     slot = Slot.objects.get(id=slot_id) 
     group = slot.get_group()
 
-    if group.organizers.all() and request.user not in group.organizers.all() and request.user != slot.parentGroup.owner:
+    if not group.get_is_organzer(request.user):
         Alert.not_permitted(request)
         return redirect('/volunteer/slot/' + str(slot.id))
 
@@ -199,7 +199,7 @@ def addSlot(request, event_id):
 def sendSlotOpeningNotification(request, slot_id):
     slot = Slot.objects.get(pk=slot_id)
     group = slot.get_group()
-    if group.organizers.all() or (request.user not in slot.parentGroup.organizers.all() and request.user != slot.parentGroup.owner):
+    if group.get_is_organzer(request.user):
         Alert.not_permitted(request)
         return redirect('/volunteer/slot/'+str(slot.id))
 
@@ -237,7 +237,7 @@ def sendEventOpeningNotification(request, event_id):
     event = Event.objects.get(pk=event_id)
     group = event.parentGroup
 
-    if group.organizers.all() and request.user not in group.organizers.all() and request.user != event.parentGroup.owner:
+    if not group.get_is_organzer(request.user):
         Alert.not_permitted(request)
         return redirect('/volunteer/event/'+str(event.id))
 
@@ -319,7 +319,7 @@ def editSlot(request, slot_id):
     group = slot.parentGroup
     if (group == None):
         group = slot.parentEvent.parentGroup
-    if not Group.get_is_organzer(group, request.user):
+    if not group.get_is_organzer(request.user):
         Alert.not_permitted(request)
         return redirect('/volunteer/slot/' + str(slot.id))
 
@@ -393,7 +393,7 @@ def addUserSlot(request, slot_id):
     group = slot.parentGroup
     if group is None:
         group = slot.parentEvent.parentGroup
-    if not Group.get_is_organzer(group, request.user):
+    if not group.get_is_organzer(request.user):
         Alert.not_permitted(request)
         return redirect('/volunteer/slot/' + str(slot.id))
 
@@ -420,7 +420,7 @@ def removeUserSlot(request, user_slot_id):
     group = slot.parentGroup
     if group is None:
         group = slot.parentEvent.parentGroup
-    if not Group.get_is_organzer(group, request.user):
+    if not group.get_is_organzer(request.user):
         Alert.not_permitted(request)
         return redirect('/volunteer/slot/'+str(slot.id))
 
@@ -428,8 +428,8 @@ def removeUserSlot(request, user_slot_id):
         group.get_is_organzer(request.user)
         alert = Alert(user=request.user, text="Only organizers can delete volunteer opennings",
                         color=Alert.getRed())
-        alert.saveIP(request)    
-    else: 
+        alert.saveIP(request)
+    else:
         user_slot.delete()
 
         alert = Alert(user=request.user, text="Deleted a volunteer openning", color=Alert.getRed())
@@ -444,7 +444,7 @@ def editField(request, user_slot_id, field):
         group = user_slot.parentSlot.parentGroup
     else:
         group = user_slot.parentSlot.parentEvent.parentGroup
-    if not Group.get_is_organzer(group, request.user):
+    if not group.get_is_organzer(request.user):
         alert = Alert(user=request.user, text="You must be an organizer to edit extra fields",
                       color=Alert.getRed())
         alert.saveIP(request)
@@ -475,7 +475,7 @@ def editSignIn(request, user_slot_id):
     else:
         group = user_slot.parentSlot.parentGroup
 
-    if not Group.get_is_organzer(group, request.user):
+    if not group.get_is_organzer(request.user):
         Alert.not_permitted(request)
         return redirect('/volunteer/slot/'+str(user_slot.parentSlot.id))
 
@@ -505,7 +505,7 @@ def editSignOut(request, user_slot_id):
     else:
         group = user_slot.parentSlot.parentGroup
 
-    if not Group.get_is_organzer(group, request.user):
+    if not group.get_is_organzer(request.user):
         Alert.not_permitted(request)
         return ('/volunteer/slot/'+str(user_slot.parentSlot.id))
 
@@ -568,7 +568,7 @@ def index(request):
 def deleteEvent(request, event_id):
     event = Event.event.get(id=event_id)
     group = event.parentGroup
-    if not Group.get_is_organzer(group, request.user):
+    if not group.get_is_organzer(request.user):
         Alert.not_permitted(request)
         return redirect('/volunteer/event/' + str(event.id))
 
@@ -606,7 +606,7 @@ def deleteSlot(request, slot_id):
     else:
         group = slot.parentGroup
 
-    if not Group.get_is_organzer(group, request.user):
+    if not group.get_is_organzer(request.user):
         Alert.not_permitted(request)
         return redirect('/volunteer/slot/'+str(slot.id))
         
