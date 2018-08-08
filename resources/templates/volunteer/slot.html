@@ -59,23 +59,28 @@
 		<div class="row">
 			{% if is_organizer %}
 				{% if offer %}
-					<a class="col-sm-3 nodec" href="/volunteer/accept/{{ slot.id }}" data-toggle="tooltip" data-placement="bottom" title="Accept volunteer request">
+					<a class="col-sm-2 nodec" href="/volunteer/accept/{{ slot.id }}" data-toggle="tooltip" data-placement="bottom" title="Accept volunteer request">
 						<button class="btn btn-info btn-block">Accept</button>
 					</a>
 
-					<a class="col-sm-3 nodec" href="/volunteer/slot/{{ slot.id }}/unvolunteer" data-toggle="tooltip" data-placement="bottom" title="Reject volunteer request">
+					<a class="col-sm-2 nodec" href="/volunteer/slot/{{ slot.id }}/unvolunteer" data-toggle="tooltip" data-placement="bottom" title="Reject volunteer request">
 						<button class="btn btn-info btn-block">Reject</button>
 					</a>
 
 				{% elif is_volunteered %}
-					<a class="col-sm-6 nodec" href="/volunteer/slot/{{ slot.id }}/unvolunteer" data-toggle="tooltip" data-placement="bottom">
+					<a class="col-sm-4 nodec" href="/volunteer/slot/{{ slot.id }}/unvolunteer" data-toggle="tooltip" data-placement="bottom">
 						<button class="btn btn-info btn-block">Unvolunteer</button>
 					</a>
 				{% else %}
-					<a class="col-sm-6 nodec" href="{% url 'volunteer' slot_id=slot.id %}" data-toggle="tooltip" data-placement="bottom" title="Sign up">
+					<a class="col-sm-4 nodec" href="{% url 'volunteer' slot_id=slot.id %}" data-toggle="tooltip" data-placement="bottom" title="Sign up">
 						<button class="btn btn-info btn-block">Volunteer</button>
 					</a>
 				{% endif %}
+				<a class="col-sm-2 nodec" href="/sheets/fromslot/{{ slot.id }}" data-toggle="tooltip" data-placement="top" title="Download slot data">
+					<button class="btn btn-block btn-success">
+						<i class="fas fa-table"></i> Generate Spreadsheet
+					</button>
+				</a>
 				<a class="col-sm-2 nodec" href="/organizer/sendMail/slot/{{ slot.id }}" data-toggle="tooltip" data-placement="bottom" title="Email users about slot">
 					<button class="btn btn-block btn-success"><i class="fas fa-envelope"></i></button>
 				</a>
@@ -153,8 +158,8 @@
                 {% endfor %}
             {% endif %}
 
-            {% if is_organizer %}
-                <th>Delete</th>
+             {% if is_organizer %}
+                <th class="no-sort">Delete</th>
             {% endif %}
         </thead>
         <tbody>
@@ -250,7 +255,7 @@
                                 {% endif %}
                             {% endif %}
 
-                            <td>{{ user_slot.difference }}</td>
+                            <td>{{ user_slot.difference|default_if_none:"-"}}</td>
 
                             {% if slot.is_payment_nonzero %}
                                 <td>${{ user_slot.payment }}</td>
@@ -332,7 +337,7 @@
                         {% endif %}
                     {% endif %}
 
-                    <td>{{ specific_user_slot.difference }}</td>
+                    <td>{{ specific_user_slot.difference|default_if_none:"-"}}</td>
 
                     {% if slot.is_payment_nonzero %}
                         <td>${{ specific_user_slot.payment }}</td>
@@ -352,17 +357,139 @@
                 </tr>
             {% endif %}
             </tbody>
-    </table>
 
-	{% if is_organizer %}
-		<th>
-			<a href="/sheets/fromslot/{{ slot.id }}" data-toggle="tooltip" data-placement="top" title="Download slot data">
-				<button class="btn btn-success">
-					<span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> Generate Spreadsheet
-				</button>
-			</a>
-		</th>
-	{% endif %}
+    <tfoot>
+        {% for user_slot in empty_slot %}
+            <tr>
+        {% if user_slot.is_volunteer_null %}
+
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+
+                            {% if slot.is_payment_nonzero %}
+                                <th>-</th>
+                            {% endif %}
+
+                            {% for a in extra %}
+                                <td>-</td>
+                            {% endfor %}
+
+                            {% if is_organizer %}
+                                <td>
+                                    <div class="btn-group">
+                                        <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown"
+                                                aria-haspopup="true" aria-expanded="false"><i class="fas fa-trash-alt"></i>
+                                        </button>
+                                        <div class="dropdown-menu px-2">
+                                            <h1 class="dropdown-header">Are you sure?</h1>
+                                            <a class="nodec"
+                                                href="/organizer/deleteUserSlot/{{ user_slot.id }}?next={{ request.path|urlencode }}">
+                                                <button class="btn btn-danger btn-block">Yes</button>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            {% endif %}
+
+                        {% elif is_organizer or not slot.private %}
+                            <td>
+                                {% ifequal user_slot.accepted "No" %}
+                                    <a href="/accounts/profile/{{ user_slot.volunteer.id }}"
+                                       title="An organizer has volunteered this user for a slot, but the user has not yet accepted"
+                                       style="border-bottom: 1px dotted blue;">
+                                        {{ user_slot.volunteer.username }}
+                                        <i class="fas fa-exclamation-triangle" style="color: red"></i>
+
+
+                                    </a>
+                                {% endifequal %}
+                                {% ifnotequal user_slot.accepted "No" %}
+                                    <a href="/accounts/profile/{{ user_slot.volunteer.id }}"> {{ user_slot.volunteer.username }}</a>
+                                {% endifnotequal %}
+                            </td>
+
+                            {% if user_slot.is_signin_null %}
+                                {% if is_organizer %}
+                                    <td>
+                                        <a href="/volunteer/signin/{{ user_slot.id }}?next=/volunteer/slot/{{ slot.id }}">
+                                            <button class="btn btn-primary">Sign In</button>
+                                        </a></td>
+                                {% else %}
+                                    <td>-</td>
+                                {% endif %}
+                            {% else %}
+                                {% if is_organizer %}
+                                    <td><a href="/organizer/editSignIn/{{ user_slot.id }}">
+                                        <button type="button" name="button"
+                                                class="btn btn-light">{{ user_slot.signin }}</button>
+                                    </a></td>
+                                {% else %}
+                                    <td>{{ user_slot.signin }}</td>
+                                {% endif %}
+                            {% endif %}
+
+                            {% if user_slot.is_signout_null %}
+                                {% if is_organizer %}
+                                    <td>
+                                        <a href="/volunteer/signout/{{ user_slot.id }}?next=/volunteer/slot/{{ slot.id }}">
+                                            <button class="btn btn-primary">Sign Out</button>
+                                        </a>
+                                    </td>
+                                {% else %}
+                                    <td>-</td>
+                                {% endif %}
+                            {% else %}
+                                {% if is_organizer %}
+                                    <td><a href="/organizer/editSignOut/{{ user_slot.id }}">
+                                        <button type="button" name="button"
+                                                class="btn btn-light">{{ user_slot.signout }}</button>
+                                    </a></td>
+                                {% else %}
+                                    <td>{{ user_slot.signout }}</td>
+                                {% endif %}
+                            {% endif %}
+
+                            <td>{{ user_slot.difference|default_if_none:"-"}}</td>
+
+                            {% if slot.is_payment_nonzero %}
+                                <td>${{ user_slot.payment }}</td>
+                            {% endif %}
+
+                            {% if is_organizer or not slot.private %}
+                                {% for a,b in user_slot.value %}
+                                    <td><a href="/organizer/editField/{{ user_slot.id }}/{{ a }}">
+                                        <button type="button" name="button" class="btn btn-light">{{ b }}</button>
+                                    </a></td>
+                                {% endfor %}
+                            {% endif %}
+
+
+                            {% if is_organizer %}
+                                <td>
+                                    <div class="btn-group">
+                                        <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown"
+                                                aria-haspopup="true" aria-expanded="false">
+                                                <span data-toggle="tooltip" data-placement="bottom" title="Remove slot">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </span>
+                                        </button>
+                                        <div class="dropdown-menu px-2">
+                                            <h1 class="dropdown-header">Are you sure?</h1>
+                                            <a class="nodec"
+                                                href="/organizer/deleteUserSlot/{{ user_slot.id }}?next={{ request.path|urlencode }}">
+                                                <button class="btn btn-danger btn-block">Yes</button>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            {% endif %}
+                        {% endif %}
+            </tr>
+        {% endfor %}
+    </tfoot>
+    </table>
 
 
 

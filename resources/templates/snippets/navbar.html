@@ -13,9 +13,6 @@
 	<!-- Links -->
 	<div class="navbar-left collapse navbar-collapse" id="nav-content">
 		<ul class="navbar-nav">
-<!-- {#			<li class="nav-item">#}
-{#				<a class="nav-link" href="/feed">Feed</a>#}
-{#			</li>#} -->
 			<li class="nav-item">
 				<a class="nav-link" href="/volunteer/events">Events</a>
 			</li>
@@ -25,9 +22,20 @@
 			<li class="nav-item">
 				<a class="nav-link" href="/groups">Groups</a>
 			</li>
-<!-- {#			<li class="nav-item">#}
-{#				<a class="nav-link" href="/accounts/profile">Profile</a>#}
-{#			</li>#} -->
+			<li class="nav-item navbar-right-dropdown">
+				<a class="nav-link" href="/accounts/profile">
+					{% if user.get_full_name == "" %}
+						{{ user.username }}
+					{% else %}
+						{{ user.get_full_name }}
+					{% endif %}
+				</a>
+			</li>
+			<li class="nav-item navbar-right-dropdown">
+				<a href="/logout" class="nav-link">
+					<button class="btn btn-danger">Logout</button>
+				</a>
+			</li>
 		</ul>
 	</div>
 
@@ -35,7 +43,7 @@
 
 		<div class="navbar-right">
 			<ul class="navbar-nav">
-				<li class="nav-item py-2">
+				<li class="nav-item py-2 navbar-right-top">
 					<a class="nav-link" href="/accounts/profile">
 						{% if user.get_full_name == "" %}
 							{{ user.username }}
@@ -53,11 +61,11 @@
 							{% for notif in user.notifs.all|dictsortreversed:"datetime"|slice:"5" %}
 								{% include 'snippets/feed_item.html' %}
 							{% endfor %}
-							<a class="dropdown-item text-center" href="/feed"> View More</a> 
+							<a class="dropdown-item text-center" href="/feed"> View More</a>
 						</div>
 					</div>
 				</li>
-				<li class="nav-item">
+				<li class="nav-item navbar-right-top">
 					<a href="/logout" class="nav-link">
 						<button class="btn btn-danger">Logout</button>
 					</a>
