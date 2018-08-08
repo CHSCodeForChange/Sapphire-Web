@@ -396,10 +396,10 @@ def addUserSlot(request, slot_id):
         user_slot.save_extra(ans)
         user_slot.save()
 
-        alert = Alert(user=request.user, text="Added a volunteer openning", color=Alert.getBlue())
+        alert = Alert(user=request.user, text="Added a volunteer opening", color=Alert.getBlue())
         alert.saveIP(request)
     else:
-        alert = Alert(user=request.user, text="Only organizers can add volunteer opennings", color=Alert.getRed())
+        alert = Alert(user=request.user, text="Only organizers can add volunteer openings", color=Alert.getRed())
         alert.saveIP(request)
     return redirect('/volunteer/slot/' + str(slot_id))
 

@@ -47,6 +47,7 @@ def events(request):
 		groupfilter = request.GET.get('groupfilter', '')
 		distancefilter = request.GET.get('distancefilter', '')
 		daterangefilter = request.GET.get('daterangefilter', '')
+		voluntoldfilter = request.GET.get('voluntold', '')
 		if distancefilter is not '':
 			try:
 				distance = int(distancefilter)
@@ -72,13 +73,17 @@ def events(request):
 					events = events.filter(Q(start__gte=start_date) & Q(end__lte=end_date))
 				except ValueError:
 					pass
+		# Filter by voluntold
+		if voluntoldfilter == 'true':
+			events = events.filter(slot__user_slot__volunteer=request.user, slot__user_slot__accepted="No")
+
 		# Filter by search query
 		if search is not '':
 			events = events.filter(Q(name__contains=search) | Q(location__contains=search) | Q(
 				parentGroup__name__contains=search)).distinct()
 		return render(request, 'volunteer/events.html',
 								{'events': events, 'groups': groups, 'search': search, 'groupfilter': groupfilter,
-								'distancefilter': distancefilter, 'daterangefilter': daterangefilter})
+								'distancefilter': distancefilter, 'daterangefilter': daterangefilter, 'voluntoldfilter': voluntoldfilter})
 	else:
 		return redirect('login')
 
@@ -154,6 +159,7 @@ def slots(request):
 		groupfilter = request.GET.get('groupfilter', '')
 		distancefilter = request.GET.get('distancefilter', '')
 		daterangefilter = request.GET.get('daterangefilter', '')
+		voluntoldfilter = request.GET.get('voluntold', '')
 		if distancefilter is not '':
 			try:
 				distance = int(distancefilter)
@@ -179,13 +185,16 @@ def slots(request):
 					slots = slots.filter(Q(start__gte=start_date) & Q(end__lte=end_date))
 				except ValueError:
 					pass
+		# Filter by voluntold
+		if voluntoldfilter == 'true':
+			slots = slots.filter(user_slot__volunteer=request.user, user_slot__accepted="No")
 		# Filter by search query
 		if search is not '':
 			slots = slots.filter(Q(title__contains=search) | Q(location__contains=search) | Q(
 				parentGroup__name__contains=search)).distinct()
 		return render(request, 'volunteer/slots.html',
 								{'slots': slots, 'groups': groups, 'search': search, 'groupfilter': groupfilter,
-								'distancefilter': distancefilter, 'daterangefilter': daterangefilter})
+								'distancefilter': distancefilter, 'daterangefilter': daterangefilter, 'voluntoldfilter': voluntoldfilter})
 	else:
 		return redirect('login')
 
