@@ -1,136 +1,166 @@
 @media (max-width: 600px) {
-  h1.display-1 {
-    font-size: 300%;
-  }
-  div.navbar-right {
-    display: none;
-  }
+	h1.display-1 {
+		font-size: 300%;
+	}
+
+	.navbar-right-top {
+		display: none;
+	}
+
+	.navbar-right-dropdown {
+		display: block;
+	}
+}
+@media (min-width: 601px) {
+	.navbar-right-top {
+		display: block;
+	}
+
+	.navbar-right-dropdown {
+		display: none;
+	}
 }
 
 @media (max-width: 350px) {
-  footer.footer > div > span {
-    font-size: 80%;
-  }
+	footer.footer > div > span {
+		font-size: 80%;
+	}
 }
 
 div.login {
-  padding-top: 17%;
+	padding-top: 17%;
 }
 
 .btn-block {
-  margin-bottom: 1%;
+	margin-bottom: 1%;
 }
 
 .dropdown-toggle {
-  height: 82%;
+	height: 82%;
 }
 
-div.dropdown-form{
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
+div.dropdown-form {
+	padding-left: 1.5rem;
+	padding-right: 1.5rem;
 }
 
-.plus:hover{
-  text-decoration: none;
-  color: #51b5c2;
+.plus:hover {
+	text-decoration: none;
+	color: #51b5c2;
 }
 
 .notif {
-  z-index: 100;
+	z-index: 100;
 }
 
 .automarg {
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: auto;
-  margin-bottom: auto;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: auto;
+	margin-bottom: auto;
 }
+
 .emptymarg {
-  margin: 0;
+	margin: 0;
 }
+
 .emptypad {
-  padding: 0;
+	padding: 0;
 }
+
 .username {
-  font-size: 250%;
-  color: black;
-  vertical-align: bottom;
-  margin-left: 3%;
+	font-size: 250%;
+	color: black;
+	vertical-align: bottom;
+	margin-left: 3%;
 }
+
 .disinlineblock {
-  display: inline-block;
+	display: inline-block;
 }
+
 .disinline {
-  display: inline;
+	display: inline;
 }
+
 .disnone {
-  display: none;
+	display: none;
 }
+
 .disblock {
-  display: block;
+	display: block;
 }
+
 .floatnone {
-  float: none;
+	float: none;
 }
+
 .floatright {
-  float: right;
+	float: right;
 }
+
 .fontup110 {
-  font-size: 110%;
+	font-size: 110%;
 }
+
 .maxw100 {
-  max-width: 100%;
+	max-width: 100%;
 }
+
 .minw0 {
-  min-width: 0%;
+	min-width: 0%;
 }
+
 .containmarg {
-  margin-left: 10%;
-  margin-right: 10%;
+	margin-left: 10%;
+	margin-right: 10%;
 }
+
 /*.navbar-brand>img {
   width: auto;
   height: 110%;
 }*/
 .autowidth {
-  width: auto;
+	width: auto;
 }
+
 .padding0left {
-  padding-left: 0;
+	padding-left: 0;
 }
+
 .maxautowidth {
-  max-width: 100%;
+	max-width: 100%;
 }
 
 .tooltip {
-    position: relative;
-    display: inline-block;
-    border-bottom: 1px dotted black;
+	position: relative;
+	display: inline-block;
+	border-bottom: 1px dotted black;
 }
 
 .tooltip .tooltiptext {
-    visibility: hidden;
-    width: 120px;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px 0;
+	visibility: hidden;
+	width: 120px;
+	background-color: black;
+	color: #fff;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px 0;
 
-    /* Position the tooltip */
-    position: absolute;
-    z-index: 1;
+	/* Position the tooltip */
+	position: absolute;
+	z-index: 1;
 }
 
 .tooltip:hover .tooltiptext {
-    visibility: visible;
+	visibility: visible;
 }
 
 .progress-bar[aria-valuenow="0"],
 .progress-bar[aria-valuenow="1"],
 .progress-bar[aria-valuenow="2"] {
-    min-width: 3%;
-    -webkit-box-shadow: none;
+	min-width: 3%;
+	-webkit-box-shadow: none;
 	-moz-box-shadow: none;
 	box-shadow: none;
 }
