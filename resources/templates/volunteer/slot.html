@@ -153,8 +153,8 @@
                 {% endfor %}
             {% endif %}
 
-            {% if is_organizer %}
-                <th>Delete</th>
+             {% if is_organizer %}
+                <th class="no-sort">Delete</th>
             {% endif %}
         </thead>
         <tbody>
@@ -250,7 +250,7 @@
                                 {% endif %}
                             {% endif %}
 
-                            <td>{{ user_slot.difference }}</td>
+                            <td>{{ user_slot.difference|default_if_none:"-"}}</td>
 
                             {% if slot.is_payment_nonzero %}
                                 <td>${{ user_slot.payment }}</td>
@@ -332,7 +332,7 @@
                         {% endif %}
                     {% endif %}
 
-                    <td>{{ specific_user_slot.difference }}</td>
+                    <td>{{ specific_user_slot.difference|default_if_none:"-"}}</td>
 
                     {% if slot.is_payment_nonzero %}
                         <td>${{ specific_user_slot.payment }}</td>
@@ -446,7 +446,7 @@
                                 {% endif %}
                             {% endif %}
 
-                            <td>{{ user_slot.difference }}</td>
+                            <td>{{ user_slot.difference|default_if_none:"-"}}</td>
 
                             {% if slot.is_payment_nonzero %}
                                 <td>${{ user_slot.payment }}</td>
