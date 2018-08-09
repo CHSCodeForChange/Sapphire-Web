@@ -93,28 +93,28 @@ def signup(request):
         if form.is_valid():
             user = form.save(commit=False)
             # Sets the user to deactive until they confirm email
-            user.is_active = False
+            user.is_active = True
             # Saves the user to the server
             user.save()
             # Gets the current domain in order to send the email
             current_site = get_current_site(request)
             # Sends the user an email based on the email template and the info passed in here
-            message = render_to_string('emails/activate_account.html', {
-                'user': user,
-                'domain': current_site.domain,
-                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                'token': account_activation_token.make_token(user),
-            })
-            mail_subject = 'Activate your Sapphire Account!'
-            to_email = form.cleaned_data.get('email')
-            email = EmailMultiAlternatives(mail_subject, message, to=[to_email])
-            email.content_subtype = 'html'
-            email.mixed_subtype = 'related'
-            fp = open('static/img/logos.ico/ms-icon-70x70.png', 'rb')
-            logo = MIMEImage(fp.read())
-            logo.add_header('Content-ID', '<logo>')
-            email.attach(logo)
-            email.send()
+            # message = render_to_string('emails/activate_account.html', {
+            #     'user': user,
+            #     'domain': current_site.domain,
+            #     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            #     'token': account_activation_token.make_token(user),
+            # })
+            # mail_subject = 'Activate your Sapphire Account!'
+            # to_email = form.cleaned_data.get('email')
+            # email = EmailMultiAlternatives(mail_subject, message, to=[to_email])
+            # email.content_subtype = 'html'
+            # email.mixed_subtype = 'related'
+            # fp = open('static/img/logos.ico/ms-icon-70x70.png', 'rb')
+            # logo = MIMEImage(fp.read())
+            # logo.add_header('Content-ID', '<logo>')
+            # email.attach(logo)
+            # email.send()
 
             alert = Alert(user=user, text="Click on the link sent to your email to confirm your account", color=Alert.getYellow())
             alert.saveIP(request)
