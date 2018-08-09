@@ -140,8 +140,8 @@
 			<a class="plus" href="/organizer/addUserSlot/{{ slot.id }}">+</a>
 		{% endif %}
 	</h3>
-
-    <table id="datatable" class="table table-hover">
+	<div class="table-responsive">
+    <table class="table table-hover">
         <thead>
             {% if is_organizer %}
                 <th>User <a class="plus" href="/organizer/addUserManually/{{ slot.id }}">+</a></th>
@@ -496,6 +496,7 @@
         {% endfor %}
     </tfoot>
     </table>
+	</div>
 
 
 
