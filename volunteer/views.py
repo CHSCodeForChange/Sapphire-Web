@@ -137,7 +137,8 @@ def slot(request, slot_id):
             User_Slot.objects.filter(parentSlot=slot)) * 100)
     else:
         percentFilled = 0
-    for i in user_slots:
+
+    for i in hasV:
         i.prep_html()
 
     if pendingAccept:
@@ -172,7 +173,8 @@ def slots(request):
                 return redirect(
                     '/volunteer/slots?groupfilter=' + groupfilter + '&distancefilter=&daterangefilter=' + daterangefilter)
         # Filter events by interpreted GET attributes
-        slots = Slot.objects.filter(parentGroup__in=groups)
+        query = Q(parentGroup__in=groups) | Q(parentEvent__parentGroup__in=groups)
+        slots = Slot.objects.filter(query)
         # Filter by group
         group_query = Q()
         for group in str.split(groupfilter, "_"):

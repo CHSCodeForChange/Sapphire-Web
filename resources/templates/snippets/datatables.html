@@ -2,14 +2,18 @@
     $(document).ready(function () {
         $('#datatable').DataTable({
             colReorder: true,
-            responsive: true,
+            responsive: false,
+            "autowidth": true,
             "searching": false,
             paging: false,
             info: false,
             stateSave: true,
             columnDefs: [
                 {targets: 'no-sort', orderable: false}
-            ]
+            ],
+            "language": {
+              "emptyTable": "No one has volunteered"
+            }
         });
     });
 </script>

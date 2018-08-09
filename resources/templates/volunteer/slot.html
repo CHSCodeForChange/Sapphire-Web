@@ -140,8 +140,8 @@
 			<a class="plus" href="/organizer/addUserSlot/{{ slot.id }}">+</a>
 		{% endif %}
 	</h3>
-
-    <table id="datatable" class="table table-hover">
+	<div class="table-responsive">
+    <table class="table table-hover">
         <thead>
             {% if is_organizer %}
                 <th>User <a class="plus" href="/organizer/addUserManually/{{ slot.id }}">+</a></th>
@@ -265,13 +265,15 @@
                                 <td>${{ user_slot.payment }}</td>
                             {% endif %}
 
-                            {% if is_organizer or not slot.private %}
-                                {% for a,b in user_slot.value %}
-                                    <td><a href="/organizer/editField/{{ user_slot.id }}/{{ a }}">
-                                        <button type="button" name="button" class="btn btn-light">{{ b }}</button>
-                                    </a></td>
-                                {% endfor %}
-                            {% endif %}
+                            {% for a,b in user_slot.value %}
+                                {% if is_organizer %}
+                                  <td><a href="/organizer/editField/{{ user_slot.id }}/{{ a }}">
+                                      <button type="button" name="button" class="btn btn-light">{{ b }}</button>
+                                  </a></td>
+                                {% else %}
+                                   <td>-</td>
+                                {% endif %}
+                            {% endfor %}
 
 
                             {% if is_organizer %}
@@ -494,6 +496,7 @@
         {% endfor %}
     </tfoot>
     </table>
+	</div>
 
 
 
