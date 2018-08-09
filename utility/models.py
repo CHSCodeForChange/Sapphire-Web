@@ -8,6 +8,7 @@ from groups.models import Group
 import ast
 from collections import OrderedDict
 import json
+import pytz
 
 """
 Notes:
@@ -171,17 +172,16 @@ class User_Slot(models.Model):
 
     def updateDeltaTimes(self):
         if (self.signin != None and self.signout != None):
-            deltaTime = self.signout.replace(tzinfo=None) - self.signin.replace(tzinfo=None)
+            signout, signin = self.signout, self.signin
+            print(signout, signin)
+            # import pdb; pdb.set_trace() 
 
+            deltaTime = signout - signin
             seconds = deltaTime.seconds
-            minutes = seconds / 60 - (seconds / 60) % 1
-            hours = minutes / 60 - (minutes / 60) % 1
 
-            minutes = minutes - hours * 60
-            seconds = seconds - minutes * 60 - hours * 60 * 60
-
-            self.difference = str(timedelta(seconds=seconds, minutes=minutes, hours=hours))
-            self.payment = (hours + minutes / 60 + seconds / 60 / 60) * (float(self.parentSlot.paymentPerHour))
+            
+            self.difference = str(timedelta(seconds=seconds))
+            self.payment = (seconds/60/60) * (float(self.parentSlot.paymentPerHour))
 
             self.save()
 

@@ -338,10 +338,7 @@ def signin(request, user_slot_id):
 
     user_slot = User_Slot.objects.get(id=user_slot_id)
 
-    if (user_slot.parentSlot.parentEvent != None):
-        group = user_slot.parentSlot.parentEvent.parentGroup
-    else:
-        group = user_slot.parentSlot.parentGroup
+    group = user_slot.parentSlot.get_group()
 
     if (user_slot.volunteer != None and group.get_is_organzer(request.user)):
         user_slot.signin = get_dt()
