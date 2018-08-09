@@ -52,7 +52,8 @@
 			</div>
 
 			<h1></h1>
-			<p class="text-left">{{ slot.description }}</p>
+            <p class="text-left">{{ slot.description }}</p>
+            <p class="text-left">{% ifnotequal slot.paymentPerHour 0.00 %}Payment Per Hour: ${{slot.paymentPerHour}}{% endifnotequal %}</p>
 		</div>
 
 
