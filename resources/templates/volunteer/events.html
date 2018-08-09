@@ -32,14 +32,7 @@
                                    target="_blank" data-toggle="tooltip" data-placement="bottom" title="Open in Google Maps">
                                    {{ event.location }}</a></td>
                         <td>
-                                <a href="http://www.google.com/calendar/event?
-                                        action=TEMPLATE
-                                        &text={{ event.name }}
-                                        &dates={{ event.start|utc|date:"Ymd\\THi00\\Z" }}/{{ event.end|utc|date:"Ymd\\THi00\\Z" }}
-                                        &details={{ event.description }}
-                                        &location={{ event.location }}
-                                        &trp=true
-                                        &sprop=website:{{ request.build_absolute_uri }}"
+                                <a href="http://www.google.com/calendar/event?action=TEMPLATE&text={{ event.name }}&dates={{ event.start|utc|date:"Ymd\\THi00\\Z" }}/{{ event.end|utc|date:"Ymd\\THi00\\Z" }}&details={{ event.description }}&location={{ event.location }}&trp=true&sprop=website:{{ request.build_absolute_uri }}"
                                         target="_blank" rel="nofollow"
                                         data-toggle="tooltip" data-placement="bottom" title="Open in Google Calendar">
                                     {{ event.start }} - {{ event.end }}

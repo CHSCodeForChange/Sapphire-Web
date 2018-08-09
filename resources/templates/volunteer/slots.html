@@ -33,16 +33,9 @@
                         {% endif %}
                     </td>
                     <td>
-                        <a href="http://www.google.com/calendar/event?
-                                action=TEMPLATE
-                                &text={{ slot.title }}
-                                &dates={{ slot.start|utc|date:"Ymd\\THi00\\Z" }}/{{ slot.end|utc|date:"Ymd\\THi00\\Z" }}
-                                &details={{ slot.description }}
-                                &location={{ slot.location }}
-                                &trp=true
-                                &sprop=website:{{ request.build_absolute_uri }}"
-                                target="_blank" rel="nofollow"
-                                data-toggle="tooltip" data-placement="bottom" title="Open in Google Calendar">
+                        <a href="http://www.google.com/calendar/event?action=TEMPLATE&text={{ slot.title }}&dates={{ slot.start|utc|date:"Ymd\\THi00\\Z" }}/{{ slot.end|utc|date:"Ymd\\THi00\\Z" }}&details={{ slot.description }}&location={{ slot.location }}&trp=true&sprop=website:{{ request.build_absolute_uri }}"
+							target="_blank" rel="nofollow"
+							data-toggle="tooltip" data-placement="bottom" title="Open in Google Calendar">
                             {{ slot.start }} - {{ slot.end }}
                         </a>
                     </td>
