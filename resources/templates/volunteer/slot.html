@@ -265,13 +265,15 @@
                                 <td>${{ user_slot.payment }}</td>
                             {% endif %}
 
-                            {% if is_organizer or not slot.private %}
-                                {% for a,b in user_slot.value %}
-                                    <td><a href="/organizer/editField/{{ user_slot.id }}/{{ a }}">
-                                        <button type="button" name="button" class="btn btn-light">{{ b }}</button>
-                                    </a></td>
-                                {% endfor %}
-                            {% endif %}
+                            {% for a,b in user_slot.value %}
+                                {% if is_organizer %}
+                                  <td><a href="/organizer/editField/{{ user_slot.id }}/{{ a }}">
+                                      <button type="button" name="button" class="btn btn-light">{{ b }}</button>
+                                  </a></td>
+                                {% else %}
+                                   <td>-</td>
+                                {% endif %}
+                            {% endfor %}
 
 
                             {% if is_organizer %}
