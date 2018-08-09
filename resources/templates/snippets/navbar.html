@@ -54,7 +54,7 @@
 				</li>
 				<li class="nav-item py-2">
 					<div class="btn-group dropleft">
-						<a class="nav-link" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<a class="nav-link" href="/feed" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 							<i class="fas fa-bell"></i>
 						</a>
 						<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
@@ -75,3 +75,29 @@
 
 	{% endif %}
 </nav>
+
+<script>
+	$(document).ready(function() {
+	    var $window = $(window);
+	    var $bell = $('#dropdownMenuButton');
+
+	    function checkWidth() {
+	        var windowsize = $window.width();
+	        if (windowsize > 600) {
+	            $bell.attr('href', '#');
+	            $bell.attr('data-toggle', 'dropdown');
+	            $bell.attr('aria-haspopup', 'true');
+	            $bell.attr('aria-expanded', 'false');
+	        } else {
+	            $bell.attr('href', '/feed');
+	            $bell.attr('data-toggle', '');
+	            $bell.attr('aria-haspopup', 'false');
+	            $bell.attr('aria-expanded', 'false');
+	        }
+	    }
+	    // Execute on load
+	    checkWidth();
+	    // Bind event listener
+	    $(window).resize(checkWidth);
+	});
+</script>
