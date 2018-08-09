@@ -140,14 +140,11 @@ def slot(request, slot_id):
 
     for i in hasV:
         i.prep_html()
-        print(i.value)
 
     if pendingAccept:
         alert = Alert(user=request.user, text="You have been requested to volunteer for this slot",
                       color=Alert.getBlue())
         alert.saveIP(request)
-
-    print((list(hasV[0].get_extra().keys()) if (len(hasV) > 0) else []), is_organizer, hasV[0].value)
 
     return render(request, 'volunteer/slot.html',
                   {'slot': slot, 'user_slots': hasV, 'event': event, 'empty_slot': noV,
