@@ -53,21 +53,21 @@
 
 		{% if is_organizer %}
 			<div class="row">
-				<a class="col-sm-4 nodec" href="/organizer/updateEvent/{{ event.id }}" data-toggle="tooltip" data-placement="bottom" title="Edit event fields">
+				<a class="col-sm-4 nodec" href="/organizer/updateEvent/{{ event.id }}" data-toggle="tooltip" data-placement="bottom" title="Edit {{ profile.eventName }} fields">
 					<button class="btn btn-primary btn-block">
 						<i class="fas fa-edit"></i> Edit
 					</button>
 				</a>
-				<a class="col-sm-2 nodec" href="/sheets/fromslot/{{ slot.id }}" data-toggle="tooltip" data-placement="top" title="Download {{ profile.slotName }} data">
+				<a class="col-sm-2 nodec" href="/sheets/fromEvent/{{ event.id }}" data-toggle="tooltip" data-placement="top" title="Download {{ profile.eventName }} data">
 					<button class="btn btn-block btn-success">
 						<i class="fas fa-table"></i> Spreadsheet
 					</button>
 				</a>
-				<a class="col-sm-2 nodec" href="/organizer/sendMail/event/{{ event.id }}" data-toggle="tooltip" data-placement="bottom" title="Email users about event"> 
-					<button class="btn btn-block btn-success"><i class="fas fa-envelope"></i></button>
+				<a class="col-sm-2 nodec" href="/organizer/sendMail/event/{{ event.id }}" data-toggle="tooltip" data-placement="bottom" title="Email users about {{ profile.eventName }}">
+					<button class="btn btn-block btn-success"><i class="fas fa-envelope"></i> Email</button>
 				</a>
 
-				<a class="col-sm-2 nodec" href="/organizer/event/{{ event.id }}/console" data-toggle="tooltip" data-placement="bottom" title="Open event organizer console">
+				<a class="col-sm-2 nodec" href="/organizer/event/{{ event.id }}/console" data-toggle="tooltip" data-placement="bottom" title="Open {{ profile.eventName }} organizer console">
 					<button class="btn btn-primary btn-block">
 						<i class="fas fa-terminal"></i> Console
 					</button>
@@ -98,7 +98,7 @@
 
 
 
-	<h3>Volunteer {{ profile.slotName }}s
+	<h3>{{ profile.slotName }}s
 		{% if is_organizer %}
 			<a class="plus" href="{% url 'addSlot' event_id=event.id %}" data-toggle="tooltip" data-placement="bottom" title="Add {{ profile.slotName }} to this event">
 				+
@@ -112,7 +112,7 @@
                     <th>Name</th>
                     <th>Start</th>
                     <th>End</th>
-                    <th>Volunteers</th>
+                    <th>Workers</th>
                     <th>{{ profile.slotName }}s Taken</th>
                     {% if is_organizer %}
                         <th>Delete</th>

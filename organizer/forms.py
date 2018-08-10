@@ -14,44 +14,44 @@ class SelectEmailRecipientField(forms.ModelMultipleChoiceField):
 
 
 class NewSingleSlotForm(forms.Form):
-		title = forms.CharField(label='Title', max_length=30, widget=forms.TextInput(
+		title = forms.CharField(label='Title', max_length=30, required=True, widget=forms.TextInput(
 				attrs={'type': 'text',
 							 'class': 'form-control'}))
-		description = forms.CharField(label='Description', widget=forms.TextInput(
+		description = forms.CharField(label='Description', required=False, widget=forms.TextInput(
 				attrs={'type': 'text',
 							 'class': 'form-control'}))
-		start = forms.DateTimeField(label='Start time', input_formats=['%Y-%m-%dT%H:%M'],
+		start = forms.DateTimeField(label='Start time', required=True, input_formats=['%Y-%m-%dT%H:%M'],
 																widget=forms.DateTimeInput(
 																		attrs={'type': 'datetime-local',
 																					 'class': 'form-control'}))
-		end = forms.DateTimeField(label='End time', input_formats=['%Y-%m-%dT%H:%M'],
+		end = forms.DateTimeField(label='End time', required=True, input_formats=['%Y-%m-%dT%H:%M'],
 															widget=forms.DateTimeInput(
 																	attrs={'type': 'datetime-local',
 																				 'class': 'form-control'}))
 
-		location = forms.CharField(label='Location', max_length=240, widget=forms.TextInput(
+		location = forms.CharField(label='Location', required=False, max_length=240, widget=forms.TextInput(
 				attrs={'type': 'text',
 							 'class': 'form-control'}))
-		address = forms.CharField(label='Address', max_length=240, widget=forms.TextInput(
+		address = forms.CharField(label='Address', required=False, max_length=240, widget=forms.TextInput(
 				attrs={'type': 'text',
 							 'class': 'form-control'}))
-		city = forms.CharField(label='City', max_length=240, widget=forms.TextInput(
+		city = forms.CharField(label='City', required=False, max_length=240, widget=forms.TextInput(
 				attrs={'type': 'text',
 							 'class': 'form-control'}))
-		state = forms.CharField(label='State', max_length=2, widget=forms.TextInput(
+		state = forms.CharField(label='State', required=False, max_length=2, widget=forms.TextInput(
 				attrs={'type': 'text',
 							 'class': 'form-control'}))
-		zip_code = forms.IntegerField(label='Zip Code', widget=forms.NumberInput(
+		zip_code = forms.IntegerField(label='Zip Code', required=False, widget=forms.NumberInput(
 				attrs={'type': 'number',
 							 'max': '99999',
 							 'class': 'form-control'}))
 
-		maxVolunteers = forms.IntegerField(label='# Slots', widget=forms.NumberInput(
+		maxVolunteers = forms.IntegerField(label='# of Slots', required=False, widget=forms.NumberInput(
 				attrs={'type': 'number',
 							 'min': '1',
 							 'class': 'form-control'}))
 
-		in_person = forms.BooleanField(label='In person', widget=forms.CheckboxInput(
+		in_person = forms.BooleanField(label='In person', required=False, widget=forms.CheckboxInput(
 				attrs={'type': 'checkbox',
 							 'class': 'form-control'}))
 
@@ -60,7 +60,7 @@ class NewSingleSlotForm(forms.Form):
 		user = models.User()
 		datetime = get_dt()
 
-		extraFields = forms.CharField(label='Extra Fields (Seperate w/ Commas)', max_length=240, widget=forms.TextInput(
+		extraFields = forms.CharField(label='Extra Fields (Seperate w/ Commas)', required=False, max_length=240, widget=forms.TextInput(
 				attrs={'type': 'text',
 							 'class': 'form-control'}))
 
@@ -273,35 +273,35 @@ class NewEventForm(forms.Form):
 
 
 class UpdateEventForm(forms.Form):
-		title = forms.CharField(label='Title', max_length=30, widget=forms.TextInput(
+		title = forms.CharField(label='Title', max_length=30, required=True, widget=forms.TextInput(
 				attrs={'type': 'text',
 							 'class': 'form-control'}))
-		description = forms.CharField(label='Description', widget=forms.TextInput(
+		description = forms.CharField(label='Description', required=False, widget=forms.TextInput(
 				attrs={'type': 'text',
 							 'class': 'form-control'}))
 
-		start = forms.DateTimeField(label='Start time', input_formats=['%Y-%m-%dT%H:%M'],
+		start = forms.DateTimeField(label='Start time', required=True, input_formats=['%Y-%m-%dT%H:%M'],
 																widget=forms.DateTimeInput(
 																		attrs={'type': 'datetime-local',
 																					 'class': 'form-control'}))
-		end = forms.DateTimeField(label='End time', input_formats=['%Y-%m-%dT%H:%M'],
+		end = forms.DateTimeField(label='End time', required=True, input_formats=['%Y-%m-%dT%H:%M'],
 															widget=forms.DateTimeInput(
 																	attrs={'type': 'datetime-local',
 																				 'class': 'form-control'}))
 
-		location = forms.CharField(label='Location', max_length=240, widget=forms.TextInput(
+		location = forms.CharField(label='Location', required=False, max_length=240, widget=forms.TextInput(
 				attrs={'type': 'text',
 							 'class': 'form-control'}))
-		address = forms.CharField(label='Address', max_length=240, widget=forms.TextInput(
+		address = forms.CharField(label='Address', required=False, max_length=240, widget=forms.TextInput(
 				attrs={'type': 'text',
 							 'class': 'form-control'}))
-		city = forms.CharField(label='City', max_length=240, widget=forms.TextInput(
+		city = forms.CharField(label='City', required=False, max_length=240, widget=forms.TextInput(
 				attrs={'type': 'text',
 							 'class': 'form-control'}))
-		state = forms.CharField(label='State', max_length=2, widget=forms.TextInput(
+		state = forms.CharField(label='State', required=False, max_length=2, widget=forms.TextInput(
 				attrs={'type': 'text',
 							 'class': 'form-control'}))
-		zip_code = forms.IntegerField(label='Zip Code', widget=forms.NumberInput(
+		zip_code = forms.IntegerField(label='Zip Code', required=False, widget=forms.NumberInput(
 				attrs={'type': 'number',
 							 'max': '99999',
 							 'class': 'form-control'}))
@@ -365,24 +365,24 @@ class UpdateEventForm(forms.Form):
 
 
 class NewSlotForm(forms.Form):
-		title = forms.CharField(label='Title', max_length=30, widget=forms.TextInput(
+		title = forms.CharField(label='Title', max_length=30, required=True, widget=forms.TextInput(
 				attrs={'type': 'text',
 							 'class': 'form-control'}))
-		description = forms.CharField(label='Description', widget=forms.TextInput(
+		description = forms.CharField(label='Description', required=False, widget=forms.TextInput(
 				attrs={'type': 'text',
 							 'class': 'form-control',
 							 'required': False}))
 
-		start = forms.DateTimeField(label='Start time', input_formats=['%Y-%m-%dT%H:%M'],
+		start = forms.DateTimeField(label='Start time', required=True, input_formats=['%Y-%m-%dT%H:%M'],
 																widget=forms.DateTimeInput(
 																		attrs={'type': 'datetime-local',
 																					 'class': 'form-control'}))
-		end = forms.DateTimeField(label='End time', input_formats=['%Y-%m-%dT%H:%M'],
+		end = forms.DateTimeField(label='End time', required=True, input_formats=['%Y-%m-%dT%H:%M'],
 															widget=forms.DateTimeInput(
 																	attrs={'type': 'datetime-local',
 																				 'class': 'form-control'}))
 
-		location = forms.CharField(label='Location', max_length=240, widget=forms.TextInput(
+		location = forms.CharField(label='Location', required=False, max_length=240, widget=forms.TextInput(
 				attrs={'type': 'text',
 							 'class': 'form-control'}))
 
@@ -529,28 +529,28 @@ class FieldForm(forms.Form):
 
 
 class UpdateSlotForm(forms.Form):
-		title = forms.CharField(label='Title', max_length=30, widget=forms.TextInput(
+		title = forms.CharField(label='Title', max_length=30, required=True, widget=forms.TextInput(
 				attrs={'type': 'text',
 							 'class': 'form-control'}))
-		description = forms.CharField(label='Description', widget=forms.TextInput(
+		description = forms.CharField(label='Description', required=False, widget=forms.TextInput(
 				attrs={'type': 'text',
 							 'class': 'form-control',
 							 'required': False}))
 
-		start = forms.DateTimeField(label='Start time', input_formats=['%Y-%m-%dT%H:%M'],
+		start = forms.DateTimeField(label='Start time', required=True, input_formats=['%Y-%m-%dT%H:%M'],
 																widget=forms.DateTimeInput(
 																		attrs={'type': 'datetime-local',
 																					 'class': 'form-control'}))
-		end = forms.DateTimeField(label='End time', input_formats=['%Y-%m-%dT%H:%M'],
+		end = forms.DateTimeField(label='End time', required=True, input_formats=['%Y-%m-%dT%H:%M'],
 															widget=forms.DateTimeInput(
 																	attrs={'type': 'datetime-local',
 																				 'class': 'form-control'}))
 
-		location = forms.CharField(label='Location', max_length=240, widget=forms.TextInput(
+		location = forms.CharField(label='Location', required=False, max_length=240, widget=forms.TextInput(
 				attrs={'type': 'text',
 							 'class': 'form-control'}))
 
-		paymentPerHour = forms.DecimalField(label='Payment Per Hour', widget=forms.NumberInput(
+		paymentPerHour = forms.DecimalField(label='Payment Per Hour', required=False, widget=forms.NumberInput(
 				attrs={'type': 'number',
 							 'min': '0',
 							 'class': 'form-control'}))

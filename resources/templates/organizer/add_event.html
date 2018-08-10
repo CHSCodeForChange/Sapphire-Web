@@ -1,11 +1,11 @@
 {% extends "header.html" %}
 
 {% block content %}
-  <h1 class="display-3">Add Event</h1>
+  <h1 class="display-3">Add {{ profile.eventName }}</h1>
 <a href="/organizer/addEvent/">
     <button class="btn btn-primary">Pick Group</button>
 </a>
-  <a href="/volunteer/eventNeeds/"><button class="btn btn-secondary">View Events</button></a>
+  <a href="/volunteer/eventNeeds/"><button class="btn btn-secondary">View {{ profile.eventName }}s</button></a>
   <form method="post">
     {% csrf_token %}
       {% for field in form %}
