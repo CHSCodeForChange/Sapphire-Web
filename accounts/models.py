@@ -19,10 +19,14 @@ class Profile(models.Model):
         null=True
     )
     # The user variable to allow authentication to work
-    username = models.CharField(max_length=200, default = "")
-    bio = models.CharField(max_length=1000, default = "")
+    username = models.CharField(max_length=200, default="")
+    bio = models.CharField(max_length=1000, default="")
     hours = models.IntegerField(default=0)
     permission = {}  # the key is the permission itself which can be a url or just a word for the permission the value is a list of orgainizations it can do this action for
+
+    eventName = models.CharField(blank=True, max_length=128, default="Event")
+
+    slotName = models.CharField(blank=True, max_length=128, default="Slot")
 
     # add permission to the profile for the PERM and the ORG
     def addPermission(self, perm, org):

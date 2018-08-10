@@ -23,12 +23,20 @@ class EditProfileForm(forms.Form):
             'style': 'resize:none;',
         }), required=False)
 
+    slotName = forms.CharField(label='Slot Name', required=False, max_length=128, widget=forms.TextInput(
+        attrs={'type': 'text',
+               'class': 'form-control'}))
+
+    eventName = forms.CharField(label='Event Name', required=False, max_length=128, widget=forms.TextInput(
+        attrs={'type': 'text',
+               'class': 'form-control'}))
+
     def clean_bio(self):
         bio = self.cleaned_data['bio']
         return bio
 
     def save(self, commit=True):
-        return self.cleaned_data['bio']
+        return self.cleaned_data
 
 
 class EditUserForm(UserChangeForm):

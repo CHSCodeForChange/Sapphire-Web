@@ -4,20 +4,20 @@
 
 {% block content %}
 
-	<h1 class="display-1 text-center">Events 
-        <a class="plus" href="/organizer/addEvent/" data-toggle="tooltip" data-placement="bottom" title="Create event">+</a>
+	<h1 class="display-1 text-center">{{ profile.eventName }}s
+        <a class="plus" href="/organizer/addEvent/" data-toggle="tooltip" data-placement="bottom" title="Create {{ profile.eventName }}">+</a>
     </h1>
 	{% include 'volunteer/filter_fragment.html' %}
 	{% include 'volunteer/filter_display_fragment.html' %}
 
     {% if events.count == 0 %}
-        <h3 class="display-3">No Events found with these filters.</h3>
+        <h3 class="display-3">No {{ profile.eventName }}s found with these filters.</h3>
     {% else %}
 
         <table id="datatable" class="table table-hover">
             <thead>
                 <tr>
-                    <th>Event</th>
+                    <th>{{ profile.eventName }}</th>
                     <th>Group</th>
                     <th>Location</th>
                     <th>Time</th>
@@ -30,7 +30,7 @@
                         <td><a href="/groups/{{ event.parentGroup.id }}">{{ event.parentGroup.name }}</a></td>
                          <td><a href="http://maps.google.com/?q={{ event.location }}"
                                    target="_blank" data-toggle="tooltip" data-placement="bottom" title="Open in Google Maps">
-                                   {{ event.location }}</a></td>
+                                   {{ eventevent.location }}</a></td>
                         <td>
                                 <a href="http://www.google.com/calendar/event?action=TEMPLATE&text={{ event.name }}&dates={{ event.start|utc|date:"Ymd\\THi00\\Z" }}/{{ event.end|utc|date:"Ymd\\THi00\\Z" }}&details={{ event.description }}&location={{ event.location }}&trp=true&sprop=website:{{ request.build_absolute_uri }}"
                                         target="_blank" rel="nofollow"

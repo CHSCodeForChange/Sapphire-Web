@@ -56,7 +56,10 @@ def edit_profile(request):
         form = EditProfileForm(request.POST, profile=profile)
         form2 = EditUserForm(request.POST, instance=request.user)
         if form.is_valid() and form2.is_valid():
-            profile.bio = form.save(commit=False)
+            data = form.save(commit=False)
+            profile.bio = data['bio']
+            profile.slotName = data['slotName']
+            profile.eventName = data['eventName']
             profile.save()
             form2.save()
 
@@ -64,7 +67,8 @@ def edit_profile(request):
             alert.saveIP(request)
 
             return redirect('/accounts/profile/')
-    form = EditProfileForm(initial={'bio':profile.bio})
+    form = EditProfileForm(initial={'bio':profile.bio,
+	                              'slotName': profile.slotName, 'eventName': profile.eventName})
     form2 = EditUserForm(instance=request.user)
 
 

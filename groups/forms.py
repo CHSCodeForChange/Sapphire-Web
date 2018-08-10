@@ -123,6 +123,7 @@ class NewGroupForm(forms.Form):
             )
         return group
 
+
 class EditGroupForm(forms.Form):
         name = forms.CharField(label='Title', max_length=120, widget=forms.TextInput(
             attrs={'type': 'text',

@@ -58,7 +58,7 @@
 						<i class="fas fa-edit"></i> Edit
 					</button>
 				</a>
-				<a class="col-sm-2 nodec" href="/sheets/fromslot/{{ slot.id }}" data-toggle="tooltip" data-placement="top" title="Download slot data">
+				<a class="col-sm-2 nodec" href="/sheets/fromslot/{{ slot.id }}" data-toggle="tooltip" data-placement="top" title="Download {{ profile.slotName }} data">
 					<button class="btn btn-block btn-success">
 						<i class="fas fa-table"></i> Spreadsheet
 					</button>
@@ -98,9 +98,9 @@
 
 
 
-	<h3>Volunteer Slots
+	<h3>Volunteer {{ profile.slotName }}s
 		{% if is_organizer %}
-			<a class="plus" href="{% url 'addSlot' event_id=event.id %}" data-toggle="tooltip" data-placement="bottom" title="Add slot to this event">
+			<a class="plus" href="{% url 'addSlot' event_id=event.id %}" data-toggle="tooltip" data-placement="bottom" title="Add {{ profile.slotName }} to this event">
 				+
 			</a>
 		{% endif %}
@@ -113,7 +113,7 @@
                     <th>Start</th>
                     <th>End</th>
                     <th>Volunteers</th>
-                    <th>Slots Taken</th>
+                    <th>{{ profile.slotName }}s Taken</th>
                     {% if is_organizer %}
                         <th>Delete</th>
                     {% endif %}
@@ -136,7 +136,7 @@
                     {% endifnotequal %}
 
                     {% ifequal slot.maxVolunteers 0 %}
-                        <a title="This slot is unlimited" style="border-bottom: 1px dotted blue;">∞</a>
+                        <a title="This {{ profile.slotName }} is unlimited" style="border-bottom: 1px dotted blue;">∞</a>
                     {% endifequal %}
                 </td>
                 {% if is_organizer %}
@@ -144,7 +144,7 @@
                         <div class="btn-group">
                             <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown"
 									aria-haspopup="true" aria-expanded="false">
-								<span  data-toggle="tooltip" data-placement="bottom" title="Remove slot"> 
+								<span  data-toggle="tooltip" data-placement="bottom" title="Remove {{ profile.slotName }}">
 									<i class="fas fa-trash-alt"></i>
 								</span>
                             </button>
