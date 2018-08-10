@@ -36,7 +36,7 @@ def from_slot(request, slot_id):
     writer.writerow(["Group", request.user.profile.eventName, request.user.profile.slotName])
     writer.writerow([group.name, parentEventName, slot.title])
     writer.writerow([])
-    writer.writerow(["First Name", "Last Name", "Time In", "Time Out", "Difference", "Payment"])
+    writer.writerow(["First Name", "Last Name", "Time In", "Time Out", "Difference", "Payment"] + slot.extraFields.split(','))
 
     user_slots = User_Slot.objects.filter(parentSlot=slot)
 
@@ -46,13 +46,13 @@ def from_slot(request, slot_id):
                              "[No Worker]",
                              excel_date(date1=slot.signin),
                              excel_date(date1=slot.signout),
-                             slot.difference, slot.payment])
+                             slot.difference, slot.payment] + slot.getExtraFieldValues())
         else:
             writer.writerow([slot.volunteer.first_name,
                              slot.volunteer.last_name,
                              excel_date(date1=slot.signin),
                              excel_date(date1=slot.signout),
-                             slot.difference, slot.payment])
+                             slot.difference, slot.payment] + slot.getExtraFieldValues())
 
     # scope = ['https://spreadsheets.google.com/feeds']
     # cred = ServiceAccountCredentials.from_json_keyfile_name('sapphire.json')
@@ -92,7 +92,7 @@ def from_event(request, event_id):
     for slot in slots:
         writer.writerow([])
         writer.writerow([slot.title])
-        writer.writerow(["First Name", "Last Name", "Time In", "Time Out", "Difference", "Payment"])
+        writer.writerow(["First Name", "Last Name", "Time In", "Time Out", "Difference", "Payment"] + slot.extraFields.split(','))
 
         user_slots = User_Slot.objects.filter(parentSlot=slot)
 
@@ -102,13 +102,13 @@ def from_event(request, event_id):
                                  "[No Worker]",
                                  excel_date(date1=user_slot.signin),
                                  excel_date(date1=user_slot.signout),
-                                 user_slot.difference, user_slot.payment])
+                                 user_slot.difference, user_slot.payment,] + user_slot.getExtraFieldValues())
             else:
                 writer.writerow([user_slot.volunteer.first_name,
                                  user_slot.volunteer.last_name,
                                  excel_date(date1=user_slot.signin),
                                  excel_date(date1=user_slot.signout),
-                                 user_slot.difference, user_slot.payment])
+                                 user_slot.difference, user_slot.payment] + user_slot.getExtraFieldValues())
 
     return response
 
