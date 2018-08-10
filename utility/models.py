@@ -165,6 +165,11 @@ class User_Slot(models.Model):
 
     extraFields = models.CharField(blank=True, max_length=240, null=True)
 
+    def getExtraFieldValues(self):
+        efs = json.loads(self.extraFields)
+        return [val for key,val in efs.items()]
+
+
     accepted = models.CharField(blank=True, max_length=240, default="No")
 
     value = None  # this is used to export the extra fields to html
