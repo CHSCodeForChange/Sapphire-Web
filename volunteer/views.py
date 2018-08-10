@@ -102,10 +102,11 @@ def event(request, event_id):
 
 def accept(request, slot_id):
 	slot = Slot.objects.get(id=slot_id)
-	us = User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first()
-	if us is not None:
-		us.accepted = "Yes"
-		us.save()
+	for us in User_Slot.objects.filter(parentSlot=slot, volunteer=request.user):
+		if us is not None and us.accepted == "No":
+			us.accepted = "Yes"
+			us.save()
+			break
 	return redirect('/volunteer/slot/' + str(slot_id))
 
 
@@ -123,8 +124,11 @@ def slot(request, slot_id):
 	is_volunteered = not (User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first() == None)
 	pendingAccept = False
 	if is_volunteered:
-		pendingAccept = User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first().accepted == 'No'
-		print(pendingAccept)
+		for user_slot in User_Slot.objects.filter(parentSlot=slot, volunteer=request.user):
+			if user_slot.accepted == "No":
+				pendingAccept = True
+				break
+
 
 	volunteer = request.user
 	specific_user_slot = User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first()
@@ -317,14 +321,14 @@ def volunteerForUser(request, slot_id, user_id):
 def unvolunteer(request, slot_id):
 	slot = Slot.objects.get(id=slot_id)
 	slots_filled_by_this_user = User_Slot.objects.filter(parentSlot=slot, volunteer=request.user).first()
-	if (slots_filled_by_this_user == None):
+	if slots_filled_by_this_user is None:
 		alert = Alert(user=request.user, text="Haven't volunteered yet", color=Alert.getRed())
 		alert.saveIP(request)
 
 		return redirect('/volunteer/slot/' + str(slot_id))
 	else:
 		slots_filled_by_this_user.delete()
-		if (slot.maxVolunteers != 0):
+		if slot.maxVolunteers is not 0:
 			user_slot = User_Slot(parentSlot=slot, extraFields=slot.get_extra())
 			user_slot.save()
 
