@@ -11,7 +11,7 @@ gunicorn = "==19.7.1"
 whitenoise = "==3.3.1"
 dj-database-url = "==0.4.2"
 "psycopg2-binary" = "==2.7.4"
-Django = "==1.11.7"
+Django = "==1.11.28"
 Pillow = "==5.1.0"
 django-inlinecss = "*"
 
