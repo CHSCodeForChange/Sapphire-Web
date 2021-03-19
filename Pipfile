@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 "jinja2" = "==2.10"
-djangorestframework = "==3.7.3"
+djangorestframework = "==3.11.2"
 django-crispy-forms = "==1.7.0"
 gunicorn = "==19.7.1"
 whitenoise = "==3.3.1"
